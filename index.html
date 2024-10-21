@@ -69,15 +69,7 @@
             if (isNaN(fio2) || isNaN(totalFlow)) {
                 alert("Please enter valid FiO2 and Total Flow values.");
                 return;
-            }
-
-             // Hiển thị cảnh báo nếu FiO2 > 80%
-            const warningMessage = document.getElementById('warningMessage');
-            if (fio2 > 80) {
-                warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
-            } else {
-                warningMessage.textContent = "";
-            }
+            }            
 
             // Công thức tính Air Flow và Oxy Flow
             const airFlow = totalFlow - ((fio2 * totalFlow - 21 * totalFlow) / 79);
