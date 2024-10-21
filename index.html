@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPAP Calculator</title>
+    <title>ICU Tools</title>
     <link rel="icon" href="icon.png" type="image/png">
     <style>
         body {
@@ -28,18 +28,18 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
 		
-		.icon-container {
-			display: inline-block;
-			padding: 5px;
-			cursor: pointer;
-			position: relative;
-		}
+	.icon-container {
+		display: inline-block;
+		padding: 5px;
+		cursor: pointer;
+		position: relative;
+	}
 
-		.icon-container:hover {
-			border: 0px solid rgba(0, 0, 0, 0.2);
-			border-radius: 6px; /* Bo tròn góc */
-			background-color: rgba(0, 0, 0, 0.05);
-		}
+	.icon-container:hover {
+		border: 0px solid rgba(0, 0, 0, 0.2);
+		border-radius: 6px; /* Bo tròn góc */
+		background-color: rgba(0, 0, 0, 0.05);
+	}
 
         .header-icon {
             width: 30px;
@@ -62,7 +62,14 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-
+	    
+	/* Khi sidebar mở, tooltip hiển thị bên phải */
+	.sidebar-open .tooltip-text {
+		top: 50%;
+		left: 110%;  /* Hiển thị về bên phải */
+		transform: translateY(-50%);
+	}
+	    
         .icon-container:hover .tooltip-text {
             visibility: visible;
             opacity: 1;
@@ -244,20 +251,32 @@
     <script>
         let sidebarOpen = false;
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById("mySidebar");
-            const main = document.getElementById("main");
-
-            if (sidebarOpen) {
-                sidebar.style.width = "0";
-                main.style.marginLeft = "0";
-                sidebarOpen = false;
-            } else {
-                sidebar.style.width = "250px";
-                main.style.marginLeft = "250px";
-                sidebarOpen = true;
-            }
-        }
+	function toggleSidebar() {
+		const sidebar = document.getElementById("mySidebar");
+		const main = document.getElementById("main");
+		const tooltip = document.querySelector(".tooltip-text");
+		const iconContainer = document.querySelector(".icon-container");
+	
+		if (sidebarOpen) {
+			sidebar.style.width = "0";
+			main.style.marginLeft = "0";
+			tooltip.textContent = "Mở Sidebar"; // Đổi tooltip khi sidebar đóng
+			document.body.classList.remove('sidebar-open'); // Loại bỏ lớp khi sidebar đóng
+			sidebarOpen = false;
+		} else {
+			sidebar.style.width = "250px";
+			main.style.marginLeft = "250px";
+			tooltip.textContent = "Đóng Sidebar"; // Đổi tooltip khi sidebar mở
+			tooltip.style.visibility = "hidden"; // Ẩn tooltip khi sidebar mở
+			document.body.classList.add('sidebar-open'); // Thêm lớp khi sidebar mở
+			sidebarOpen = true;
+		}
+	
+		// Khi hover lại icon, tooltip sẽ hiện lại
+		iconContainer.onmouseover = function() {
+			tooltip.style.visibility = "visible";
+		};
+	}
 
         function calculateFlow() {
             const fio2 = parseFloat(document.getElementById('fio2').value);
