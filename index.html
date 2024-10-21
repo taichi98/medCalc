@@ -61,6 +61,7 @@
             <p id="airFlow">Air Flow: </p>
             <p id="oxyFlow">Oxy Flow: </p>
         </div>
+        <div id="warningMessage" class="warning"></div>
     </div>
 
     <script>
@@ -72,7 +73,8 @@
             const warningMessage = document.getElementById('warningMessage');
             if (fio2 > 80) {
                 warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
-                return;
+            } else {
+                warningMessage.textContent = "";
             }
             
             if (isNaN(fio2) || isNaN(totalFlow)) {
