@@ -21,7 +21,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         input, button {
-            width: 100%;
+            width: calc(100% - 20px);
             padding: 10px;
             margin: 10px 0;
             font-size: 16px;
@@ -37,6 +37,10 @@
         }
         .result {
             margin-top: 20px;
+        }
+        .warning {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -65,6 +69,14 @@
             if (isNaN(fio2) || isNaN(totalFlow)) {
                 alert("Please enter valid FiO2 and Total Flow values.");
                 return;
+            }
+
+             // Hiển thị cảnh báo nếu FiO2 > 80%
+            const warningMessage = document.getElementById('warningMessage');
+            if (fio2 > 80) {
+                warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
+            } else {
+                warningMessage.textContent = "";
             }
 
             // Công thức tính Air Flow và Oxy Flow
