@@ -45,6 +45,20 @@
             color: red;
             font-weight: bold;
         }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        table th, table td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +77,38 @@
             <p id="oxyFlow">Oxy Flow: </p>
         </div>
         <div id="warningMessage" class="warning"></div>
+        
+        <h3>Áp lực CPAP tương ứng với lưu lượng khi áp dụng cho van Benveniste</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lưu lượng (L/phút)</th>
+                    <th>Áp lực (cm H<sub>2</sub>O)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>10</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>8.5</td>
+                </tr>
+                <tr>
+                    <td>18</td>
+                    <td>11</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <script>
