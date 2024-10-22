@@ -3,43 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ETT Size</title>
-    <link rel="icon" href="icon.png" type="image/png">      
+    <title>ETT Calculator</title>
+    <style>
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .result p {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-        <div class="container">
-            <h2>ETT Size Table</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Age (Years)</th>
-                        <th>ETT Size (mm)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>0 - 6 months</td>
-                        <td>3.0</td>
-                    </tr>
-                    <tr>
-                        <td>6 months - 1 year</td>
-                        <td>3.5</td>
-                    </tr>
-                    <tr>
-                        <td>1 - 2 years</td>
-                        <td>4.0</td>
-                    </tr>
-                    <tr>
-                        <td>2 - 4 years</td>
-                        <td>4.5</td>
-                    </tr>
-                    <tr>
-                        <td>4 - 6 years</td>
-                        <td>5.0</td>
-                    </tr>
-                </tbody>
-            </table>
+
+    <div class="container">
+        <h2>ETT Size Calculator</h2>
+        
+        <label for="age">Tuổi</label>
+        <select id="age">
+            <option value="1">1 tuổi</option>
+            <option value="2">2 tuổi</option>
+            <option value="3">3 tuổi</option>
+            <option value="4">4 tuổi</option>
+            <option value="5">5 tuổi</option>
+            <option value="6">6 tuổi</option>
+            <option value="7">7 tuổi</option>
+            <option value="8">8 tuổi</option>
+            <option value="9">9 tuổi</option>
+            <option value="10">10 tuổi</option>
+        </select>
+
+        <label for="type">Nội khí quản</label>
+        <select id="type">
+            <option value="cuffed">Có bóng chèn</option>
+            <option value="uncuffed">Không bóng chèn</option>
+        </select>
+
+        <button onclick="calculateETT()">Tính toán</button>
+
+        <div class="result">
+            <p id="ettSize">ETT Size: </p>
+            <p id="depth">Độ sâu nội khí quản: </p>
         </div>
+    </div>
 <script src="script.js"></script>
 </body>
 </html>
