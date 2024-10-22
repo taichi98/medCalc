@@ -172,14 +172,20 @@
         }
 
         /* Media query cho màn hình nhỏ */
-        @media (max-width: 768px) {            
-            /* Làm mờ nội dung phía sau sidebar khi mở */
-            body.sidebar-open #main {
-	        margin-left: 0px; 
-                filter: blur(5px);
-                background-color: rgba(0, 0, 0, 0.2); /* Hiệu ứng tối màu */
-            }
-        }
+    @media (max-width: 768px) {            
+    /* Làm mờ nội dung phía sau sidebar khi mở */
+    body.sidebar-open #main {
+        margin-left: 0px;  /* Không đẩy nội dung khi sidebar mở */
+        filter: blur(5px);
+        background-color: rgba(0, 0, 0, 0.2); /* Hiệu ứng tối màu */
+    }
+    
+    .sidebar {
+        width: 250px;  /* Chiều rộng sidebar */
+        left: 0;
+        top: 50px;
+    }
+}
 
         /* Media query cho màn hình lớn */
         @media (min-width: 769px) {
