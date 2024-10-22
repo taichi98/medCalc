@@ -173,12 +173,14 @@
 
         /* Media query cho màn hình nhỏ */
        @media (max-width: 768px) {            
-       /* Làm mờ nội dung phía sau sidebar khi mở */
        body.sidebar-open #main {
-         filter:filter(3px);
-         background-color: rgba(0, 0, 0, 0.2); /* Hiệu ứng tối màu */
+         filter:blur(3px);
+         background-color: rgba(0, 0, 0, 0.3); /* Hiệu ứng tối màu */
         }
+      .sidebar {
+	 z-index: 300;
        }
+      }
 
         /* Media query cho màn hình lớn */
         @media (min-width: 769px) {
