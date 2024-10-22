@@ -51,3 +51,14 @@ let sidebarOpen = false;
             document.getElementById('airFlow').textContent = "Air Flow: " + airFlow.toFixed(2) + " L/min";
             document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
         }
+
+function loadPage(page) {
+            fetch(page)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('main').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error loading page:', error);
+            });
+}
