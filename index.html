@@ -166,6 +166,23 @@
             background-color: #f2f2f2;
         }
 
+.overlay {
+    position: fixed;
+    top: 50px; /* Phía dưới thanh header */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 50px);
+    background-color: rgba(0, 0, 0, 0.5); /* Màu tối */
+    z-index: 150;
+    display: none; /* Ban đầu không hiển thị */
+    transition: 0.5s;
+}
+
+/* Khi sidebar mở thì overlay xuất hiện */
+.sidebar-open #myOverlay {
+    display: block;
+}
+
         /* Sidebar: khi kích thước màn hình nhỏ */
 @media only screen and (max-width: 768px) {
     .sidebar {
@@ -234,6 +251,8 @@
         <a href="#">CPAP Calculator</a>
         <a href="#">ETT Size</a>
     </div>
+	
+    <div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div id="main">
         <div class="container">
@@ -291,25 +310,35 @@
 
 	function toggleSidebar() {
     const sidebar = document.getElementById("mySidebar");
+    const main = document.getElementById("main");
     const tooltip = document.querySelector(".tooltip-text");
     const iconContainer = document.querySelector(".icon-container");
+    const overlay = document.getElementById("myOverlay");
 
     if (sidebarOpen) {
-        document.body.classList.remove('sidebar-open'); // Đóng sidebar
-        tooltip.textContent = "Mở Sidebar"; // Đổi tooltip
+        sidebar.style.width = "0";
+        main.style.marginLeft = "0";
+        tooltip.textContent = "Mở Sidebar";
+        document.body.classList.remove('sidebar-open');
         sidebarOpen = false;
     } else {
-        document.body.classList.add('sidebar-open'); // Mở sidebar
-        tooltip.textContent = "Đóng Sidebar"; // Đổi tooltip khi mở
-        tooltip.style.visibility = "hidden"; // Ẩn tooltip khi mở sidebar
+        sidebar.style.width = "250px";
+        main.style.marginLeft = "250px";
+        tooltip.textContent = "Đóng Sidebar";
+        tooltip.style.visibility = "hidden";
+        document.body.classList.add('sidebar-open');
         sidebarOpen = true;
     }
+
+    // Hiển thị/ẩn overlay
+    overlay.style.display = sidebarOpen ? 'block' : 'none';
 
     // Khi hover lại icon, tooltip sẽ hiện lại
     iconContainer.onmouseover = function() {
         tooltip.style.visibility = "visible";
     };
 }
+
 
 
         function calculateFlow() {
