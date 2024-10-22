@@ -166,15 +166,43 @@
             background-color: #f2f2f2;
         }
 
-        /* Media query cho màn hình nhỏ */
-       @media only screen and (max-width: 768px) {            
-       body.sidebar-open #main {
-         background-color: rgba(0, 0, 0, 0.3); /* Hiệu ứng tối màu */
-        }
-       .main.sidebar-open {
-         left: 0; /* Khi mở sidebar, nó sẽ trượt vào màn hình */
-        }
-      }
+        /* Sidebar: khi kích thước màn hình nhỏ */
+@media only screen and (max-width: 768px) {
+    .sidebar {
+        width: 250px; /* Đặt chiều rộng cố định */
+        position: fixed;
+        top: 50px; /* Vẫn nằm dưới thanh header */
+        left: -250px; /* Bắt đầu ẩn ở ngoài màn hình */
+        transition: left 0.3s ease; /* Hiệu ứng trượt */
+    }
+
+    /* Khi sidebar mở, nó trượt vào */
+    body.sidebar-open .sidebar {
+        left: 0; /* Trượt vào màn hình */
+    }
+
+    /* Đảm bảo phần chính không bị đẩy */
+    #main {
+        margin-left: 0; /* Không thay đổi vị trí khi sidebar mở */
+    }
+}
+
+/* Đối với màn hình lớn hơn, sidebar vẫn sẽ đẩy nội dung */
+@media only screen and (min-width: 769px) {
+    .sidebar {
+        width: 0;
+        left: 0;
+    }
+
+    body.sidebar-open .sidebar {
+        width: 250px; /* Sidebar sẽ đẩy nội dung sang phải */
+    }
+
+    body.sidebar-open #main {
+        margin-left: 250px;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -262,31 +290,27 @@
         let sidebarOpen = false;
 
 	function toggleSidebar() {
-		const sidebar = document.getElementById("mySidebar");
-		const main = document.getElementById("main");
-		const tooltip = document.querySelector(".tooltip-text");
-		const iconContainer = document.querySelector(".icon-container");
-	
-		if (sidebarOpen) {
-			sidebar.style.width = "0";
-			main.style.marginLeft = "0";
-			tooltip.textContent = "Mở Sidebar"; // Đổi tooltip khi sidebar đóng
-			document.body.classList.remove('sidebar-open'); // Loại bỏ lớp khi sidebar đóng
-			sidebarOpen = false;
-		} else {
-			sidebar.style.width = "250px";
-			main.style.marginLeft = "250px";
-			tooltip.textContent = "Đóng Sidebar"; // Đổi tooltip khi sidebar mở
-			tooltip.style.visibility = "hidden"; // Ẩn tooltip khi sidebar mở
-			document.body.classList.add('sidebar-open'); // Thêm lớp khi sidebar mở
-			sidebarOpen = true;
-		}
-	
-		// Khi hover lại icon, tooltip sẽ hiện lại
-		iconContainer.onmouseover = function() {
-			tooltip.style.visibility = "visible";
-		};
-	}
+    const sidebar = document.getElementById("mySidebar");
+    const tooltip = document.querySelector(".tooltip-text");
+    const iconContainer = document.querySelector(".icon-container");
+
+    if (sidebarOpen) {
+        document.body.classList.remove('sidebar-open'); // Đóng sidebar
+        tooltip.textContent = "Mở Sidebar"; // Đổi tooltip
+        sidebarOpen = false;
+    } else {
+        document.body.classList.add('sidebar-open'); // Mở sidebar
+        tooltip.textContent = "Đóng Sidebar"; // Đổi tooltip khi mở
+        tooltip.style.visibility = "hidden"; // Ẩn tooltip khi mở sidebar
+        sidebarOpen = true;
+    }
+
+    // Khi hover lại icon, tooltip sẽ hiện lại
+    iconContainer.onmouseover = function() {
+        tooltip.style.visibility = "visible";
+    };
+}
+
 
         function calculateFlow() {
             const fio2 = parseFloat(document.getElementById('fio2').value);
