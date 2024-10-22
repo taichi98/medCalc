@@ -166,19 +166,13 @@
             background-color: #f2f2f2;
         }
 
-       /* Làm mờ nội dung khi sidebar mở */
-        .blur-background {
-            filter: blur(3px);
-        }
-
         /* Media query cho màn hình nhỏ */
        @media only screen and (max-width: 768px) {            
        body.sidebar-open #main {
-         filter:blur(3px);
          background-color: rgba(0, 0, 0, 0.3); /* Hiệu ứng tối màu */
         }
        .main.sidebar-open {
-         margin-left: 0; /* Khi mở sidebar, nó sẽ trượt vào màn hình */
+         left: 0; /* Khi mở sidebar, nó sẽ trượt vào màn hình */
         }
       }
     </style>
