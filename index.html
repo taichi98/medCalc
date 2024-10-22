@@ -310,20 +310,15 @@
 
 	function toggleSidebar() {
     const sidebar = document.getElementById("mySidebar");
-    const main = document.getElementById("main");
     const tooltip = document.querySelector(".tooltip-text");
     const iconContainer = document.querySelector(".icon-container");
     const overlay = document.getElementById("myOverlay");
 
     if (sidebarOpen) {
-        sidebar.style.width = "0";
-        main.style.marginLeft = "0";
         tooltip.textContent = "Mở Sidebar";
         document.body.classList.remove('sidebar-open');
         sidebarOpen = false;
     } else {
-        sidebar.style.width = "250px";
-        main.style.marginLeft = "250px";
         tooltip.textContent = "Đóng Sidebar";
         tooltip.style.visibility = "hidden";
         document.body.classList.add('sidebar-open');
