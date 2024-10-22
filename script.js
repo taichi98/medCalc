@@ -26,31 +26,31 @@ function toggleSidebar() {
     };
 }
 
-        function calculateFlow() {
-            const fio2 = parseFloat(document.getElementById('fio2').value);
-            const totalFlow = parseFloat(document.getElementById('totalFlow').value);
+    function calculateFlow() {
+        const fio2 = parseFloat(document.getElementById('fio2').value);
+        const totalFlow = parseFloat(document.getElementById('totalFlow').value);
 
-            // Hiển thị cảnh báo nếu FiO2 > 80%
-            const warningMessage = document.getElementById('warningMessage');
-            if (fio2 > 80) {
-                warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
-            } else {
-                warningMessage.textContent = "";
-            }
-
-            if (isNaN(fio2) || isNaN(totalFlow)) {
-                alert("Please enter valid FiO2 and Total Flow values.");
-                return;
-            }            
-
-            // Công thức tính Air Flow và Oxy Flow
-            const airFlow = totalFlow - ((fio2 * totalFlow - 21 * totalFlow) / 79);
-            const oxyFlow = totalFlow - airFlow;
-
-            // Hiển thị kết quả
-            document.getElementById('airFlow').textContent = "Air Flow: " + airFlow.toFixed(2) + " L/min";
-            document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
+        // Hiển thị cảnh báo nếu FiO2 > 80%
+        const warningMessage = document.getElementById('warningMessage');
+        if (fio2 > 80) {
+            warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
+        } else {
+            warningMessage.textContent = "";
         }
+
+        if (isNaN(fio2) || isNaN(totalFlow)) {
+            alert("Please enter valid FiO2 and Total Flow values.");
+            return;
+        }            
+
+        // Công thức tính Air Flow và Oxy Flow
+        const airFlow = totalFlow - ((fio2 * totalFlow - 21 * totalFlow) / 79);
+        const oxyFlow = totalFlow - airFlow;
+
+        // Hiển thị kết quả
+        document.getElementById('airFlow').textContent = "Air Flow: " + airFlow.toFixed(2) + " L/min";
+        document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
+    }
 
 function loadPage(page) {
             fetch(page)
@@ -74,3 +74,25 @@ function highlightSelected(selectedId) {
     var selectedItem = document.getElementById(selectedId);
     selectedItem.classList.add('selected');
 }
+
+function calculateETT() {
+        // Lấy giá trị từ form
+        let age = parseInt(document.getElementById("age").value);
+        let type = document.getElementById("type").value;
+    
+        // Tính toán cỡ ống nội khí quản (ETT size)
+        let ettSize;
+        if (type === "cuffed") {
+            ettSize = (age / 4) + 3.5; // Có bóng chèn
+        } else {
+            ettSize = (age / 4) + 4;   // Không bóng chèn
+        }
+    
+        // Tính toán độ sâu nội khí quản
+        let depth = ettSize * 3;
+    
+        // Hiển thị kết quả
+        document.getElementById("ettSize").innerText = "ETT Size: " + ettSize.toFixed(1);
+        document.getElementById("depth").innerText = "Độ sâu nội khí quản: " + depth.toFixed(1) + " cm";
+    }
+
