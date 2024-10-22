@@ -222,7 +222,7 @@
 
     </style>
 </head>
-<body>
+<body onload="loadPage('cpap.html')">
 
     <div class="header">
         <div class="icon-container" onclick="toggleSidebar()">
@@ -248,119 +248,15 @@
     </div>
 
     <div id="mySidebar" class="sidebar">
-        <a href="#">CPAP Calculator</a>
+        <a href="cpap.html">CPAP Calculator</a>
         <a href="ett.html">ETT Size</a>
     </div>
 	
     <div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
 
     <div id="main">
-        <div class="container">
-            <h2>CPAP Calculator</h2>
-            <label for="fio2">FiO2 (%)</label>
-            <input type="number" id="fio2" placeholder="Enter FiO2 value" />
 
-            <label for="totalFlow">Total Flow (L/min)</label>
-            <input type="number" id="totalFlow" placeholder="Enter Total Flow" />
-
-            <button onclick="calculateFlow()">Calculate</button>
-
-            <div class="result">
-                <p id="airFlow">Air Flow: </p>
-                <p id="oxyFlow">Oxy Flow: </p>
-            </div>
-            <div id="warningMessage" class="warning"></div>
-
-            <h3>Áp lực CPAP tương ứng với lưu lượng khi áp dụng cho van Benveniste</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lưu lượng (L/phút)</th>
-                        <th>Áp lực (cm H<sub>2</sub>O)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>10</td>
-                        <td>3</td>
-                    </tr>
-                    <tr>
-                        <td>12</td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>14</td>
-                        <td>6</td>
-                    </tr>
-                    <tr>
-                        <td>16</td>
-                        <td>8.5</td>
-                    </tr>
-                    <tr>
-                        <td>18</td>
-                        <td>11</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
-
-    <script>
-        let sidebarOpen = false;
-
-	function toggleSidebar() {
-    const sidebar = document.getElementById("mySidebar");
-    const tooltip = document.querySelector(".tooltip-text");
-    const iconContainer = document.querySelector(".icon-container");
-    const overlay = document.getElementById("myOverlay");
-
-    if (sidebarOpen) {
-        tooltip.textContent = "Mở Sidebar";
-        document.body.classList.remove('sidebar-open');
-        sidebarOpen = false;
-    } else {
-        tooltip.textContent = "Đóng Sidebar";
-        tooltip.style.visibility = "hidden";
-        document.body.classList.add('sidebar-open');
-        sidebarOpen = true;
-    }
-
-    // Hiển thị/ẩn overlay
-    overlay.style.display = sidebarOpen ? 'block' : 'none';
-
-    // Khi hover lại icon, tooltip sẽ hiện lại
-    iconContainer.onmouseover = function() {
-        tooltip.style.visibility = "visible";
-    };
-}
-
-
-
-        function calculateFlow() {
-            const fio2 = parseFloat(document.getElementById('fio2').value);
-            const totalFlow = parseFloat(document.getElementById('totalFlow').value);
-
-            // Hiển thị cảnh báo nếu FiO2 > 80%
-            const warningMessage = document.getElementById('warningMessage');
-            if (fio2 > 80) {
-                warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
-            } else {
-                warningMessage.textContent = "";
-            }
-
-            if (isNaN(fio2) || isNaN(totalFlow)) {
-                alert("Please enter valid FiO2 and Total Flow values.");
-                return;
-            }            
-
-            // Công thức tính Air Flow và Oxy Flow
-            const airFlow = totalFlow - ((fio2 * totalFlow - 21 * totalFlow) / 79);
-            const oxyFlow = totalFlow - airFlow;
-
-            // Hiển thị kết quả
-            document.getElementById('airFlow').textContent = "Air Flow: " + airFlow.toFixed(2) + " L/min";
-            document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
-        }
-    </script>
+<script src="script.js"></script>
 </body>
 </html>
