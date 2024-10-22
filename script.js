@@ -1,6 +1,6 @@
 let sidebarOpen = false;
 
-	function toggleSidebar() {
+function toggleSidebar() {
     const sidebar = document.getElementById("mySidebar");
     const tooltip = document.querySelector(".tooltip-text");
     const iconContainer = document.querySelector(".icon-container");
@@ -61,4 +61,16 @@ function loadPage(page) {
             .catch(error => {
                 console.error('Error loading page:', error);
             });
+}
+
+function highlightSelected(selectedId) {
+    // Xóa lớp "selected" từ các mục khác
+    var items = document.querySelectorAll('.sidebar a');
+    items.forEach(function(item) {
+        item.classList.remove('selected');
+    });
+
+    // Thêm lớp "selected" cho mục đang được chọn
+    var selectedItem = document.getElementById(selectedId);
+    selectedItem.classList.add('selected');
 }
