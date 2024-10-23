@@ -87,23 +87,20 @@ function highlightSelected(selectedId) {
 }
 
 function calculateETT() {
-        // Lấy giá trị từ form
-        let age = parseInt(document.getElementById("age").value);
-        let type = document.getElementById("type").value;
-    
-        // Tính toán cỡ ống nội khí quản (ETT size)
-        let ettSize;
-        if (type === "cuffed") {
-            ettSize = (age / 4) + 3.5; // Có bóng chèn
-        } else {
-            ettSize = (age / 4) + 4;   // Không bóng chèn
-        }
-    
-        // Tính toán độ sâu nội khí quản
-        let depth = ettSize * 3;
-    
-        // Hiển thị kết quả
-        document.getElementById("ettSize").innerText = "ETT Size: " + ettSize.toFixed(1);
-        document.getElementById("depth").innerText = "Độ sâu nội khí quản: " + depth.toFixed(1) + " cm";
+    const age = parseInt(document.getElementById('age').value);
+    // Kiểm tra giá trị của tuổi trong khoảng từ 1 đến 12
+    if (age < 1 || age > 12 || isNaN(age)) {
+        alert("Vui lòng nhập tuổi hợp lệ từ 1 đến 12.");
+        return;
     }
+    // Tính toán NKQ không bóng và có bóng
+    const ettWithoutCuff = (age / 4) + 4;
+    const ettWithCuff = (age / 4) + 3.5;
+    // Tính toán độ sâu nội khí quản
+    const ettDepth = ettWithCuff * 3; // Công thức tính độ sâu: ETT với bóng * 3
+    // Hiển thị kết quả
+    document.getElementById('ettWithoutCuff').textContent = ettWithoutCuff.toFixed(1) + " mm";
+    document.getElementById('ettWithCuff').textContent = ettWithCuff.toFixed(1) + " mm";
+    document.getElementById('ettDepth').textContent = ettDepth.toFixed(1) + " cm";
+}
 
