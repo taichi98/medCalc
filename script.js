@@ -25,32 +25,6 @@ function toggleSidebar() {
         tooltip.style.visibility = "visible";
     };
 }
-
-    function calculateFlow() {
-        const fio2 = parseFloat(document.getElementById('fio2').value);
-        const totalFlow = parseFloat(document.getElementById('totalFlow').value);
-
-        // Hiển thị cảnh báo nếu FiO2 > 80%
-        const warningMessage = document.getElementById('warningMessage');
-        if (fio2 > 80) {
-            warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
-        } else {
-            warningMessage.textContent = "";
-        }
-
-        if (isNaN(fio2) || isNaN(totalFlow)) {
-            alert("Please enter valid FiO2 and Total Flow values.");
-            return;
-        }            
-
-        // Công thức tính Air Flow và Oxy Flow
-        const airFlow = totalFlow - ((fio2 * totalFlow - 21 * totalFlow) / 79);
-        const oxyFlow = totalFlow - airFlow;
-
-        // Hiển thị kết quả
-        document.getElementById('airFlow').textContent = "Air Flow: " + airFlow.toFixed(2) + " L/min";
-        document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
-    }
 function validateFiO2() {
     const fio2Input = document.getElementById('fio2').value;
     const totalFlowInput = document.getElementById('totalFlow').value;
@@ -60,21 +34,44 @@ function validateFiO2() {
       alert('FiO2 phải nằm trong khoảng từ 21 đến 100%. Vui lòng nhập lại.');
       return false; // Ngăn không cho form submit hoặc tính toán
     }
-
     calculateFlow();
-    return false; // Ngăn form submit, chỉ thực hiện tính toán
 }
+    function calculateFlow() {
+        const fio2 = parseFloat(document.getElementById('fio2').value);
+        const totalFlow = parseFloat(document.getElementById('totalFlow').value);
+    
+        // Hiển thị cảnh báo nếu FiO2 > 80%
+        const warningMessage = document.getElementById('warningMessage');
+        if (fio2 > 80) {
+            warningMessage.textContent = "Warning: FiO2 value should not exceed 80%!";
+        } else {
+            warningMessage.textContent = "";
+        }
+    
+        if (isNaN(fio2) || isNaN(totalFlow)) {
+            alert("Please enter valid FiO2 and Total Flow values.");
+            return;
+        }            
+    
+        // Công thức tính Air Flow và Oxy Flow
+        const airFlow = totalFlow - ((fio2 * totalFlow - 21 * totalFlow) / 79);
+        const oxyFlow = totalFlow - airFlow;
+    
+        // Hiển thị kết quả
+        document.getElementById('airFlow').textContent = "Air Flow: " + airFlow.toFixed(2) + " L/min";
+        document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
+    }
 
-function loadPage(page) {
-            fetch(page)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('main').innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Error loading page:', error);
-            });
-}
+    function loadPage(page) {
+        fetch(page)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('main').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Error loading page:', error);
+        }); 
+    }
 
 function highlightSelected(selectedId) {
     // Xóa lớp "selected" từ các mục khác
