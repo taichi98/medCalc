@@ -10,18 +10,23 @@
             margin-bottom: 10px;
             font-weight: bold;
         }
-
+	    
+	.result_container {
+	    max-width: 350px;
+	    flex: 1;
+	    background-color: #ffffff;
+	    padding: 20px;
+	    border-radius: 10px;
+	    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	    display: flex;
+	    flex-direction: column;
+	 }
         button:hover {
             background-color: #218838;
         }
-
-        .result {
-            margin-top: 20px;
-        }
-
-        .result p {
-            font-size: 18px;
-            font-weight: bold;
+	    
+        #resultBoxes, #resetBtn, .result_container {
+            display: none;
         }
     </style>
 </head>
@@ -58,14 +63,27 @@
 
 			<button type="submit">Tính toán</button>
 		</form>
-
-		<div id="result">
-			<h3>Kết quả:</h3>
-			<p><strong>NKQ không bóng:</strong> <span id="ettWithoutCuff"></span></p>
-			<p><strong>NKQ có bóng:</strong> <span id="ettWithCuff"></span></p>
-			<p><strong>Độ sâu nội khí quản:</strong> <span id="ettDepth"></span></p>
-		</div>
 	</div>
+	<div class="result_container" id="resultBoxes">
+		<!-- Phần kết quả được ẩn ban đầu -->
+			<div class="box">
+				<div class="box-header">Predicted Uncuffed Tube Size</div>
+				<div class="box-content"><span id="ettWithoutCuff"></span></div>
+			</div></br>
+
+			<div class="box">
+				<div class="box-header">Predicted Cuffed Tube Size</div>
+				<div class="box-content"><span id="ettWithCuff"></span></div>
+			</div> </br>
+
+			<div class="box">
+				<div class="box-header">Predicted Depth Tube</div>
+				<div class="box-content"><span id="ettDepth"></span></div>
+			</div></br>
+
+		<!-- Nút "Nhập lại" ẩn ban đầu -->
+		<button id="resetBtn" onclick="resetForm()">Nhập lại</button>
+	</div>    
     </div>
 <script src="script.js"></script>
 </body>
