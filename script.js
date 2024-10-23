@@ -35,6 +35,7 @@ function validateFiO2() {
       return false; // Ngăn không cho form submit hoặc tính toán
     }
     calculateFlow();
+    return false;
 }
     function calculateFlow() {
         const fio2 = parseFloat(document.getElementById('fio2').value);
