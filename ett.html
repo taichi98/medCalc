@@ -32,38 +32,8 @@
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h2>ETT Size Calculator</h2>
-        
-        <label for="age">Tuổi</label>
-        <select id="age">
-            <option value="1">1 tuổi</option>
-            <option value="2">2 tuổi</option>
-            <option value="3">3 tuổi</option>
-            <option value="4">4 tuổi</option>
-            <option value="5">5 tuổi</option>
-            <option value="6">6 tuổi</option>
-            <option value="7">7 tuổi</option>
-            <option value="8">8 tuổi</option>
-            <option value="9">9 tuổi</option>
-            <option value="10">10 tuổi</option>
-        </select>
-
-        <label for="type">Nội khí quản</label>
-        <select id="type">
-            <option value="cuffed">Có bóng chèn</option>
-            <option value="uncuffed">Không bóng chèn</option>
-        </select>
-
-        <button onclick="calculateETT()">Tính toán</button>
-
-        <div class="result">
-            <p id="ettSize">ETT Size: </p>
-            <p id="depth">Độ sâu nội khí quản: </p>
-        </div>
-
-        <div class="description">
+        <div class="description-box">
             <h3>MÔ TẢ</h3>
 
             <h4>Kích cỡ ống nội khí quản</h4>
@@ -83,6 +53,36 @@
                 <li>Ở người lớn, trường hợp đặt nội khí quản qua đường mũi + thêm 3 đến 4 cm.</li>
             </ul>
         </div>
+
+		<div class="calculation-box">
+			<h2>ETT Size Calculator</h2>
+			<label for="age">Tuổi</label>
+			<select id="age">
+				<option value="1">1 tuổi</option>
+				<option value="2">2 tuổi</option>
+				<option value="3">3 tuổi</option>
+				<option value="4">4 tuổi</option>
+				<option value="5">5 tuổi</option>
+				<option value="6">6 tuổi</option>
+				<option value="7">7 tuổi</option>
+				<option value="8">8 tuổi</option>
+				<option value="9">9 tuổi</option>
+				<option value="10">10 tuổi</option>
+			</select>
+
+			<label for="type">Nội khí quản</label>
+			<select id="type">
+				<option value="cuffed">Có bóng chèn</option>
+				<option value="uncuffed">Không bóng chèn</option>
+			</select>
+
+			<button onclick="calculateETT()">Tính toán</button>
+
+			<div class="result">
+				<p id="ettSize">ETT Size: </p>
+				<p id="depth">Độ sâu nội khí quản: </p>
+			</div>
+		</div>
     </div>
 <script src="script.js"></script>
 </body>
