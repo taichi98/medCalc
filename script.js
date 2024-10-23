@@ -53,11 +53,16 @@ function toggleSidebar() {
     }
 function validateFiO2() {
     const fio2Input = document.getElementById('fio2').value;
+    const totalFlowInput = document.getElementById('totalFlow').value;
+
+    // Kiểm tra FiO2 có hợp lệ hay không
     if (fio2Input < 21 || fio2Input > 100) {
       alert('FiO2 phải nằm trong khoảng từ 21 đến 100%. Vui lòng nhập lại.');
       return false; // Ngăn không cho form submit hoặc tính toán
     }
-    return true; // Cho phép submit hoặc tính toán nếu hợp lệ
+
+    calculateFlow();
+    return false; // Ngăn form submit, chỉ thực hiện tính toán
 }
 
 function loadPage(page) {
