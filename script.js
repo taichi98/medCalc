@@ -88,19 +88,38 @@ function highlightSelected(selectedId) {
 
 function calculateETT() {
     const age = parseInt(document.getElementById('age').value);
+
     // Kiểm tra giá trị của tuổi trong khoảng từ 1 đến 12
     if (age < 1 || age > 12 || isNaN(age)) {
         alert("Vui lòng nhập tuổi hợp lệ từ 1 đến 12.");
         return;
     }
+
     // Tính toán NKQ không bóng và có bóng
     const ettWithoutCuff = (age / 4) + 4;
     const ettWithCuff = (age / 4) + 3.5;
+
     // Tính toán độ sâu nội khí quản
     const ettDepth = ettWithCuff * 3; // Công thức tính độ sâu: ETT với bóng * 3
+
     // Hiển thị kết quả
     document.getElementById('ettWithoutCuff').textContent = ettWithoutCuff.toFixed(1) + " mm";
     document.getElementById('ettWithCuff').textContent = ettWithCuff.toFixed(1) + " mm";
     document.getElementById('ettDepth').textContent = ettDepth.toFixed(1) + " cm";
+
+    // Ẩn form nhập liệu và hiện kết quả
+    document.getElementById('formBox').style.display = 'none';
+    document.getElementById('resultBoxes').style.display = 'block';
+    document.getElementById('resetBtn').style.display = 'inline-block';
+}
+
+function resetForm() {
+    // Ẩn kết quả và hiển thị lại form nhập liệu
+    document.getElementById('resultBoxes').style.display = 'none';
+    document.getElementById('resetBtn').style.display = 'none';
+    document.getElementById('formBox').style.display = 'block';
+
+    // Reset giá trị của form
+    document.getElementById('age').value = '';
 }
 
