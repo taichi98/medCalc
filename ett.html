@@ -54,35 +54,24 @@
             </ul>
         </div>
 
-		<div class="calculation-box">
-			<h2>ETT Size Calculator</h2>
+	<div class="calculation-box">
+	  <h2>ETT Size Calculator</h2>
+		<form id="ettForm" onsubmit="calculateETT(); return false;">
 			<label for="age">Tuổi</label>
-			<select id="age">
-				<option value="1">1 tuổi</option>
-				<option value="2">2 tuổi</option>
-				<option value="3">3 tuổi</option>
-				<option value="4">4 tuổi</option>
-				<option value="5">5 tuổi</option>
-				<option value="6">6 tuổi</option>
-				<option value="7">7 tuổi</option>
-				<option value="8">8 tuổi</option>
-				<option value="9">9 tuổi</option>
-				<option value="10">10 tuổi</option>
-			</select>
+			<input type="number" id="age" min="1" max="12" required placeholder="Nhập tuổi" />
+			<small style="display: block; font-size: 10px; color: #6c757d; margin-top: -6px;">Input range: 1 - 12</small>
+			<br />
 
-			<label for="type">Nội khí quản</label>
-			<select id="type">
-				<option value="cuffed">Có bóng chèn</option>
-				<option value="uncuffed">Không bóng chèn</option>
-			</select>
+			<button type="submit">Tính toán</button>
+		</form>
 
-			<button onclick="calculateETT()">Tính toán</button>
-
-			<div class="result">
-				<p id="ettSize">ETT Size: </p>
-				<p id="depth">Độ sâu nội khí quản: </p>
-			</div>
+		<div id="result">
+			<h3>Kết quả:</h3>
+			<p><strong>NKQ không bóng:</strong> <span id="ettWithoutCuff"></span></p>
+			<p><strong>NKQ có bóng:</strong> <span id="ettWithCuff"></span></p>
+			<p><strong>Độ sâu nội khí quản:</strong> <span id="ettDepth"></span></p>
 		</div>
+	</div>
     </div>
 <script src="script.js"></script>
 </body>
