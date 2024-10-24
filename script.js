@@ -101,7 +101,7 @@ function calculateETT() {
 
     // Tính toán độ sâu nội khí quản
     const ettDepth = ettWithCuff * 3; // Công thức tính độ sâu: ETT với bóng * 3
-
+    document.getElementById('age').textContent = age;
     // Hiển thị kết quả
     document.getElementById('ettWithoutCuff').textContent = ettWithoutCuff.toFixed(1) + " mm";
     document.getElementById('ettWithCuff').textContent = ettWithCuff.toFixed(1) + " mm";
