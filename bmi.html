@@ -6,38 +6,68 @@
     <title>BMI & BSA Calculator</title>
 </head>
 <style>
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    font-weight: bold;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#result {
-    margin-top: 20px;
-}
-
-.facts-figures table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.facts-figures th, .facts-figures td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-.facts-figures th {
-    background-color: #f2f2f2;
-}
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .result-container {
+        max-width: 400px;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #117D67;
+        padding: 10px;
+        border-radius: 10px;
+        color: white;
+        margin: 10px 0;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm shadow */
+    }
+    .result-item {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        justify-content: left;
+        font-size: 1.5em;
+        flex: 1; /* Chia đều không gian cho các item */
+        padding: 5px 20px;
+    }
+    
+    .result-item:not(:last-child) {
+        border-right: 1px solid white; /* Đường kẻ trắng giữa 2 kết quả */
+    }
+    
+    .result-item span {
+        font-size: 14px;
+        color: #C0CFCF;
+    }
+    
+    label {
+        font-weight: bold;
+    }
+    
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    #result {
+        margin-top: 20px;
+    }
+    
+    .facts-figures table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .facts-figures th, .facts-figures td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    
+    .facts-figures th {
+        background-color: #f2f2f2;
+    }
 </style>
   <body>
         <div class="container">
@@ -59,10 +89,18 @@ button {
                 </div>
             </form>
 
-            <div id="result">
+            <div id="result" class="result-container">
                 <h3>Result:</h3>
-                <p id="bmi-output">Please fill out required fields.</p>
-                <p id="bsa-output"></p>
+                <p id="text1">Please fill out required fields.</p>
+                <div id="resultBoxBMI" style="display: none;">
+                    <div class="result-item">
+                        <div id="bmi-output"></div>
+                    </div>
+                    <div class="result-item">
+                        <div id="bsa-output"></div>
+                        <span>Body Surface Area</span>
+                    </div>
+                </div>
             </div>
 
             <div class="formula-section">
