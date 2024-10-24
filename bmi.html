@@ -71,42 +71,10 @@
 </style>
   <body>
     <div class="container_of_ett">
-        <div class="calculation-box" id="formBox">
-            <h2>BMI & BSA Calculator (Body Mass Index and Body Surface Area)</h2>
-
-            <form id="bmi-form">
-                <div class="form-group">
-                    <label for="weight">Weight (kg):</label>
-                    <input type="number" id="weight" name="weight" required min="2" max="330">
-                </div>
-
-                <div class="form-group">
-                    <label for="height">Height (cm):</label>
-                    <input type="number" id="height" name="height" required min="60" max="270">
-                </div>
-
-                <div class="form-group">
-                    <button type="button" onclick="calculateBMIandBSA()">Calculate BMI & BSA</button>
-                </div>
-            </form>
-
-            <div id="result" class="result-container">
-                <h3>Result:</h3>
-                <p id="text1">Please fill out required fields.</p>
-                <div id="resultBoxBMI" style="display: none;">
-                    <div class="result-item">
-                        <div id="bmi-output"></div>
-                        <span>Body Mass Index (<div id="bmiCategory-output"></div>)</span>
-                    </div>
-                    <div class="result-item">
-                        <div id="bsa-output"></div>
-                        <span>Body Surface Area</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-      <div class="description-box">
+        <div class="description-box">
             <div class="formula-section">
+                <h3>What is BMI?</h3>
+                <p>Body Mass Index (BMI) is used as a screening tool to identify possible weight problems in children. BMI is calculated from a person's weight and height.</p>
                 <h3>Formulas</h3>
                 <p>BMI (kg/m<sup>2</sup>) = weight (kg) / (height (m))<sup>2</sup></p>
                 <p>BSA (m<sup>2</sup>) = √[(height (cm) × weight (kg)) / 3600]</p>
@@ -114,7 +82,7 @@
 
             <div class="facts-figures">
                 <h3>Facts & Figures</h3>
-                <table>
+                <table style="width: 100%; max-width: 450px;">
                     <thead>
                         <tr>
                             <th>BMI, kg/m<sup>2</sup></th>
@@ -150,7 +118,42 @@
                 </table>
             </div>
           </div>
+    <div class="calculation-box" id="formBox">
+            <h2>BMI & BSA Calculator (Body Mass Index and Body Surface Area)</h2>
+
+            <form id="bmi-form">
+                <div class="form-group">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" id="weight" name="weight" required min="2" max="330">
+                </div>
+
+                <div class="form-group">
+                    <label for="height">Height (cm):</label>
+                    <input type="number" id="height" name="height" required min="60" max="270">
+                </div>
+
+                <div class="form-group">
+                    <button type="button" onclick="calculateBMIandBSA()">Calculate BMI & BSA</button>
+                </div>
+            </form>
+
+            <div id="result" class="result-container">
+                <h3>Result:</h3>
+                <p id="text1">Please fill out required fields.</p>
+                <div id="resultBoxBMI" style="display: none;">
+                    <div class="result-item">
+                        <div id="bmi-output"></div>
+                        <span>Body Mass Index (<div id="bmiCategory-output"></div>)</span>
+                    </div>
+                    <div class="result-item">
+                        <div id="bsa-output"></div>
+                        <span>Body Surface Area</span>
+                    </div>
+                </div>
+            </div>
         </div>
+        
+    </div>
 
     <script src="script.js"></script>
 </body>
