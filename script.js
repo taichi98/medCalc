@@ -87,7 +87,7 @@ function highlightSelected(selectedId) {
 }
 
 function calculateETT() {
-    const age = parseInt(document.getElementById('age').value);
+    const age = parseInt(document.getElementById('ageInput').value);
 
     // Kiểm tra giá trị của tuổi trong khoảng từ 1 đến 12
     if (age < 1 || age > 12 || isNaN(age)) {
