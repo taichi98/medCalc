@@ -266,7 +266,7 @@
 	}
     </style>
 </head>
-<body onload="loadPage('cpap.html'); highlightSelected('item1');">
+<body onload="loadLastPage(); highlightSelected(localStorage.getItem('selectedItem') || 'item1');">
 
     <div class="header">
         <div class="icon-container" onclick="toggleSidebar()">
@@ -298,9 +298,7 @@
 	
     <div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
 
-    <div id="main">
-
-    </div>
+    <div id="main"></div>
 <script src="script.js"></script>
 </body>
 </html>
