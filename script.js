@@ -69,7 +69,7 @@ function loadPage(page) {
         .then(data => {
             document.getElementById('main').innerHTML = data;
             // Lưu lại trang hiện tại vào localStorage
-            localStorage.setItem('lastPage', page);
+            sessionStorage.setItem('lastPage', page);
         })
         .catch(error => {
             console.error('Error loading page:', error);
@@ -88,13 +88,13 @@ function highlightSelected(selectedId) {
     selectedItem.classList.add('selected');
 
     // Lưu lại mục được chọn vào localStorage
-    localStorage.setItem('selectedItem', selectedId);
+    sessionStorage.setItem('selectedItem', selectedId);
 }
 
 // Hàm để tải lại trang cuối cùng khi tải lại trang web
 function loadLastPage() {
     // Kiểm tra xem trang cuối cùng đã được lưu trong localStorage hay chưa
-    var lastPage = localStorage.getItem('lastPage');
+    var lastPage = sessionStorage.getItem('lastPage');
     if (lastPage) {
         loadPage(lastPage);
     } else {
@@ -103,7 +103,7 @@ function loadLastPage() {
     }
 
     // Kiểm tra xem mục được chọn cuối cùng đã được lưu trong localStorage hay chưa
-    var selectedItem = localStorage.getItem('selectedItem');
+    var selectedItem = sessionStorage.getItem('selectedItem');
     if (selectedItem) {
         highlightSelected(selectedItem);
     } else {
