@@ -1,0 +1,116 @@
+	    max-width: 350px;
+	    flex: 1;
+	    background-color: #ffffff;
+	    padding: 20px;
+	    border-radius: 10px;
+	    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	    display: flex;
+	    flex-direction: column;
+	}
+        input, button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border: 1px solid black;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        table th, table td {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+@media only screen and (max-width: 768px) {
+   .overlay {
+	    position: fixed;
+	    top: 50px; /* Phía dưới thanh header */
+	    left: 0;
+	    width: 100%;
+	    height: calc(100% - 50px);
+	    background-color: rgba(0, 0, 0, 0.5); /* Màu tối */
+	    z-index: 150;
+	    display: none; /* Ban đầu không hiển thị */
+	    transition: 0.5s;
+    }
+
+	.sidebar-open #myOverlay {
+	    display: block;
+	} 
+	
+	.sidebar {
+	        width: 250px; /* Đặt chiều rộng cố định */
+	        position: fixed;
+	        top: 50px; /* Vẫn nằm dưới thanh header */
+	        left: -250px; /* Bắt đầu ẩn ở ngoài màn hình */
+	        transition: left 0.3s ease; /* Hiệu ứng trượt */
+    	}
+
+	    body.sidebar-open .sidebar {
+	        left: 0; /* Trượt vào màn hình */
+	    }
+	
+	    #main {
+	        margin-left: 0; 
+	    }
+    .container_of_ett {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .calculation-box {
+      order: 1;
+    }
+
+    .description-box {
+      order: 2;
+    }
+}
+
+	/* Đối với màn hình lớn hơn, sidebar vẫn sẽ đẩy nội dung */
+	@media only screen and (min-width: 769px) {
+	    .sidebar {
+	        width: 0;
+	        left: 0;
+	    }
+	
+	    body.sidebar-open .sidebar {
+	        width: 250px; /* Sidebar sẽ đẩy nội dung sang phải */
+	    }
+	
+	    body.sidebar-open #main {
+	        margin-left: 250px;
+	    }
+	}
