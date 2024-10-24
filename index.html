@@ -266,7 +266,7 @@
 	}
     </style>
 </head>
-<body onload="loadLastPage(); highlightSelected(localStorage.getItem('selectedItem') || 'item1');">
+<body onload="loadLastPage(); highlightSelected(sessionStorage.getItem('selectedItem') || 'item1');">
 
     <div class="header">
         <div class="icon-container" onclick="toggleSidebar()">
