@@ -173,11 +173,11 @@ function calculateBMIandBSA() {
             bmiCategory = 'Obese (Class 3)';
         }
 
-        document.getElementById('bmi-output').innerHTML = `Your BMI is: ${bmi} (${bmiCategory})`;
-
+        document.getElementById('bmi-output').innerHTML = `${bmi} kg/m²`;
+        document.getElementById('bmiCategory-output').innerHTML = `${bmiCategory}`;
         // Tính BSA sử dụng công thức Mosteller
         var bsa = Math.sqrt((weight * height) / 3600).toFixed(2); // Tính BSA và làm tròn
-        document.getElementById('bsa-output').innerHTML = `Your BSA is: ${bsa} m²`;
+        document.getElementById('bsa-output').innerHTML = `${bsa} m²`;
     } else {
         document.getElementById('bmi-output').innerHTML = 'Please fill out required fields.';
         document.getElementById('bsa-output').innerHTML = '';
