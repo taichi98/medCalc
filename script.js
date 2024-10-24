@@ -182,4 +182,7 @@ function calculateBMIandBSA() {
         document.getElementById('bmi-output').innerHTML = 'Please fill out required fields.';
         document.getElementById('bsa-output').innerHTML = '';
     }
+
+        document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
+        document.getElementById('resultBoxBMI').style.display = 'flex';   // Hiển thị kết quả
 }
