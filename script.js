@@ -149,3 +149,37 @@ function resetForm() {
     document.getElementById('age').value = '';
 }
 
+function calculateBMIandBSA() {
+    var weight = document.getElementById('weight').value;
+    var height = document.getElementById('height').value;
+
+    if (weight && height) {
+        // Tính BMI
+        var heightInMeters = height / 100; // Chuyển đổi chiều cao từ cm sang mét
+        var bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1); // Tính BMI và làm tròn
+
+        var bmiCategory = '';
+        if (bmi < 18.5) {
+            bmiCategory = 'Underweight';
+        } else if (bmi >= 18.5 && bmi <= 24.9) {
+            bmiCategory = 'Normal weight';
+        } else if (bmi >= 25 && bmi <= 29.9) {
+            bmiCategory = 'Overweight';
+        } else if (bmi >= 30 && bmi <= 34.9) {
+            bmiCategory = 'Obese (Class 1)';
+        } else if (bmi >= 35 && bmi <= 39.9) {
+            bmiCategory = 'Obese (Class 2)';
+        } else {
+            bmiCategory = 'Obese (Class 3)';
+        }
+
+        document.getElementById('bmi-output').innerHTML = `Your BMI is: ${bmi} (${bmiCategory})`;
+
+        // Tính BSA sử dụng công thức Mosteller
+        var bsa = Math.sqrt((weight * height) / 3600).toFixed(2); // Tính BSA và làm tròn
+        document.getElementById('bsa-output').innerHTML = `Your BSA is: ${bsa} m²`;
+    } else {
+        document.getElementById('bmi-output').innerHTML = 'Please fill out required fields.';
+        document.getElementById('bsa-output').innerHTML = '';
+    }
+}
