@@ -195,3 +195,24 @@ function calculateBMIandBSA() {
         document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
         document.getElementById('resultBoxBMI').style.display = 'flex';   // Hiển thị kết quả
 }
+
+    function calculateLightCriteria() {
+        var serumProtein = parseFloat(document.getElementById('serumProtein').value);
+        var pleuralFluidProtein = parseFloat(document.getElementById('pleuralFluidProtein').value);
+        var serumLDH = parseFloat(document.getElementById('serumLDH').value);
+        var pleuralFluidLDH = parseFloat(document.getElementById('pleuralFluidLDH').value);
+        var upperLimitLDH = parseFloat(document.getElementById('upperLimitLDH').value);
+
+        if (isNaN(serumProtein) || isNaN(pleuralFluidProtein) || isNaN(serumLDH) || isNaN(pleuralFluidLDH) || isNaN(upperLimitLDH)) {
+            document.getElementById('result').innerHTML = "Please enter valid values for all fields.";
+            return;
+        }
+
+        var criteria1 = pleuralFluidProtein / serumProtein > 0.5;
+        var criteria2 = pleuralFluidLDH / serumLDH > 0.6;
+        var criteria3 = pleuralFluidLDH > (2 / 3) * upperLimitLDH;
+
+        var result = (criteria1 || criteria2 || criteria3) ? "Exudative Effusion" : "Transudative Effusion";
+
+        document.getElementById('result').innerHTML = "Result: " + result;
+    }
