@@ -32,6 +32,8 @@ function validateFiO2() {
     // Kiểm tra FiO2 có hợp lệ hay không
     if (fio2Input < 21 || fio2Input > 100) {
       alert('FiO2 phải nằm trong khoảng từ 21 đến 100%. Vui lòng nhập lại.');
+      document.getElementById('airFlow').value = '';
+      document.getElementById('oxyFlow').value = '';
       return false; // Ngăn không cho form submit hoặc tính toán
     }
     calculateFlow();
@@ -152,7 +154,10 @@ function resetForm() {
 function calculateBMIandBSA() {
     var weight = document.getElementById('weight').value;
     var height = document.getElementById('height').value;
-
+    if (isNaN(weight) || isNaN(height)) {
+        alert("Please enter valid values.");
+        return false;
+    } 
     if (weight && height) {
         // Tính BMI
         var heightInMeters = height / 100; // Chuyển đổi chiều cao từ cm sang mét
