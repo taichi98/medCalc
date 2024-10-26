@@ -154,14 +154,16 @@ function resetForm() {
 function calculateBMIandBSA() {
     var weight = document.getElementById('weight').value;
     var height = document.getElementById('height').value;
-    // Kiểm tra xem các trường có để trống hay không
-    if (!weight || !height) {
-        alert("Please enter both weight and height.");
-        // Ẩn kết quả nếu chưa nhập đủ dữ liệu
-        document.getElementById('resultBoxBMI').style.display = 'none';
-        document.getElementById('text1').style.display = 'block'; // Hiển thị placeholder
-        return; // Ngăn không thực hiện phép tính
-    }
+        // Kiểm tra xem các trường có để trống hay không
+        if (!weight || !height) {
+            warningMessage.textContent = "Warning: Please enter both weight and height.";
+            // Ẩn kết quả nếu chưa nhập đủ dữ liệu
+            document.getElementById('resultBoxBMI').style.display = 'none';
+            document.getElementById('text1').style.display = 'block'; // Hiển thị placeholder
+            return;
+        } else {
+            warningMessage.textContent = "";
+        }
     if (weight && height) {
         // Tính BMI
         var heightInMeters = height / 100; // Chuyển đổi chiều cao từ cm sang mét
