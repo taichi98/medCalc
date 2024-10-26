@@ -50,7 +50,14 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-	    
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
 	/* Khi sidebar mở, tooltip hiển thị bên phải */
 	.sidebar-open .tooltip-text {
 		top: 50%;
@@ -209,6 +216,8 @@
     .container_of_ett {
       flex-direction: column;
       align-items: center;
+      padding: 0 10px;
+      box-sizing: border-box;
     }
     .calculation-box {
       order: 1;
