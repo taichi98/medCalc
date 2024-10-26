@@ -148,7 +148,7 @@ function resetForm() {
     document.getElementById('formBox').style.display = 'block';
 
     // Reset giá trị của form
-    document.getElementById('age').value = '';
+    document.getElementById('ageInput').value = '';
 }
 
 function calculateBMIandBSA() {
