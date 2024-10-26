@@ -206,7 +206,7 @@ function calculateBMIandBSA() {
         var upperLimitLDH = parseFloat(document.getElementById('upperLimitLDH').value);
 
         if (isNaN(serumProtein) || isNaN(pleuralFluidProtein) || isNaN(serumLDH) || isNaN(pleuralFluidLDH) || isNaN(upperLimitLDH)) {
-            document.getElementById('result').innerHTML = "Please enter valid values for all fields.";
+            warningMessage.textContent = "Warning: Please enter all values.";
             return;
         }
 
@@ -216,5 +216,7 @@ function calculateBMIandBSA() {
 
         var result = (criteria1 || criteria2 || criteria3) ? "Exudative Effusion" : "Transudative Effusion";
 
-        document.getElementById('result').innerHTML = "Result: " + result;
+        document.getElementById('resultLight').innerHTML = result;
+        document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
+        document.getElementById('resultBoxLight').style.display = 'flex';   // Hiển thị kết quả
     }
