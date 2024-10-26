@@ -31,8 +31,21 @@
     </style>
 </head>
 <body>
-
-    <div class="container">
+    <div class="container_of_ett">
+        <div id="info" class="description-box">
+            <h3>Light's Criteria</h3>
+            <p>The Light's Criteria is used to determine whether pleural effusions are exudative or transudative. An exudative effusion is diagnosed if at least one of the following criteria is met:</p>
+            <ul>
+                <li>Pleural fluid protein / Serum protein ratio > 0.5</li>
+                <li>Pleural fluid LDH / Serum LDH ratio > 0.6</li>
+                <li>Pleural fluid LDH is greater than 2/3 the upper limit of normal for serum LDH</li>
+            </ul>
+            <p>An exudative effusion is typically caused by conditions such as infections, malignancies, or inflammatory diseases, while transudative effusions are often caused by systemic factors such as heart failure or cirrhosis.</p>
+            <p>Light's criteria are the most sensitive for identifying exudates but have lower specificity than other criteria. This means that some patients may be misidentified as having an exudative pleural effusion when they actually have a transudative pleural effusion.</p>
+            <p>Therefore, if a patient meets Light's Criteria but has a clinical appearance suggestive of a transudative effusion, Dr. Light recommends a serum albumin − pleural albumin < 1.2 mg/dl, to confirm the effusion is exudative. However, do not use the albumin gradient alone to distinguish transudates from exudates as it will misidentify ~13% of exudates as transudates.</p>
+        </div>
+        
+        <div class="calculation-box">
         <h2>Light's Criteria Calculator</h2>
 
         <form id="lights-criteria-form">
@@ -65,18 +78,8 @@
                 <button type="button" onclick="calculateLightCriteria()">Calculate</button>
             </div>
         </form>
-
-        <div id="result">Result: Please fill out all fields.</div>
         
-        <div id="info">
-            <h3>Light's Criteria</h3>
-            <p>The Light's Criteria is used to determine whether pleural effusions are exudative or transudative. An exudative effusion is diagnosed if at least one of the following criteria is met:</p>
-            <ul>
-                <li>Pleural fluid protein / Serum protein ratio > 0.5</li>
-                <li>Pleural fluid LDH / Serum LDH ratio > 0.6</li>
-                <li>Pleural fluid LDH is greater than 2/3 the upper limit of normal for serum LDH</li>
-            </ul>
-            <p>An exudative effusion is typically caused by conditions such as infections, malignancies, or inflammatory diseases, while transudative effusions are often caused by systemic factors such as heart failure or cirrhosis.</p>
+        <div id="result">Result: Please fill out all fields.</div>
         </div>
         
     </div>
