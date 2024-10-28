@@ -198,25 +198,45 @@ function calculateBMIandBSA() {
         document.getElementById('resultBoxBMI').style.display = 'flex';   // Hiển thị kết quả
 }
 
-    function calculateLightCriteria() {
-        var serumProtein = parseFloat(document.getElementById('serumProtein').value);
-        var pleuralFluidProtein = parseFloat(document.getElementById('pleuralFluidProtein').value);
-        var serumLDH = parseFloat(document.getElementById('serumLDH').value);
-        var pleuralFluidLDH = parseFloat(document.getElementById('pleuralFluidLDH').value);
-        var upperLimitLDH = parseFloat(document.getElementById('upperLimitLDH').value);
+    // JavaScript functions
+function toggleUnit(fieldId) {
+    const inputField = document.getElementById(fieldId);
+    let value = parseFloat(inputField.value);
 
-        if (isNaN(serumProtein) || isNaN(pleuralFluidProtein) || isNaN(serumLDH) || isNaN(pleuralFluidLDH) || isNaN(upperLimitLDH)) {
-            warningMessage.textContent = "Warning: Please enter all values.";
-            return;
-        }
+    if (isNaN(value)) return;
 
-        var criteria1 = pleuralFluidProtein / serumProtein > 0.5;
-        var criteria2 = pleuralFluidLDH / serumLDH > 0.6;
-        var criteria3 = pleuralFluidLDH > (2 / 3) * upperLimitLDH;
-
-        var result = (criteria1 || criteria2 || criteria3) ? "Exudative Effusion" : "Transudative Effusion";
-
-        document.getElementById('resultLight').innerHTML = result;
-        document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
-        document.getElementById('resultBoxLight').style.display = 'flex';   // Hiển thị kết quả
+    // Toggle between g/L and g/dL
+    if (inputField.dataset.unit === "g/L") {
+        inputField.value = (value / 10).toFixed(2); // Convert to g/dL
+        inputField.dataset.unit = "g/dL";
+    } else {
+        inputField.value = (value * 10).toFixed(2); // Convert to g/L
+        inputField.dataset.unit = "g/L";
     }
+}
+
+function calculateLightCriteria() {
+    var serumProtein = parseFloat(document.getElementById('serumProtein').value);
+    var pleuralFluidProtein = parseFloat(document.getElementById('pleuralFluidProtein').value);
+    var serumLDH = parseFloat(document.getElementById('serumLDH').value);
+    var pleuralFluidLDH = parseFloat(document.getElementById('pleuralFluidLDH').value);
+    var upperLimitLDH = parseFloat(document.getElementById('upperLimitLDH').value);
+
+    if (isNaN(serumProtein) || isNaN(pleuralFluidProtein) || isNaN(serumLDH) || isNaN(pleuralFluidLDH) || isNaN(upperLimitLDH)) {
+        warningMessage.textContent = "Warning: Please enter all values.";
+        return;
+    }
+
+    var criteria1 = pleuralFluidProtein / serumProtein > 0.5;
+    var criteria2 = pleuralFluidLDH / serumLDH > 0.6;
+    var criteria3 = pleuralFluidLDH > (2 / 3) * upperLimitLDH;
+
+    var criteriaMet = [criteria1, criteria2, criteria3].filter(Boolean).length;
+    var result = (criteria1 || criteria2 || criteria3) ? "Exudative Effusion" : "Transudative Effusion";
+    result += ` (Criteria Met: ${criteriaMet}/3)`;
+
+    document.getElementById('resultLight').innerHTML = result;
+    document.getElementById('text1').style.display = 'none'; // Hide placeholder
+    document.getElementById('resultBoxLight').style.display = 'flex'; // Show result
+}
+
