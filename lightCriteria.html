@@ -35,11 +35,9 @@
     }
     .result-item {
         display: flex;
-        flex-direction: column;
         align-items: left;
         justify-content: left;
         font-size: 17px;
-        flex: 1; /* Chia đều không gian cho các item */
         padding: 5px 10px;
     }
         
@@ -97,7 +95,7 @@
             </div>
         </form>
         <div id="warningMessage" class="warning"></div>
-        <div id="result" class="result-container">
+        <div class="result-container">
                 <div style="font-size: 1.17em; font-weight: bold; margin-top: 4px; margin-bottom: 4px; padding-left: 5px;">Result:</div>
                 <p id="text1">Please fill out required fields.</p>
                 <div id="resultBoxLight" style="display: none;">
