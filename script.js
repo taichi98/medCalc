@@ -230,27 +230,38 @@ function toggleUnit(fieldId, labelId) {
     document.getElementById('pleuralFluidProtein').dataset.unit = "g/dL";
 
 function calculateLightCriteria() {
-    var serumProtein = parseFloat(document.getElementById('serumProtein').value);
-    var pleuralFluidProtein = parseFloat(document.getElementById('pleuralFluidProtein').value);
-    var serumLDH = parseFloat(document.getElementById('serumLDH').value);
-    var pleuralFluidLDH = parseFloat(document.getElementById('pleuralFluidLDH').value);
-    var upperLimitLDH = parseFloat(document.getElementById('upperLimitLDH').value);
+    const serumProteinInput = document.getElementById('serumProtein');
+    const pleuralFluidProteinInput = document.getElementById('pleuralFluidProtein');
+    const serumLDH = parseFloat(document.getElementById('serumLDH').value);
+    const pleuralFluidLDH = parseFloat(document.getElementById('pleuralFluidLDH').value);
+    const upperLimitLDH = parseFloat(document.getElementById('upperLimitLDH').value);
+
+    let serumProtein = parseFloat(serumProteinInput.value);
+    let pleuralFluidProtein = parseFloat(pleuralFluidProteinInput.value);
+
+    // Check if serum and pleural fluid proteins are in the same unit
+    if (serumProteinInput.dataset.unit !== pleuralFluidProteinInput.dataset.unit) {
+        // Convert pleural fluid protein to match serum protein unit
+        if (serumProteinInput.dataset.unit === "g/dL" && pleuralFluidProteinInput.dataset.unit === "g/L") {
+            pleuralFluidProtein /= 10; // Convert from g/L to g/dL
+        } else if (serumProteinInput.dataset.unit === "g/L" && pleuralFluidProteinInput.dataset.unit === "g/dL") {
+            pleuralFluidProtein *= 10; // Convert from g/dL to g/L
+        }
+    }
 
     if (isNaN(serumProtein) || isNaN(pleuralFluidProtein) || isNaN(serumLDH) || isNaN(pleuralFluidLDH) || isNaN(upperLimitLDH)) {
-        warningMessage.textContent = "Warning: Please enter all values.";
+        document.getElementById('warningMessage').textContent = "Warning: Please enter all values.";
         return;
     }
 
-    var criteria1 = pleuralFluidProtein / serumProtein > 0.5;
-    var criteria2 = pleuralFluidLDH / serumLDH > 0.6;
-    var criteria3 = pleuralFluidLDH > (2 / 3) * upperLimitLDH;
+    const criteria1 = pleuralFluidProtein / serumProtein > 0.5;
+    const criteria2 = pleuralFluidLDH / serumLDH > 0.6;
+    const criteria3 = pleuralFluidLDH > (2 / 3) * upperLimitLDH;
 
-    var criteriaMet = [criteria1, criteria2, criteria3].filter(Boolean).length;
-    var result = (criteria1 || criteria2 || criteria3) ? "Exudative Effusion" : "Transudative Effusion";
-    result += ` (Criteria Met: ${criteriaMet}/3)`;
-
-    document.getElementById('resultLight').innerHTML = result;
-    document.getElementById('text1').style.display = 'none'; // Hide placeholder
-    document.getElementById('resultBoxLight').style.display = 'flex'; // Show result
+    const criteriaMet = [criteria1, criteria2, criteria3].filter(Boolean).length;
+    const result = (criteria1 || criteria2 || criteria3) ? "Exudative Effusion" : "Transudative Effusion";
+    document.getElementById('resultLight').innerHTML = `${result} (Criteria Met: ${criteriaMet}/3)`;
+    document.getElementById('text1').style.display = 'none';
+    document.getElementById('resultBoxLight').style.display = 'flex';
 }
 
