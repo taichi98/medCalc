@@ -199,21 +199,29 @@ function calculateBMIandBSA() {
 }
 
     // JavaScript functions
-function toggleUnit(fieldId) {
-    const inputField = document.getElementById(fieldId);
-    let value = parseFloat(inputField.value);
 
-    if (isNaN(value)) return;
+function toggleUnit(fieldId, labelId) {
+        const inputField = document.getElementById(fieldId);
+        const label = document.getElementById(labelId);
+        let value = parseFloat(inputField.value);
 
-    // Toggle between g/L and g/dL
-    if (inputField.dataset.unit === "g/L") {
-        inputField.value = (value / 10).toFixed(2); // Convert to g/dL
-        inputField.dataset.unit = "g/dL";
-    } else {
-        inputField.value = (value * 10).toFixed(2); // Convert to g/L
-        inputField.dataset.unit = "g/L";
+        if (isNaN(value)) return;
+
+        // Toggle unit between g/L and g/dL
+        if (inputField.dataset.unit === "g/L") {
+            inputField.value = (value / 10).toFixed(2); // Convert to g/dL
+            inputField.dataset.unit = "g/dL";
+            label.textContent = label.textContent.replace("g/L", "g/dL");
+        } else {
+            inputField.value = (value * 10).toFixed(2); // Convert to g/L
+            inputField.dataset.unit = "g/L";
+            label.textContent = label.textContent.replace("g/dL", "g/L");
+        }
     }
-}
+
+    // Set initial data-unit for conversion
+    document.getElementById('serumProtein').dataset.unit = "g/dL";
+    document.getElementById('pleuralFluidProtein').dataset.unit = "g/dL";
 
 function calculateLightCriteria() {
     var serumProtein = parseFloat(document.getElementById('serumProtein').value);
