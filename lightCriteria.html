@@ -66,15 +66,16 @@
         <h2>Light's Criteria Calculator</h2>
 
         <form id="lights-criteria-form">
-            <div class="form-group">
-                <label for="serumProtein">Serum Protein (g/dL):</label>
-                <input type="number" id="serumProtein" name="serumProtein" step="0.1" min="0" required>
-            </div>
-
-            <div class="form-group">
-                <label for="pleuralFluidProtein">Pleural Fluid Protein (g/dL):</label>
-                <input type="number" id="pleuralFluidProtein" name="pleuralFluidProtein" step="0.1" min="0" required>
-            </div>
+<div class="form-group">
+    <label for="serumProtein">Serum Protein:</label>
+    <input type="number" id="serumProtein" name="serumProtein" step="0.1" min="0" required>
+    <button type="button" onclick="toggleUnit('serumProtein')">g/L ↔ g/dL</button>
+</div>
+<div class="form-group">
+    <label for="pleuralFluidProtein">Pleural Fluid Protein:</label>
+    <input type="number" id="pleuralFluidProtein" name="pleuralFluidProtein" step="0.1" min="0" required>
+    <button type="button" onclick="toggleUnit('pleuralFluidProtein')">g/L ↔ g/dL</button>
+</div>
 
             <div class="form-group">
                 <label for="serumLDH">Serum LDH (IU/L):</label>
