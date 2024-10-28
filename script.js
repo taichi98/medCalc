@@ -205,17 +205,23 @@ function toggleUnit(fieldId, labelId) {
         const label = document.getElementById(labelId);
         let value = parseFloat(inputField.value);
 
-        if (isNaN(value)) return;
-
-        // Toggle unit between g/L and g/dL
+        // Toggle unit in the label
         if (inputField.dataset.unit === "g/L") {
-            inputField.value = (value / 10).toFixed(2); // Convert to g/dL
             inputField.dataset.unit = "g/dL";
             label.textContent = label.textContent.replace("g/L", "g/dL");
+            
+            // Convert value only if it's not empty
+            if (!isNaN(value)) {
+                inputField.value = (value / 10).toFixed(2); // Convert to g/dL
+            }
         } else {
-            inputField.value = (value * 10).toFixed(2); // Convert to g/L
             inputField.dataset.unit = "g/L";
             label.textContent = label.textContent.replace("g/dL", "g/L");
+            
+            // Convert value only if it's not empty
+            if (!isNaN(value)) {
+                inputField.value = (value * 10).toFixed(2); // Convert to g/L
+            }
         }
     }
 
