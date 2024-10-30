@@ -36,7 +36,7 @@
         }
         .tooltip-text {
             visibility: hidden;
-            width: 100px;
+            width: 110px;
             background-color: black;
             color: #fff;
             text-align: center;
@@ -51,16 +51,16 @@
             transition: opacity 0.3s;
         }
 
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-}
-
-label {
-        font-weight: bold;
-}
+	img {
+	    max-width: 100%;
+	    height: auto;
+	    display: block;
+	    margin: 0 auto;
+	}
+	
+	label {
+	        font-weight: bold;
+	}
 
 	/* Khi sidebar mở, tooltip hiển thị bên phải */
 	.sidebar-open .tooltip-text {
