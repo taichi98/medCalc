@@ -17,18 +17,24 @@
             flex: 2;
             position: relative;
         }
-.input-group button {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: auto;
-    background-color: #117D67;
-    color: white;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
+        .input-group calc_unit-button {
+            flex: 0 0 auto;
+            height: 44px;
+            padding: 0 6px;
+            border-radius: 4px;
+            line-height: 47px;
+            display: inline-block;
+            min-width: 33%;
+            vertical-align: middle;
+            text-align: center;
+            background-color: #f0f0f0;
+            border: 1px solid #d7d7d7;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            font-size: 13px;
+            font-weight: 400;
+            box-shadow: none;
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -88,7 +94,7 @@
                 <label id="serumProteinLabel" for="serumProtein">Total Serum Protein (g/dL):</label>
                 <div class="input-group">
                     <input type="number" id="serumProtein" name="serumProtein" step="0.1" min="0" required>
-                    <button type="button" onclick="toggleUnit('serumProtein', 'serumProteinLabel')">g/L ↔ g/dL</button>
+                    <button type="calc_unit-button" onclick="toggleUnit('serumProtein', 'serumProteinLabel')">g/L ↔ g/dL</button>
                 </div>
             </div>
 
@@ -96,7 +102,7 @@
                 <label id="pleuralFluidProteinLabel" for="pleuralFluidProtein">Pleural Fluid Protein (g/dL):</label>
                 <div class="input-group">
                     <input type="number" id="pleuralFluidProtein" name="pleuralFluidProtein" step="0.1" min="0" required>
-                    <button type="button" onclick="toggleUnit('pleuralFluidProtein', 'pleuralFluidProteinLabel')">g/L ↔ g/dL</button>
+                    <button type="calc_unit-button" onclick="toggleUnit('pleuralFluidProtein', 'pleuralFluidProteinLabel')">g/L ↔ g/dL</button>
                 </div>
             </div>
 
