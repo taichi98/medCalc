@@ -17,11 +17,13 @@
             position: relative; 
         }
         .input-group input {
-           flex: 1;
-    padding-right: 50px; /* Đảm bảo khoảng trống cho nút bên phải */
+.input-group input {
+    flex: 1;
+    padding-right: 40px; /* Đảm bảo khoảng trống cho nút bên phải */
     box-sizing: border-box;
-    height: 40px; /* Độ cao của ô nhập liệu */
-        }
+    height: 38px; /* Độ cao của ô nhập liệu */
+}
+
 .input-group button {
     position: absolute;
     right: 0;
@@ -32,7 +34,9 @@
     border: none;
     border-radius: 0 4px 4px 0;
     cursor: pointer;
-    padding: 0 10px;
+    padding: 0 8px; /* Độ rộng nhỏ hơn */
+    font-size: 14px; /* Giảm kích thước chữ nếu cần */
+    width: 40px; /* Điều chỉnh độ rộng của nút */
 }
         .form-group {
             margin-bottom: 15px;
