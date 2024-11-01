@@ -1,4 +1,5 @@
 let sidebarOpen = false;
+let gender = '';
 
 function toggleSidebar() {
     const sidebar = document.getElementById("mySidebar");
@@ -265,30 +266,42 @@ function calculateLightCriteria() {
     document.getElementById('resultBoxLight').style.display = 'flex';
 }
 
-function calculateIBW() {
-            // Lấy giá trị từ form
-            var gender = document.getElementById('gender').value;
-            var height = parseFloat(document.getElementById('height').value);
-            var actualWeight = parseFloat(document.getElementById('actualWeight').value);
+        function selectGender(selectedGender) {
+            gender = selectedGender;
+            document.getElementById('male-btn').classList.remove('active');
+            document.getElementById('female-btn').classList.remove('active');
+            if (selectedGender === 'male') {
+                document.getElementById('male-btn').classList.add('active');
+            } else {
+                document.getElementById('female-btn').classList.add('active');
+            }
+        }
 
-            if (!gender || isNaN(height) || isNaN(actualWeight)) {
-                alert("Please fill out all fields.");
+        function calculateIBW() {
+            const height = parseFloat(document.getElementById('height').value);
+            const actualWeight = parseFloat(document.getElementById('actualWeight').value);
+
+            if (!gender || isNaN(height) || height < 20 || height > 200) {
+                alert("Please fill out all fields with valid values.");
                 return;
             }
 
-            // Tính IBW
-            var ibw;
-            if (gender === "male") {
-                ibw = 50 + 2.3 * (height - 60);
-            } else if (gender === "female") {
-                ibw = 45.5 + 2.3 * (height - 60);
+            // Tính IBW dựa trên giới tính và chiều cao
+            let ibw;
+            if (gender === 'male') {
+                ibw = 50 + 2.3 * ((height / 2.54) - 60); // Chuyển chiều cao từ cm sang inches
+            } else {
+                ibw = 45.5 + 2.3 * ((height / 2.54) - 60);
             }
             ibw = ibw.toFixed(2);
 
-            // Tính ABW (nếu trọng lượng thực > IBW)
-            var abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2) : ibw;
+            let resultText = `IBW: ${ibw} kg`;
 
-            // Hiển thị kết quả
-            document.getElementById('ibw-output').innerHTML = `IBW: ${ibw} kg`;
-            document.getElementById('abw-output').innerHTML = `ABW: ${abw} kg`;
-}
+            // Tính ABW nếu nhập Actual Weight
+            if (!isNaN(actualWeight)) {
+                const abw = (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2);
+                resultText += `<br>ABW: ${abw} kg`;
+            }
+
+            document.getElementById('result').innerHTML = resultText;
+        }
