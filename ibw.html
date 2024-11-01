@@ -8,6 +8,35 @@
        .form-group {
             margin-bottom: 15px;
         }
+        .result-container {
+        max-width: 400px;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #117D67;
+        padding: 10px;
+        border-radius: 10px;
+        color: white;
+        margin: 10px 0;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm shadow */
+    }
+    .result-item {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        justify-content: left;
+        font-size: 17px;
+        flex: 1; /* Chia đều không gian cho các item */
+        padding: 5px 10px;
+    }
+    
+    .result-item:not(:last-child) {
+        border-right: 1px solid white; /* Đường kẻ trắng giữa 2 kết quả */
+    }
+    
+    .result-item span {
+        font-size: 14px;
+        color: #C0CFCF;
+    }
         .form-group label {
             display: block;
             margin-bottom: 5px;
@@ -42,8 +71,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Ideal Body Weight (IBW) & Adjusted Body Weight (ABW)</h2>
+    <div class="container_of_ett">
         <div class="description-box">
             <h3>FORMULA</h3>
             <p><strong>Ideal Body Weight (Devine formula):</strong></p>
@@ -58,6 +86,7 @@
         </div>
 
         <div class="calculation-box">
+        <h2>Ideal Body Weight (IBW) & Adjusted Body Weight (ABW)</h2>
             <form id="ibw-form">
                 <div class="form-group">
                 <label for="gender">Sex</label>
@@ -78,7 +107,10 @@
             </div>
             <button type="button" onclick="calculateIBW()">Calculate IBW & ABW</button>
             </form>
-            <div id="result"></div>
+            <div id="result" class="result-container">
+                <div style="font-size: 1.17em; font-weight: bold; margin-top: 4px; margin-bottom: 4px; padding-left: 5px;">Result:</div>
+                <p id="text1">Please fill out required fields.</p>
+            </div>
         </div>
     </div>
 
