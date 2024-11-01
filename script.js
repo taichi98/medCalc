@@ -265,3 +265,30 @@ function calculateLightCriteria() {
     document.getElementById('resultBoxLight').style.display = 'flex';
 }
 
+function calculateIBW() {
+            // Lấy giá trị từ form
+            var gender = document.getElementById('gender').value;
+            var height = parseFloat(document.getElementById('height').value);
+            var actualWeight = parseFloat(document.getElementById('actualWeight').value);
+
+            if (!gender || isNaN(height) || isNaN(actualWeight)) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            // Tính IBW
+            var ibw;
+            if (gender === "male") {
+                ibw = 50 + 2.3 * (height - 60);
+            } else if (gender === "female") {
+                ibw = 45.5 + 2.3 * (height - 60);
+            }
+            ibw = ibw.toFixed(2);
+
+            // Tính ABW (nếu trọng lượng thực > IBW)
+            var abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2) : ibw;
+
+            // Hiển thị kết quả
+            document.getElementById('ibw-output').innerHTML = `IBW: ${ibw} kg`;
+            document.getElementById('abw-output').innerHTML = `ABW: ${abw} kg`;
+}
