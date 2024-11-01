@@ -289,9 +289,9 @@ function calculateLightCriteria() {
             // Tính IBW dựa trên giới tính và chiều cao
             let ibw;
             if (gender === 'male') {
-                ibw = 50 + 2.3 * ((height / 0.393700787) - 60); // Chuyển chiều cao từ cm sang inches
+                ibw = 50 + 2.3 * ((height / 2.54) - 60); // Chuyển chiều cao từ cm sang inches
             } else {
-                ibw = 45.5 + 2.3 * ((height / 0.393700787) - 60);
+                ibw = 45.5 + 2.3 * ((height / 2.54) - 60);
             }
             ibw = ibw.toFixed(2);
 
