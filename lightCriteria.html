@@ -14,21 +14,24 @@
         
         .input-group {
             display: flex;
-            flex: 2;
+            flex: 1;
             position: relative; 
         }
-        .input-group button {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: auto;
-            background-color: #117D67;
-            color: white;
-            border: none;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
+        .input-group input {
+           padding-right: 40px; /* Adds space to avoid overlapping with the button */
         }
+.input-group button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #117D67;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    padding: 5px 10px;
+}
         .form-group {
             margin-bottom: 15px;
         }
