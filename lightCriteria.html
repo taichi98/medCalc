@@ -12,32 +12,38 @@
             color: #333;
         }
         
-        .input-group {
-            display: flex;
-            position: relative; 
-        }
-        .input-group input {
+.input-group {
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
 .input-group input {
     flex: 1;
     padding-right: 40px; /* Đảm bảo khoảng trống cho nút bên phải */
     box-sizing: border-box;
-    height: 38px; /* Độ cao của ô nhập liệu */
+    height: 38px; /* Đặt chiều cao của ô nhập liệu */
+    font-size: 16px;
 }
 
 .input-group button {
     position: absolute;
     right: 0;
-    top: 0;
     height: 100%; /* Độ cao bằng ô nhập liệu */
-    background-color: #117D67;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0; /* Bo góc phải */
     cursor: pointer;
-    padding: 0 8px; /* Độ rộng nhỏ hơn */
-    font-size: 14px; /* Giảm kích thước chữ nếu cần */
-    width: 40px; /* Điều chỉnh độ rộng của nút */
+    padding: 0 8px; /* Đệm nhỏ hơn */
+    font-size: 14px; /* Kích thước chữ */
+    width: 38px; /* Độ rộng nhỏ hơn */
 }
+
+.input-group button:hover {
+    background-color: #45a049; /* Màu nền khi hover */
+}
+
         .form-group {
             margin-bottom: 15px;
         }
