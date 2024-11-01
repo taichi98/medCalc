@@ -4,7 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ideal Body Weight Calculator</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+       .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .gender-select {
+            display: flex;
+            justify-content: space-between;
+        }
+        .gender-select button {
+            width: 48%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+        }
+        .gender-select button.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .unit {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -25,28 +60,25 @@
         <div class="calculation-box">
             <form id="ibw-form">
                 <div class="form-group">
-                    <label for="gender">Gender:</label>
-                    <select id="gender" required>
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
+                <label for="gender">Sex</label>
+                <div class="gender-select">
+                    <button type="button" id="male-btn" onclick="selectGender('male')">Male</button>
+                    <button type="button" id="female-btn" onclick="selectGender('female')">Female</button>
                 </div>
-                <div class="form-group">
-                    <label for="height">Height (inches):</label>
-                    <input type="number" id="height" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label for="actualWeight">Actual Weight (kg):</label>
-                    <input type="number" id="actualWeight" min="1" required>
-                </div>
-                <button type="button" onclick="calculateIBW()">Calculate IBW & ABW</button>
-            </form>
-            
-            <div id="result" style="margin-top: 20px;">
-                <p id="ibw-output"></p>
-                <p id="abw-output"></p>
             </div>
+            <div class="form-group">
+                <label for="height">Height</label>
+                <input type="number" id="height" min="1" placeholder="Norm: 20 - 200">
+                <span class="unit">cm</span>
+            </div>
+            <div class="form-group">
+                <label for="actualWeight">Actual body weight</label>
+                <input type="number" id="actualWeight" min="1" placeholder="Optional, for ABW calculation">
+                <span class="unit">kg</span>
+            </div>
+            <button type="button" onclick="calculateIBW()">Calculate IBW & ABW</button>
+            </form>
+            <div id="result"></div>
         </div>
     </div>
 
