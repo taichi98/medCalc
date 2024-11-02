@@ -301,30 +301,34 @@ function calculateLightCriteria() {
             ibw = 45.5 + 2.3 * ((height / 2.54) - 60);
         }
         ibw = ibw.toFixed(2);
+        
+        const ibwOutput = document.getElementById('ibw-output');
+        const abwOutput = document.getElementById('abw-output');
+        const ibwItem = ibwOutput.parentElement;
+        const abwItem = abwOutput.parentElement;
     
-        document.getElementById('ibw-output').innerHTML = `${ibw} kg`;
+        ibwOutput.innerHTML = `${ibw} kg`; // Hiển thị IBW
     
         // Kiểm tra xem người dùng có nhập Actual Weight không, nếu có thì tính và hiển thị ABW
-        const ibwItem = document.getElementById('ibw-output').parentElement;
-        const abwItem = document.getElementById('abw-output').parentElement;
-    
         if (!isNaN(actualWeight) && actualWeight > 0) {
             if (actualWeight > ibw) {
                 // Tính ABW nếu Actual Weight lớn hơn IBW
                 const abw = (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2);
-                document.getElementById('abw-output').innerHTML = `${abw} kg`;
+                abwOutput.innerHTML = `${abw} kg`;
+                abwItem.querySelector("span").innerHTML = "Adjusted Body Weight"; // Khôi phục nhãn ABW bình thường
                 ibwItem.classList.add('with-border'); // Thêm border khi hiển thị cả ABW và IBW
             } else {
                 // Hiển thị thông báo nếu Actual Weight nhỏ hơn hoặc bằng IBW
-                document.getElementById('abw-output').innerHTML = "Adjusted body weight only applicable if actual body weight is greater than ideal body weight";
-                ibwItem.classList.add('with-border'); // Thêm border khi hiển thị cả IBW và thông báo
+                abwOutput.innerHTML = "";
+                abwItem.querySelector("span").innerHTML = "Adjusted body weight only applicable if actual body weight is greater than ideal body weight";
+                ibwItem.classList.add('with-border'); // Thêm border khi hiển thị thông báo
             }
             abwItem.style.display = 'flex'; // Hiển thị ô ABW nếu có giá trị hoặc thông báo
         } else {
             abwItem.style.display = 'none'; // Ẩn ABW nếu không có giá trị
             ibwItem.classList.remove('with-border'); // Xóa border khi chỉ có IBW
         }
-    
+
         document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
         document.getElementById('resultIBW').style.display = 'flex'; // Hiển thị kết quả
     }
