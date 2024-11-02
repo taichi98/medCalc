@@ -279,39 +279,46 @@ function calculateLightCriteria() {
             }
         }
 
-        function calculateIBW() {
-            const height = parseFloat(document.getElementById('height').value);
-            const actualWeight = parseFloat(document.getElementById('actualWeight').value);
-
-            if (!gender || isNaN(height) || height < 152 || height > 250) {
-                document.getElementById('resultIBW').style.display = 'none';
-                document.getElementById('text1').style.display = 'block'; // Hiển thị placeholder               
-                document.getElementById('warningMessage').textContent = "Warning: You entered a height of less than 5 ft (1.52m).";
-                return;
-            } else {
-                warningMessage.textContent = "";
-            }
-
-            // Tính IBW dựa trên giới tính và chiều cao
-            let ibw;
-            if (gender === 'male') {
-                ibw = 50 + 2.3 * ((height / 2.54) - 60); // Chuyển chiều cao từ cm sang inches
-            } else {
-                ibw = 45.5 + 2.3 * ((height / 2.54) - 60);
-            }
-            ibw = ibw.toFixed(2);
-            
-            document.getElementById('ibw-output').innerHTML = `${ibw} kg`;
-
-            // Kiểm tra xem người dùng có nhập Actual Weight không, nếu có thì tính và hiển thị ABW
-            if (!isNaN(actualWeight) && actualWeight > 0) {
-                const abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2) : ibw;
-                document.getElementById('abw-output').innerHTML = `${abw} kg`;
-                document.getElementById('abw-output').parentElement.style.display = 'flex'; // Hiển thị ABW nếu có giá trị
-            } else {
-                document.getElementById('abw-output').parentElement.style.display = 'none'; // Ẩn ABW nếu không có giá trị
-            }
-            
-            document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
-            document.getElementById('resultIBW').style.display = 'flex';   // Hiển thị kết quả
+    function calculateIBW() {
+        const height = parseFloat(document.getElementById('height').value);
+        const actualWeight = parseFloat(document.getElementById('actualWeight').value);
+    
+        // Kiểm tra các điều kiện nhập vào
+        if (!gender || isNaN(height) || height < 152 || height > 250) {
+            document.getElementById('resultIBW').style.display = 'none';
+            document.getElementById('text1').style.display = 'block'; // Hiển thị placeholder               
+            document.getElementById('warningMessage').textContent = "Warning: You entered a height of less than 5 ft (1.52m).";
+            return;
+        } else {
+            document.getElementById('warningMessage').textContent = "";
         }
+    
+        // Tính IBW dựa trên giới tính và chiều cao
+        let ibw;
+        if (gender === 'male') {
+            ibw = 50 + 2.3 * ((height / 2.54) - 60); // Chuyển chiều cao từ cm sang inches
+        } else {
+            ibw = 45.5 + 2.3 * ((height / 2.54) - 60);
+        }
+        ibw = ibw.toFixed(2);
+    
+        document.getElementById('ibw-output').innerHTML = `${ibw} kg`;
+    
+        // Kiểm tra xem người dùng có nhập Actual Weight không, nếu có thì tính và hiển thị ABW
+        const ibwItem = document.getElementById('ibw-output').parentElement;
+        const abwItem = document.getElementById('abw-output').parentElement;
+    
+        if (!isNaN(actualWeight) && actualWeight > 0) {
+            const abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2) : ibw;
+            document.getElementById('abw-output').innerHTML = `${abw} kg`;
+            abwItem.style.display = 'flex'; // Hiển thị ABW nếu có giá trị
+            ibwItem.classList.add('with-border'); // Thêm border khi hiển thị cả ABW và IBW
+        } else {
+            abwItem.style.display = 'none'; // Ẩn ABW nếu không có giá trị
+            ibwItem.classList.remove('with-border'); // Xóa border khi chỉ có IBW
+        }
+    
+        document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
+        document.getElementById('resultIBW').style.display = 'flex'; // Hiển thị kết quả
+    }
+
