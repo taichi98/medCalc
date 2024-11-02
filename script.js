@@ -303,10 +303,13 @@ function calculateLightCriteria() {
             
             document.getElementById('ibw-output').innerHTML = `${ibw} kg`;
 
-            // Tính ABW nếu nhập Actual Weight
-            if (!isNaN(actualWeight)) {
+            // Kiểm tra xem người dùng có nhập Actual Weight không, nếu có thì tính và hiển thị ABW
+            if (!isNaN(actualWeight) && actualWeight > 0) {
                 const abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2) : ibw;
                 document.getElementById('abw-output').innerHTML = `${abw} kg`;
+                document.getElementById('abw-output').parentElement.style.display = 'flex'; // Hiển thị ABW nếu có giá trị
+            } else {
+                document.getElementById('abw-output').parentElement.style.display = 'none'; // Ẩn ABW nếu không có giá trị
             }
             
             document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
