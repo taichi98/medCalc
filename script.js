@@ -284,6 +284,8 @@ function calculateLightCriteria() {
             const actualWeight = parseFloat(document.getElementById('actualWeight').value);
 
             if (!gender || isNaN(height) || height < 152 || height > 250) {
+                document.getElementById('resultIBW').style.display = 'none';
+                document.getElementById('text1').style.display = 'block'; // Hiển thị placeholder               
                 document.getElementById('warningMessage').textContent = "Warning: You entered a height of less than 5 ft (1.52m).";
                 return;
             } else {
@@ -298,14 +300,15 @@ function calculateLightCriteria() {
                 ibw = 45.5 + 2.3 * ((height / 2.54) - 60);
             }
             ibw = ibw.toFixed(2);
-
-            let resultText = `IBW: ${ibw} kg`;
+            
+            document.getElementById('ibw-output').innerHTML = `${ibw} kg`;
 
             // Tính ABW nếu nhập Actual Weight
             if (!isNaN(actualWeight)) {
                 const abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2) : ibw;
-                resultText += `<br>ABW: ${abw} kg`;
+                document.getElementById('abw-output').innerHTML = `${abw} kg`;
             }
-
-            document.getElementById('result').innerHTML = resultText;
+            
+            document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
+            document.getElementById('resultIBW').style.display = 'flex';   // Hiển thị kết quả
         }
