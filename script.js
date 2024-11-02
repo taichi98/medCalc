@@ -281,8 +281,8 @@ function calculateLightCriteria() {
             const height = parseFloat(document.getElementById('height').value);
             const actualWeight = parseFloat(document.getElementById('actualWeight').value);
 
-            if (!gender || isNaN(height) || height < 20 || height > 200) {
-                alert("Please fill out all fields with valid values.");
+            if (!gender || isNaN(height) || height < 152 || height > 250) {
+                document.getElementById('warningMessage').textContent = "Warning: You entered a height of less than 5 ft (1.52m).";
                 return;
             }
 
