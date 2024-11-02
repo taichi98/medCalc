@@ -303,7 +303,7 @@ function calculateLightCriteria() {
 
             // Tính ABW nếu nhập Actual Weight
             if (!isNaN(actualWeight)) {
-                const abw = (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2);
+                const abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2);
                 resultText += `<br>ABW: ${abw} kg`;
             }
 
