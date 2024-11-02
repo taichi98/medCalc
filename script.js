@@ -253,7 +253,9 @@ function calculateLightCriteria() {
     if (isNaN(serumProtein) || isNaN(pleuralFluidProtein) || isNaN(serumLDH) || isNaN(pleuralFluidLDH) || isNaN(upperLimitLDH)) {
         document.getElementById('warningMessage').textContent = "Warning: Please enter all values.";
         return;
-    }
+    } else {
+            warningMessage.textContent = "";
+        }
 
     const criteria1 = pleuralFluidProtein / serumProtein > 0.5;
     const criteria2 = pleuralFluidLDH / serumLDH > 0.6;
@@ -284,6 +286,8 @@ function calculateLightCriteria() {
             if (!gender || isNaN(height) || height < 152 || height > 250) {
                 document.getElementById('warningMessage').textContent = "Warning: You entered a height of less than 5 ft (1.52m).";
                 return;
+            } else {
+                warningMessage.textContent = "";
             }
 
             // Tính IBW dựa trên giới tính và chiều cao
