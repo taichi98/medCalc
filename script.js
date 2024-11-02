@@ -309,10 +309,17 @@ function calculateLightCriteria() {
         const abwItem = document.getElementById('abw-output').parentElement;
     
         if (!isNaN(actualWeight) && actualWeight > 0) {
-            const abw = actualWeight > ibw ? (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2) : ibw;
-            document.getElementById('abw-output').innerHTML = `${abw} kg`;
-            abwItem.style.display = 'flex'; // Hiển thị ABW nếu có giá trị
-            ibwItem.classList.add('with-border'); // Thêm border khi hiển thị cả ABW và IBW
+            if (actualWeight > ibw) {
+                // Tính ABW nếu Actual Weight lớn hơn IBW
+                const abw = (parseFloat(ibw) + 0.4 * (actualWeight - ibw)).toFixed(2);
+                document.getElementById('abw-output').innerHTML = `${abw} kg`;
+                ibwItem.classList.add('with-border'); // Thêm border khi hiển thị cả ABW và IBW
+            } else {
+                // Hiển thị thông báo nếu Actual Weight nhỏ hơn hoặc bằng IBW
+                document.getElementById('abw-output').innerHTML = "Adjusted body weight only applicable if actual body weight is greater than ideal body weight";
+                ibwItem.classList.add('with-border'); // Thêm border khi hiển thị cả IBW và thông báo
+            }
+            abwItem.style.display = 'flex'; // Hiển thị ô ABW nếu có giá trị hoặc thông báo
         } else {
             abwItem.style.display = 'none'; // Ẩn ABW nếu không có giá trị
             ibwItem.classList.remove('with-border'); // Xóa border khi chỉ có IBW
