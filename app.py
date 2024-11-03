@@ -9,7 +9,7 @@ standards_path = os.path.join('data', 'standards.rds')
 
 # Hàm khởi tạo R và đọc file standards.rds
 robjects.r['readRDS'](standards_path)
-robjects.r('''
+robjects.r('''\
 list_standards <- readRDS(file.path("data", "standards.rds"))
 
 CalculateZScores <- function(sex, age_in_days, height, weight) {
@@ -41,24 +41,28 @@ def index():
 
 @app.route('/calculate_zscore', methods=['POST'])
 def calculate_zscore():
-    sex = request.form['sex']
-    age = int(request.form['age'])
-    height = float(request.form['height'])
-    weight = float(request.form['weight'])
+    try:
+        sex = request.form['sex']
+        age = int(request.form['age']) * 30.44  # Chuyển tuổi từ tháng sang ngày
+        height = float(request.form['height'])
+        weight = float(request.form['weight'])
 
-    # Gọi hàm R để tính z-scores
-    calculate_zscore_r = robjects.globalenv['CalculateZScores']
-    results = calculate_zscore_r(sex, age, height, weight)
+        # Gọi hàm R để tính z-scores
+        calculate_zscore_r = robjects.globalenv['CalculateZScores']
+        results = calculate_zscore_r(sex, age, height, weight)
 
-    zlen = results[0]
-    zwei = results[1]
-    zbmi = results[2]
+        # Chuyển đổi kết quả từ R sang Python
+        zlen = float(results[0][0])  # Chỉ lấy giá trị đầu tiên
+        zwei = float(results[1][0])
+        zbmi = float(results[2][0])
 
-    return jsonify({
-        'Length-for-Age Z-Score': zlen,
-        'Weight-for-Age Z-Score': zwei,
-        'BMI-for-Age Z-Score': zbmi
-    })
+        return jsonify({
+            'Length-for-Age Z-Score': zlen,
+            'Weight-for-Age Z-Score': zwei,
+            'BMI-for-Age Z-Score': zbmi
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
