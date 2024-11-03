@@ -1,9 +1,7 @@
 [setup]
-# Cài đặt các gói hệ thống cần thiết cho Flask và rpy2
-systemPackages = ["gcc", "libffi", "gfortran", "pkg-config", "libxml2", "libxslt"]
+systemPackages = ["gcc", "libffi", "gfortran", "pkg-config", "libxml2", "libxslt", "r-base", "r-dev"]
 
 [install]
-# Tạo môi trường ảo và cài đặt các thư viện Python từ requirements.txt
 cmds = [
     "python -m venv /opt/venv",
     ". /opt/venv/bin/activate",
@@ -11,5 +9,4 @@ cmds = [
 ]
 
 [start]
-# Lệnh khởi động ứng dụng Flask
 cmd = "flask run --host=0.0.0.0 --port=${PORT:-5000}"
