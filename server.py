@@ -14,7 +14,7 @@ robjects.r('''
 load_standards = robjects.globalenv['load_standards']
 standards = load_standards()
 
-@app.route('/calculate_zscore', methods=['POST'])
+@app.route('/mdCalc', methods=['POST'])
 def calculate_zscore():
     data = request.json
     age = data['age']
