@@ -1,2 +1,2 @@
-Flask
-rpy2
+Flask==2.1.0
+rpy2==3.4.5
