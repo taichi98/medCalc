@@ -9,7 +9,7 @@ robjects.r('''
   load_standards <- function() {
     list_standards <- readRDS(file.path("data", "standards.rds"))
     list_standards
-  }
+  } 
 ''')
 load_standards = robjects.globalenv['load_standards']
 standards = load_standards()
