@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Load RDS file in R and expose via Python using rpy2
 robjects.r('''
   load_standards <- function() {
-    list_standards <- readRDS(file.path("code", "standards.rds"))
+    list_standards <- readRDS(file.path("data", "standards.rds"))
     list_standards
   }
 ''')
