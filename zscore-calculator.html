@@ -33,11 +33,11 @@
     </div>
 
     <div id="mySidebar" class="sidebar"> 
-        <a id="item1" href="/" onclick="loadPage('cpap.html'); highlightSelected('item1');">CPAP Calculator</a>
-        <a id="item2" href="/" onclick="loadPage('ett.html'); highlightSelected('item2');">ETT Size</a>
-        <a id="item3" href="/" onclick="loadPage('bmi.html'); highlightSelected('item3');">BMI & BSA Calculator</a>
-	<a id="item4" href="/" onclick="loadPage('lightCriteria.html'); highlightSelected('item4');">Light's Criteria</a>
-	<a id="item5" href="/" onclick="loadPage('ibw.html'); highlightSelected('item5');">Ideal Body Weight</a>
+        <a id="item1" href="/" onclick="clearLastPage(); loadPage('cpap.html'); highlightSelected('item1');">CPAP Calculator</a>
+        <a id="item2" href="/" onclick="clearLastPage(); loadPage('ett.html'); highlightSelected('item2');">ETT Size</a>
+        <a id="item3" href="/" onclick="clearLastPage(); loadPage('bmi.html'); highlightSelected('item3');">BMI & BSA Calculator</a>
+	<a id="item4" href="/" onclick="clearLastPage(); loadPage('lightCriteria.html'); highlightSelected('item4');">Light's Criteria</a>
+	<a id="item5" href="/" onclick="clearLastPage(); loadPage('ibw.html'); highlightSelected('item5');">Ideal Body Weight</a>
         <a id="item6" href="javascript:void(0)" onclick="loadPage('zscore-calculator'); highlightSelected('item6');">Z-Score</a>
     </div>
 	
