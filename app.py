@@ -6,8 +6,7 @@ from rpy2.robjects import r
 app = Flask(__name__)
 
 # Đảm bảo bạn có đường dẫn đúng đến file standards.rds
-standards_path = os.path.join('data', 'standards.rds')
-list_standards <- readRDS(standards_path)
+list_standards = os.path.join('data', 'standards.rds')
 
 # Hàm tính Z-score (cần thay đổi cho phù hợp với logic của bạn)
 def calculate_z_score(sex, age, height, weight):
