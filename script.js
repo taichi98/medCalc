@@ -109,17 +109,6 @@ function highlightSelected(selectedId) {
     sessionStorage.setItem('selectedItem', selectedId);
 }
 
-
-    // Kiểm tra xem mục được chọn cuối cùng đã được lưu trong localStorage hay chưa
-    var selectedItem = sessionStorage.getItem('selectedItem');
-    if (selectedItem) {
-        highlightSelected(selectedItem);
-    } else {
-        // Nếu không có, mặc định chọn mục đầu tiên (item1)
-        highlightSelected('item1');
-    }
-}
-
 function calculateETT() {
     const age = parseInt(document.getElementById('ageInput').value);
 
