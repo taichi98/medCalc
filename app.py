@@ -37,10 +37,6 @@ def zscore_calculator():
 @app.route('/<path:filename>')
 def static_files(filename):
     return send_from_directory(os.getcwd(), filename)
-
-@app.route('/icon.png')
-def favicon():
-    return send_from_directory(os.getcwd(), 'icon.png')
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
