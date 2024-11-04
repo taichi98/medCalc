@@ -87,9 +87,6 @@ window.addEventListener('load', function() {
     const lastPage = sessionStorage.getItem('lastPage');
     if (lastPage) {
         loadPage(lastPage);
-    } else {
-        // Nếu không có, mặc định tải trang cpap.html
-        loadPage('cpap.html');
     }
 });
 
