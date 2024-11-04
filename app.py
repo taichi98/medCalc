@@ -36,8 +36,12 @@ CalculateZScores <- function(sex, age_in_days, height, weight) {
 ''')
 
 @app.route('/')
-def index():
-    return render_template('zscore-calculator.html')
+def home():
+    return render_template('index.html')  # Trả về index.html khi truy cập vào /
+    
+@app.route('/zscore')
+def zscore():
+    return render_template('zscore-calculator.html') 
 
 @app.route('/calculate_zscore', methods=['POST'])
 def calculate_zscore():
