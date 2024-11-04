@@ -54,10 +54,9 @@ def calculate_zscore():
     calculate_zscore_r = robjects.globalenv['CalculateZScores']
     results = calculate_zscore_r(sex, age, height, weight)
 
-    zlen = results[0]
-    zwei = results[1]
-    zbmi = results[2]
-
+    zlen = float(results[0])  # Chuyển đổi kết quả từ R về kiểu float
+    zwei = float(results[1])  # Chuyển đổi kết quả từ R về kiểu float
+    zbmi = float(results[2])  # Chuyển đổi kết quả từ R về kiểu float
     return jsonify({
         'Length-for-Age Z-Score': zlen,
         'Weight-for-Age Z-Score': zwei,
