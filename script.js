@@ -85,6 +85,8 @@ function loadZScoreCalculator() {
         .then(html => {
             document.getElementById('main').innerHTML = html;
             sessionStorage.setItem('lastPage', '/zscore-calculator'); 
+            window.history.pushState({page: 'zscore'}, 'Z-Score', '/zscore-calculator'); // Cập nhật URL
+
         });
 }
 
