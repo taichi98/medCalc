@@ -1,21 +1,20 @@
-# Sử dụng image Python làm base
-FROM python:3.8-slim
+# Sử dụng image cơ bản của Python
+FROM python:3.11
 
-# Thiết lập thư mục làm việc
+# Cài đặt R và các thư viện cần thiết
+RUN apt-get update && apt-get install -y r-base
+
+# Cài đặt các gói Python từ requirements.txt
 WORKDIR /app
-
-# Sao chép file requirements vào image
 COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Cài đặt các phụ thuộc
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Sao chép toàn bộ mã nguồn vào image
+# Copy mã nguồn vào container
 COPY . .
 
-# Expose cổng mà ứng dụng sẽ chạy
+# Đặt biến môi trường cho Flask (chỉ định ứng dụng cần chạy)
+ENV FLASK_APP=app.py
+# Mở cổng cần thiết (theo mặc định Flask chạy trên cổng 5000)
 EXPOSE 5000
-
-# Lệnh khởi động ứng dụng
-CMD ["python", "app.py"]
- 
+# Lệnh để chạy ứng dụng
+CMD ["flask", "run", "--host=0.0.0.0"]
