@@ -79,6 +79,14 @@ function loadPage(page) {
         });
 }
 
+function loadZScoreCalculator() {
+    fetch('/zscore-calculator')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('content').innerHTML = html;
+        });
+}
+
 function highlightSelected(selectedId) {
     // Xóa lớp "selected" từ các mục khác
     var items = document.querySelectorAll('.sidebar a');
