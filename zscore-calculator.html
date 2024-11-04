@@ -36,13 +36,14 @@
         <a id="item1" href="/" onclick="loadPage('cpap.html'); highlightSelected('item1');">CPAP Calculator</a>
         <a id="item2" href="/" onclick="loadPage('ett.html'); highlightSelected('item2');">ETT Size</a>
         <a id="item3" href="/" onclick="loadPage('bmi.html'); highlightSelected('item3');">BMI & BSA Calculator</a>
-	    <a id="item4" href="/" onclick="loadPage('lightCriteria.html'); highlightSelected('item4');">Light's Criteria</a>
-	    <a id="item5" href="/" onclick="loadPage('ibw.html'); highlightSelected('item5');">Ideal Body Weight</a>
+	<a id="item4" href="/" onclick="loadPage('lightCriteria.html'); highlightSelected('item4');">Light's Criteria</a>
+	<a id="item5" href="/" onclick="loadPage('ibw.html'); highlightSelected('item5');">Ideal Body Weight</a>
         <a id="item6" href="javascript:void(0)" onclick="loadPage('zscore-calculator'); highlightSelected('item6');">Z-Score</a>
     </div>
 	
     <div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
-    
+
+<div id="main">
     <div class="container">
         <h1>Tính Z-score</h1>
         <form id="zscore-form">
@@ -63,8 +64,10 @@
             <br>
             <button type="submit">Tính Z-score</button>
         </form>
-    </div>
+    <br>
     <div id="result"></div>
+    </div>
+</div>
     <script>
         document.getElementById('zscore-form').addEventListener('submit', function(event) {
             event.preventDefault();
