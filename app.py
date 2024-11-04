@@ -17,6 +17,9 @@ def calculate_z_score(sex, age, height, weight):
 @app.route('/')
 def index():
     return send_from_directory(os.getcwd(), 'index.html')
+@app.route('/zscore-calculator', methods=['GET'])
+def zscore_calculator():
+    return send_from_directory(os.getcwd(), 'zscore-calculator.html')
 
 @app.route('/zscore-calculator', methods=['GET', 'POST'])
 def zscore_calculator():
