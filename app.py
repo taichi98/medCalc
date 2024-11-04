@@ -51,7 +51,7 @@ def compute_wfh(data, standards):
 def index():
     return render_template('index.html')
 
-@app.route('/calculate', methods=['POST'])
+@app.route('/zscore', methods=['POST'])
 def calculate():
     # Nhận dữ liệu từ form
     data = request.form.to_dict()
@@ -61,7 +61,7 @@ def calculate():
     result = calculate_z_scores(df)
     
     # Chuyển đổi kết quả thành HTML hoặc JSON để hiển thị
-    return render_template('result.html', result=result)
+    return render_template('zscore-calculator.html', result=result)
 
 if __name__ == '__main__':
     app.run(debug=True)
