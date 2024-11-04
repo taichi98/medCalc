@@ -12,8 +12,11 @@ RUN pip install -r requirements.txt
 # Copy mã nguồn vào container
 COPY . .
 
-# Đặt biến môi trường cho R_HOME
-ENV R_HOME /usr/lib/R
+# Đặt biến môi trường cho Flask (chỉ định ứng dụng cần chạy)
+ENV FLASK_APP=app.py
 
-# Chạy ứng dụng
-CMD ["python", "app.py"]
+# Mở cổng cần thiết (theo mặc định Flask chạy trên cổng 5000)
+EXPOSE 5000
+
+# Lệnh để chạy ứng dụng
+CMD ["flask", "run", "--host=0.0.0.0"]
