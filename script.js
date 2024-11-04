@@ -66,6 +66,14 @@ function validateFiO2() {
         document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
     }
 
+function loadPage_ZScore(page) {// Mục đích chỉ để lưu lastPage
+    fetch(page)
+        .then(response => response.text())
+        .then(data => {
+            sessionStorage.setItem('lastPage', page);
+        })
+}
+
 function loadPage(page) {
     fetch(page)
         .then(response => response.text())
