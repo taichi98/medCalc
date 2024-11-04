@@ -80,13 +80,11 @@ function loadPage(page) {
 }
 
 function loadZScoreCalculator() {
-    event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
     fetch('/zscore-calculator')
         .then(response => response.text())
         .then(html => {
             document.getElementById('main').innerHTML = html;
             sessionStorage.setItem('lastPage', '/zscore-calculator'); 
-            window.history.pushState({page: 'zscore'}, 'Z-Score', '/zscore-calculator');
         });
 }
 
