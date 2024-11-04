@@ -1,60 +1,44 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tính Z-Score</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/style.css"> <!-- Cập nhật đường dẫn -->
+    <script src="/script.js"></script> <!-- Cập nhật đường dẫn -->
+    <title>Tính Z-score</title>
 </head>
 <body>
-    <h1>Tính Z-Score</h1>
-    <form id="zscoreForm">
+    <h1>Tính Z-score</h1>
+    <form id="zscore-form">
         <label for="sex">Giới tính:</label>
-        <select id="sex" name="sex" required>
-            <option value="">Chọn giới tính</option>
+        <select id="sex" name="sex">
             <option value="male">Nam</option>
             <option value="female">Nữ</option>
         </select>
         <br>
-
-        <label for="age">Tuổi (tháng):</label>
+        <label for="age">Tuổi:</label>
         <input type="number" id="age" name="age" required>
         <br>
-
         <label for="height">Chiều cao (cm):</label>
         <input type="number" id="height" name="height" required>
         <br>
-
         <label for="weight">Cân nặng (kg):</label>
         <input type="number" id="weight" name="weight" required>
         <br>
-
-        <button type="submit">Tính toán</button>
+        <button type="submit">Tính Z-score</button>
     </form>
-
-    <h2>Kết quả:</h2>
     <div id="result"></div>
-
     <script>
-        $(document).ready(function() {
-            $('#zscoreForm').on('submit', function(event) {
-                event.preventDefault(); // Ngăn chặn hành động mặc định của form
-        
-                $.ajax({
-                    type: 'POST',
-                    url: '/calculate_zscore',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        $('#result').html(`
-                            <p>Length-for-Age Z-Score: ${response['Length-for-Age Z-Score']}</p>
-                            <p>Weight-for-Age Z-Score: ${response['Weight-for-Age Z-Score']}</p>
-                            <p>BMI-for-Age Z-Score: ${response['BMI-for-Age Z-Score']}</p>
-                        `);
-                    },
-                    error: function(xhr) {
-                        $('#result').html(`<p>Lỗi: ${xhr.responseJSON.error}</p>`);
-                    }
-                });
+        document.getElementById('zscore-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch('/zscore-calculator', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Z-score: ${data.z_score}`;
             });
         });
     </script>
