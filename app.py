@@ -31,7 +31,7 @@ def zscore_calculator():
 
         return jsonify({'z_score': z_score})
 
-    return send_from_directory(os.getcwd(), 'index.html')
+    return send_from_directory(os.getcwd(), 'zscore-calculator.html')
 
 # Thêm route để phục vụ các tệp tĩnh
 @app.route('/<path:filename>')
