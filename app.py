@@ -6,45 +6,42 @@ from rpy2.robjects import pandas2ri
 
 app = Flask(__name__)
 
-# Đường dẫn tới các file R và chuẩn RDS
+# Đường dẫn tới các file RDS và R script
 list_standards_path = os.path.join('data', 'standards.rds')
 macro_z_path = "macro-z.R"
 functions_z_path = "functions-z.R"
 
 # Load các file R
 robjects.r(f"source('{macro_z_path}')")
-robjects.r(f"source('{functions_z_path}')")
+robjects.r(f"source('{functions_z_path}')") 
 
-# Kích hoạt tự động chuyển đổi giữa pandas và R data frames
+# Kích hoạt chuyển đổi tự động giữa pandas và R data frames
 pandas2ri.activate()
 
-# Load the R standards file
-standards_data = r['readRDS'](list_standards_path)
+# Load file RDS
+list_standards = r['readRDS'](list_standards_path)
 
-# Function to calculate Z-scores using R
+# Function để tính toán Z-scores
 def calculate_z_scores(sex, age, height, weight):
     # Prepare data as a DataFrame in R
     input_data = robjects.DataFrame({
         "age_in_days": [age * 30],  # Convert months to days
         "sex": [sex],
         "height": [height],
-        "weight": [weight],
-        "age_group": [None],  # If age group is needed
-        "oedema": [None],  # Assuming no oedema
+        "weight": [weight]
     })
 
-    # Call the R function
-    z_scores = r['MakeZScores1'](
-        growth_standard=r['list_standards'][["lenanthro"]],
-        measure="clenhei",
-        zscore_name="zlen",
-        flag_name="zlen_flag",
-        flag_max=6,
-        agevar="age_in_days",
-        sexvar="sex",
-        condition="!is.na(data[[agevar]]) & data[[agevar]] >= 0 & data[[agevar]] <= 1856",
-        data=input_data
-    )  # Assuming 'h' for height
+    # Lấy giá trị từ list_standards
+    growth_standard = list_standards.rx2("lenanthro")  # Giả sử lenanthro chứa các chuẩn chiều cao
+    measure = "height"  # Tên biến chiều cao
+    zscore_name = "zlen"  # Tên biến lưu Z-score chiều cao
+    flag_name = "zlen_flag"  # Tên biến lưu cờ cho Z-score chiều cao
+    flag_max = 6  # Ngưỡng cờ tối đa
+    condition = "!is.na(data[[agevar]]) & data[[agevar]] >= 0 & data[[agevar]] <= 1856"  # Điều kiện
+
+    # Gọi hàm MakeZScores1 từ R
+    z_scores = r['MakeZScores1'](input_data, growth_standard, measure, zscore_name, flag_name, flag_max, condition, agevar="age_in_days", sexvar="sex")
+
     return z_scores
 
 @app.route('/')
@@ -59,14 +56,12 @@ def zscore_calculator():
         height = float(request.form.get('height'))
         weight = float(request.form.get('weight'))
 
-        # Calculate Z-scores using the R function
+        # Tính toán Z-scores bằng hàm R
         z_scores = calculate_z_scores(sex, age, height, weight)
 
         return jsonify({
-            'zwfl': z_scores.rx2('zwfl')[0],
-            'zbmi': z_scores.rx2('zbmi')[0],
             'zlen': z_scores.rx2('zlen')[0],
-            'zwei': z_scores.rx2('zwei')[0]
+            'zlen_flag': z_scores.rx2('zlen_flag')[0]
         })
 
     return send_from_directory(os.getcwd(), 'zscore-calculator.html')
