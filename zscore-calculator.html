@@ -38,7 +38,7 @@
         $(document).ready(function() {
             $('#zscoreForm').on('submit', function(event) {
                 event.preventDefault(); // Ngăn chặn hành động mặc định của form
-
+        
                 $.ajax({
                     type: 'POST',
                     url: '/calculate_zscore',
@@ -49,13 +49,16 @@
                             <p>Weight-for-Age Z-Score: ${response['Weight-for-Age Z-Score']}</p>
                             <p>BMI-for-Age Z-Score: ${response['BMI-for-Age Z-Score']}</p>
                         `);
+                        $('#error').html(''); // Xóa thông báo lỗi nếu có
                     },
                     error: function(xhr) {
-                        $('#result').html('<p>' + xhr.responseJSON.error + '</p>');
+                        $('#result').html(''); // Xóa kết quả nếu có lỗi
+                        $('#error').html('<p>' + xhr.responseJSON.error + '</p>');
                     }
                 });
             });
         });
+
     </script>
 </body>
 </html>
