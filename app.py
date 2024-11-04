@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import rpy2.robjects as robjects
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
 # Đường dẫn tới file standards.rds
 standards_path = os.path.join('data', 'standards.rds')
