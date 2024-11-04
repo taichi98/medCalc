@@ -42,7 +42,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/calculate_zscore',
+                    url: '/zscore',
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#result').html(`
