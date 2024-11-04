@@ -1,2 +1,4 @@
 Flask
 rpy2
+numpy
+pandas
