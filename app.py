@@ -11,57 +11,57 @@ standards_path = os.path.join('data', 'standards.rds')
 robjects.r['readRDS'](standards_path)
 robjects.r('''
 list_standards <- readRDS(file.path("data", "standards.rds"))
-
-CalculateZScores <- function(sex, age_in_days, height, weight) {
-    # Kiểm tra dữ liệu đầu vào
-    if (is.na(sex) || is.na(age_in_days) || is.na(height) || is.na(weight)) {
-        stop("Giá trị đầu vào không hợp lệ.")
-    }
-
-    # Chuyển đổi giới tính
-    csex <- ifelse(sex == "male", 1, ifelse(sex == "female", 2, NA))
-    
-    # Chuẩn hóa dữ liệu
-    clenhei <- ifelse(age_in_days < 731, height + 0.7, height - 0.7)
-    cbmi <- weight / (clenhei / 100)^2
-    
-    # Tính toán z-scores
-    zlen <- MakeZScores1(list_standards[["lenanthro"]], "clenhei", "zlen", "zlen_flag", 6, age_in_days, csex, "!is.na(age_in_days) & age_in_days >= 0 & age_in_days <= 1856")
-    zwei <- MakeZScores2(list_standards[["weianthro"]], weight, "zwei", "zwei_flag", 5, -6, age_in_days, csex, NULL, '!is.na(age_in_days) & age_in_days >= 0 & age_in_days <= 1856')
-    zbmi <- MakeZScores2(list_standards[["bmianthro"]], cbmi, "zbmi", "zbmi_flag", 5, age_in_days, csex, NULL, '!is.na(age_in_days) & age_in_days >= 0 & age_in_days <= 1856')
-    
-    # Trả về kết quả
-    list(zlen = zlen, zwei = zwei, zbmi = zbmi)
-}
 ''')
 
-@app.route('/')
-def home():
-    return render_template('index.html')  # Trả về index.html khi truy cập vào /
+def calculate_z_scores(data):
+    # Chuyển đổi chiều cao và cân nặng sang kiểu số
+    data['weight'] = pd.to_numeric(data['weight'], errors='coerce')
+    data['length'] = pd.to_numeric(data['length'], errors='coerce')
+    data['age_in_days'] = pd.to_numeric(data['age_in_days'], errors='coerce')
+
+    # Các giá trị mặc định
+    data['csex'] = data['sex'].apply(lambda x: 1 if x.lower() in ['m', '1'] else (2 if x.lower() in ['f', '2'] else np.nan))
     
-@app.route('/zscore')
-def zscore():
-    return render_template('zscore-calculator.html') 
+    # Tính toán z-scores cho từng chỉ số
+    data['zlen'] = compute_z_score(data['length'], list_standards['lenanthro'], data['age_in_days'], data['csex'])
+    data['zwei'] = compute_z_score(data['weight'], list_standards['weianthro'], data['age_in_days'], data['csex'])
+    data['zbmi'] = compute_z_score(data['weight'] / (data['length']/100) ** 2, list_standards['bmianthro'], data['age_in_days'], data['csex'])
+    
+    # Tính toán z-scores cho chiều dài và cân nặng theo chiều cao
+    data['zwfl'] = compute_wfl(data, list_standards['wflanthro'])
+    data['zwfh'] = compute_wfh(data, list_standards['wfhanthro'])
+    
+    return data
 
-@app.route('/calculate_zscore', methods=['POST'])
-def calculate_zscore():
-    sex = request.form['sex']
-    age = int(request.form['age'])
-    height = float(request.form['height'])
-    weight = float(request.form['weight'])
+def compute_z_score(measure, standards, age_in_days, sex):
+    # Đây là hàm giả định để tính toán z-score dựa trên tiêu chuẩn
+    # Thay thế bằng logic cụ thể theo yêu cầu của bạn
+    # Logic z-score sẽ được tính toán tại đây
+    return (measure - standards.mean()) / standards.std()
 
-    # Gọi hàm R để tính z-scores
-    calculate_zscore_r = robjects.globalenv['CalculateZScores']
-    results = calculate_zscore_r(sex, age, height, weight)
+def compute_wfl(data, standards):
+    # Logic tính toán z-score cho cân nặng chiều dài
+    return (data['weight'] / (data['length'] / 100) ** 2 - standards.mean()) / standards.std()
 
-    zlen = float(results[0])  # Chuyển đổi kết quả từ R về kiểu float
-    zwei = float(results[1])  # Chuyển đổi kết quả từ R về kiểu float
-    zbmi = float(results[2])  # Chuyển đổi kết quả từ R về kiểu float
-    return jsonify({
-        'Length-for-Age Z-Score': zlen,
-        'Weight-for-Age Z-Score': zwei,
-        'BMI-for-Age Z-Score': zbmi
-    })
+def compute_wfh(data, standards):
+    # Logic tính toán z-score cho cân nặng chiều cao
+    return (data['weight'] / (data['height'] / 100) ** 2 - standards.mean()) / standards.std()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/calculate', methods=['POST'])
+def calculate():
+    # Nhận dữ liệu từ form
+    data = request.form.to_dict()
+    df = pd.DataFrame([data])
+    
+    # Tính toán z-scores
+    result = calculate_z_scores(df)
+    
+    # Chuyển đổi kết quả thành HTML hoặc JSON để hiển thị
+    return render_template('result.html', result=result)
 
 if __name__ == '__main__':
     app.run(debug=True)
