@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tính Z-Score</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>Tính Z-Score</h1>
@@ -49,16 +50,13 @@
                             <p>Weight-for-Age Z-Score: ${response['Weight-for-Age Z-Score']}</p>
                             <p>BMI-for-Age Z-Score: ${response['BMI-for-Age Z-Score']}</p>
                         `);
-                        $('#error').html(''); // Xóa thông báo lỗi nếu có
                     },
                     error: function(xhr) {
-                        $('#result').html(''); // Xóa kết quả nếu có lỗi
-                        $('#error').html('<p>' + xhr.responseJSON.error + '</p>');
+                        $('#result').html(`<p>Lỗi: ${xhr.responseJSON.error}</p>`);
                     }
                 });
             });
         });
-
     </script>
 </body>
 </html>
