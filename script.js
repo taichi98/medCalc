@@ -83,7 +83,8 @@ function loadZScoreCalculator() {
     fetch('/zscore-calculator')
         .then(response => response.text())
         .then(html => {
-            document.getElementById('content').innerHTML = html;
+            document.getElementById('main').innerHTML = html;
+            sessionStorage.setItem('lastPage', '/zscore-calculator'); 
         });
 }
 
