@@ -66,13 +66,6 @@ function validateFiO2() {
         document.getElementById('oxyFlow').textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
     }
 
-function loadPage_ZScore(page) {// Mục đích chỉ để lưu lastPage
-    fetch(page)
-        .then(response => response.text())
-        .then(data => {
-            sessionStorage.setItem('lastPage', page);
-        })
-}
 
 function loadPage(page) {
     fetch(page)
@@ -84,15 +77,6 @@ function loadPage(page) {
         })
         .catch(error => {
             console.error('Error loading page:', error);
-        });
-}
-
-function loadZScoreCalculator() {
-    fetch('/zscore-calculator')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('main').innerHTML = html;
-            sessionStorage.setItem('lastPage', '/zscore-calculator'); 
         });
 }
 
