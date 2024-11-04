@@ -68,17 +68,31 @@ function validateFiO2() {
 
 
 function loadPage(page) {
-    fetch(page)
+    // Load nội dung trang và lưu vào sessionStorage
+    fetch(`/${page}`)
         .then(response => response.text())
-        .then(data => {
-            document.getElementById('main').innerHTML = data;
-            // Lưu lại trang hiện tại vào localStorage
-            sessionStorage.setItem('lastPage', page);
-        })
-        .catch(error => {
-            console.error('Error loading page:', error);
+        .then(html => {
+            document.getElementById('main').innerHTML = html;
+            sessionStorage.setItem('lastPage', page); // Lưu trang hiện tại
         });
 }
+
+// Xóa sessionStorage khi chọn trang chủ
+function clearLastPage() {
+    sessionStorage.removeItem('lastPage');
+}
+
+// Kiểm tra và tải lại trang cuối cùng khi load lại trang
+window.addEventListener('load', function() {
+    const lastPage = sessionStorage.getItem('lastPage');
+    if (lastPage) {
+        loadPage(lastPage);
+    } else {
+        // Nếu không có, mặc định tải trang cpap.html
+        loadPage('cpap.html');
+    }
+});
+
 
 function highlightSelected(selectedId) {
     // Xóa lớp "selected" từ các mục khác
@@ -95,16 +109,6 @@ function highlightSelected(selectedId) {
     sessionStorage.setItem('selectedItem', selectedId);
 }
 
-// Hàm để tải lại trang cuối cùng khi tải lại trang web
-function loadLastPage() {
-    // Kiểm tra xem trang cuối cùng đã được lưu trong localStorage hay chưa
-    var lastPage = sessionStorage.getItem('lastPage');
-    if (lastPage) {
-        loadPage(lastPage);
-    } else {
-        // Nếu không có, mặc định tải trang cpap.html
-        loadPage('cpap.html');
-    }
 
     // Kiểm tra xem mục được chọn cuối cùng đã được lưu trong localStorage hay chưa
     var selectedItem = sessionStorage.getItem('selectedItem');
