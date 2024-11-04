@@ -34,7 +34,17 @@ def calculate_z_scores(sex, age, height, weight):
     })
 
     # Call the R function
-    z_scores = r['CalculateZScores'](input_data, sex="sex", weight="weight", lenhei="height", lenhei_unit="h")  # Assuming 'h' for height
+    z_scores = r['MakeZScores1'](
+        growth_standard=r['list_standards'][["lenanthro"]],
+        measure="clenhei",
+        zscore_name="zlen",
+        flag_name="zlen_flag",
+        flag_max=6,
+        agevar="age_in_days",
+        sexvar="sex",
+        condition="!is.na(data[[agevar]]) & data[[agevar]] >= 0 & data[[agevar]] <= 1856",
+        data=input_data
+    )  # Assuming 'h' for height
     return z_scores
 
 @app.route('/')
