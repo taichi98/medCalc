@@ -9,7 +9,7 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
 </head>
-<body onload="loadLastPage(); highlightSelected(sessionStorage.getItem('selectedItem') || 'item1');">
+<body onload="highlightSelected(sessionStorage.getItem('selectedItem') || 'item1');">
 
     <div class="header">
         <div class="icon-container" onclick="toggleSidebar()">
@@ -40,7 +40,7 @@
         <a id="item3" href="javascript:void(0)" onclick="loadPage('bmi.html'); highlightSelected('item3');">BMI & BSA Calculator</a>
 	<a id="item4" href="javascript:void(0)" onclick="loadPage('lightCriteria.html'); highlightSelected('item4');">Light's Criteria</a>
 	<a id="item5" href="javascript:void(0)" onclick="loadPage('ibw.html'); highlightSelected('item5');">Ideal Body Weight</a>
-        <a id="item6" href="/zscore-calculator" onclick="loadPage(/zscore-calculator); highlightSelected('item6');">Z-Score</a>
+        <a id="item6" href="/zscore-calculator" onclick="loadPage('/zscore-calculator'); highlightSelected('item6');">Z-Score</a>
     </div>
 	
     <div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
