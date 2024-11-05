@@ -267,16 +267,17 @@ function calculateLightCriteria() {
     document.getElementById('resultBoxLight').style.display = 'flex';
 }
 
-        function selectGender(selectedGender) {
-            gender = selectedGender;
-            document.getElementById('male-btn').classList.remove('active');
-            document.getElementById('female-btn').classList.remove('active');
-            if (selectedGender === 'male') {
-                document.getElementById('male-btn').classList.add('active');
-            } else {
-                document.getElementById('female-btn').classList.add('active');
-            }
+    function selectGender(selectedGender) {
+        gender = selectedGender;
+        document.getElementById('male-btn').classList.remove('active');
+        document.getElementById('female-btn').classList.remove('active');
+        if (selectedGender === 'male') {
+            document.getElementById('male-btn').classList.add('active');
+        } else {
+            document.getElementById('female-btn').classList.add('active');
         }
+        document.getElementById('gender').value = gender; // Cập nhật giá trị trường ẩn với giới tính đã chọn
+    }
 
     function calculateIBW() {
         const height = parseFloat(document.getElementById('height').value);
