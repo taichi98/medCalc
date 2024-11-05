@@ -1,75 +1,58 @@
-from flask import Flask, request, jsonify, send_from_directory
-import os
-import rpy2.robjects as robjects
-from rpy2.robjects import r
-from rpy2.robjects import pandas2ri
+from flask import Flask, request, jsonify, render_template
+import pandas as pd
+import math
 
 app = Flask(__name__)
 
-# Đường dẫn tới các file RDS và R script
-list_standards_path = os.path.join('data', 'standards.rds')
-macro_z_path = "macro-z.R"
-functions_z_path = "functions-z.R"
+# Hàm để đọc dữ liệu chuẩn từ các file txt
+def make_standard(name):
+    path = f"growthstandards/{name}.txt"
+    return pd.read_csv(path, sep='\t', dtype={'sex': int, 'age': int})
 
-# Load các file R
-robjects.r(f"source('{macro_z_path}')")
-robjects.r(f"source('{functions_z_path}')") 
+# Tải các bảng dữ liệu tiêu chuẩn
+growthstandards_bmianthro = make_standard("bmianthro")
 
-# Kích hoạt chuyển đổi tự động giữa pandas và R data frames
-pandas2ri.activate()
+# Hàm tính Z-score cho BMI theo tuổi
+def calculate_zscore_bmi(age, sex, bmi):
+    # Lọc dữ liệu theo giới tính và tuổi
+    subset = growthstandards_bmianthro[(growthstandards_bmianthro['sex'] == sex) & 
+                                       (growthstandards_bmianthro['age'] == age)]
+    
+    if not subset.empty:
+        l = subset.iloc[0]['l']
+        m = subset.iloc[0]['m']
+        s = subset.iloc[0]['s']
+        
+        # Tính Z-score
+        z_score = ((bmi / m)**l - 1) / (s * l)
+        return z_score
+    else:
+        return None
 
-# Load file RDS
-list_standards = r['readRDS'](list_standards_path)
-
-# Function để tính toán Z-scores
-def calculate_z_scores(sex, age, height, weight):
-    # Prepare data as a DataFrame in R
-    input_data = robjects.DataFrame({
-        "age_in_days": [age * 30],  # Convert months to days
-        "sex": [sex],
-        "height": [height],
-        "weight": [weight]
-    })
-
-    # Lấy giá trị từ list_standards
-    growth_standard = list_standards.rx2("lenanthro")  # Giả sử lenanthro chứa các chuẩn chiều cao
-    measure = "height"  # Tên biến chiều cao
-    zscore_name = "zlen"  # Tên biến lưu Z-score chiều cao
-    flag_name = "zlen_flag"  # Tên biến lưu cờ cho Z-score chiều cao
-    flag_max = 6  # Ngưỡng cờ tối đa
-    condition = "!is.na(data[[agevar]]) & data[[agevar]] >= 0 & data[[agevar]] <= 1856"  # Điều kiện
-
-    # Gọi hàm MakeZScores1 từ R
-    z_scores = r['MakeZScores1'](input_data, growth_standard, measure, zscore_name, flag_name, flag_max, condition, agevar="age_in_days", sexvar="sex")
-
-    return z_scores
-
-@app.route('/')
+@app.route("/")
 def index():
-    return send_from_directory(os.getcwd(), 'index.html')
+    return render_template("zscore-calculator.html")
 
-@app.route('/zscore-calculator', methods=['GET', 'POST'])
+@app.route("/zscore-calculator", methods=["POST"])
 def zscore_calculator():
-    if request.method == 'POST':
-        sex = request.form.get('sex')
-        age = float(request.form.get('age'))
-        height = float(request.form.get('height'))
-        weight = float(request.form.get('weight'))
+    sex = request.form.get("sex")
+    age = int(request.form.get("age"))
+    height = float(request.form.get("height"))
+    weight = float(request.form.get("weight"))
 
-        # Tính toán Z-scores bằng hàm R
-        z_scores = calculate_z_scores(sex, age, height, weight)
+    # Tính BMI
+    bmi = weight / ((height / 100) ** 2)
+    
+    # Chuyển đổi giới tính thành dạng số (1 = Nam, 2 = Nữ)
+    sex_value = 1 if sex == "male" else 2
+    
+    # Tính toán Z-score
+    z_score = calculate_zscore_bmi(age, sex_value, bmi)
+    
+    if z_score is not None:
+        return jsonify({"z_score": z_score})
+    else:
+        return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
 
-        return jsonify({
-            'zlen': z_scores.rx2('zlen')[0],
-            'zlen_flag': z_scores.rx2('zlen_flag')[0]
-        })
-
-    return send_from_directory(os.getcwd(), 'zscore-calculator.html')
-
-# Route for serving static files
-@app.route('/<path:filename>')
-def static_files(filename):
-    return send_from_directory(os.getcwd(), filename)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(debug=True)
