@@ -30,6 +30,38 @@ def calculate_zscore_bmi(age, sex, bmi):
     else:
         return None
 
+# Số ngày trung bình trong một tháng theo WHO
+ANTHRO_DAYS_OF_MONTH = 30.4375
+
+def round_up(x):
+    # Kiểm tra xem x có phải là số và các phần tử không âm
+    if isinstance(x, (int, float)) and x >= 0:
+        x_rounded = math.floor(x)
+        rest = x - x_rounded
+        # Làm tròn lên nếu phần thập phân >= 0.5
+        if rest >= 0.5:
+            x_rounded += 1
+        return x_rounded
+    elif isinstance(x, list):  # Trường hợp là danh sách các số
+        x_rounded_list = []
+        for val in x:
+            if val >= 0:
+                x_rounded = math.floor(val)
+                rest = val - x_rounded
+                if rest >= 0.5:
+                    x_rounded += 1
+                x_rounded_list.append(x_rounded)
+        return x_rounded_list
+    else:
+        raise ValueError("Giá trị phải là số dương hoặc danh sách các số dương.")
+
+def age_to_days(age, is_age_in_month):
+    if is_age_in_month:
+        res = age * ANTHRO_DAYS_OF_MONTH
+    else:
+        res = age
+    return int(round_up(res))
+    
 @app.route("/")
 def index():
     return send_from_directory(os.getcwd(), 'index.html')
@@ -48,11 +80,10 @@ def zscore_calculator():
         # Chuyển đổi giới tính thành dạng số (1 = Nam, 2 = Nữ)
         sex_value = 1 if sex.lower() == "male" else 2
         
-        # Chuyển đổi tuổi từ tháng sang ngày
-        age_in_days = age_months * 30.4375
+        age_days = age_to_days(age_months, is_age_in_month=True)
         
         # Tính toán Z-score
-        z_score = calculate_zscore_bmi(int(age_in_days), sex_value, bmi)
+        z_score = calculate_zscore_bmi(age_days, sex_value, bmi)
         
         if z_score is not None:
             return jsonify({"bmi": round(bmi, 2), "z_score": round(z_score, 2)})
