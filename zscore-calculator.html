@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/style.css"> <!-- Cập nhật đường dẫn -->
     <script src="/script.js"></script> <!-- Cập nhật đường dẫn -->
     <title>Tính Z-score</title>
+    <link rel="icon" href="/icon.png" type="image/png">
 </head>
 <body onload="highlightSelected('item6');">
    <div class="header">
@@ -44,9 +45,15 @@
     <div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
 
 <div id="main">
-    <div class="container">
-        <h1>Tính Z-score</h1>
-        <form id="zscore-form">
+    <div class="container_of_content">
+        <div class="description-box">
+	     <h3>Child growth standards</h3>
+		<p>This web site presents the WHO Child Growth Standards. These standards were developed using data collected in the WHO Multicentre Growth Reference Study. The site presents documentation on how the physical growth curves and motor milestone windows of achievement were developed as well as application tools to support the implementation of the standards</p>
+	</div>
+	    
+	<div class="calculation-box">
+          <h1>Tính Z-score</h1>
+          <form id="zscore-form">
             <label for="sex">Giới tính:</label>
             <select id="sex" name="sex">
                 <option value="male">Nam</option>
@@ -64,8 +71,8 @@
             <br>
             <button type="submit">Tính Z-score</button>
         </form>
-    <br>
-    <div id="result"></div>
+        <div id="result"></div>
+	</div>
     </div>
 </div>
     <script>
