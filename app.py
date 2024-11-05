@@ -31,28 +31,37 @@ def calculate_zscore_bmi(age, sex, bmi):
 
 @app.route("/")
 def index():
-    return render_template("zscore-calculator.html")
+    return send_from_directory(os.getcwd(), 'index.html')
 
-@app.route("/zscore-calculator", methods=["POST"])
+@app.route("/zscore-calculator", methods=["GET", "POST"])
 def zscore_calculator():
-    sex = request.form.get("sex")
-    age = int(request.form.get("age"))
-    height = float(request.form.get("height"))
-    weight = float(request.form.get("weight"))
+    if request.method == "POST":
+        sex = request.form.get("sex")
+        age = int(request.form.get("age"))
+        height = float(request.form.get("height"))
+        weight = float(request.form.get("weight"))
 
-    # Tính BMI
-    bmi = weight / ((height / 100) ** 2)
-    
-    # Chuyển đổi giới tính thành dạng số (1 = Nam, 2 = Nữ)
-    sex_value = 1 if sex == "male" else 2
-    
-    # Tính toán Z-score
-    z_score = calculate_zscore_bmi(age, sex_value, bmi)
-    
-    if z_score is not None:
-        return jsonify({"z_score": z_score})
+        # Tính BMI
+        bmi = weight / ((height / 100) ** 2)
+        
+        # Chuyển đổi giới tính thành dạng số (1 = Nam, 2 = Nữ)
+        sex_value = 1 if sex.lower() == "male" else 2
+        
+        # Tính toán Z-score
+        z_score = calculate_zscore_bmi(age, sex_value, bmi)
+        
+        if z_score is not None:
+            return jsonify({"bmi": round(bmi, 2), "z_score": z_score})
+        else:
+            return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
     else:
-        return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
-
-if __name__ == "__main__":
-    app.run(debug=True)
+        # Trả về trang HTML `zscore-calculator.html` cho yêu cầu GET
+        return send_from_directory(os.getcwd(), 'zscore-calculator.html')
+        
+# Route for serving static files
+@app.route('/<path:filename>')
+def static_files(filename):
+    return send_from_directory(os.getcwd(), filename)
+    
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
