@@ -88,9 +88,19 @@
                 </div>
 	    <input type="hidden" id="gender" name="sex" required>
             <br>
+
+	    <label for="dob">Date of Birth:</label>
+	    <input type="date" id="dob" name="dob" required>
+	    <br>
+		
+	    <label for="current-day">Current Day:</label>
+	    <input type="date" id="current-day" name="current_day" required>
+	    <br>	
+	    <!--  
             <label for="age">Age (month):</label>
             <input type="number" id="age" name="age" required>
-            <br>
+            <br> --> 
+		  
             <label for="height">Height (cm):</label>
             <input type="number" id="height" name="height" required>
             <br>
@@ -108,18 +118,34 @@
     </div>
 </div>
     <script>
+        function calculateAgeInDays(dob, currentDay) {
+            const birthDate = new Date(dob);
+            const currentDate = new Date(currentDay);
+            const timeDifference = currentDate - birthDate;
+            const ageInDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            return ageInDays;
+        }
+
         document.getElementById('zscore-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(this);
+            // Lấy giá trị của 'dob' và 'current-day' từ form
+            const dob = document.getElementById('dob').value;
+            const currentDay = document.getElementById('current-day').value;
+            // Tính toán ageInDays
+            const ageInDays = calculateAgeInDays(dob, currentDay);
+            // Thêm ageInDays vào FormData
+            formData.append('ageInDays', ageInDays);
+
             fetch('/zscore-calculator', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
-		document.getElementById('bmi-result').innerText = `BMI: ${data.bmi}`;
+                document.getElementById('bmi-result').innerText = `BMI: ${data.bmi}`;
                 document.getElementById('bmiage-result').innerText = `BMI for Age: ${data.bmi_age}`;
-	        document.getElementById('wei-result').innerText = `Weight for Age: ${data.wei}`;
+                document.getElementById('wei-result').innerText = `Weight for Age: ${data.wei}`;
             });
         });
     </script>
