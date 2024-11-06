@@ -89,13 +89,18 @@
 	    <input type="hidden" id="gender" name="sex" required>
             <br>
 
-	    <label for="dob">Date of Birth:</label>
-	    <input type="date" id="dob" name="dob" required>
-	    <br>
-		
-	    <label for="current-day">Current Day:</label>
-	    <input type="date" id="current-day" name="current_day" required>
-	    <br>	
+	<div class="container_date_input">
+	    <div class="field_date_input">
+	        <label for="dob">Date of Birth:</label>
+	        <input type="date" id="dob" name="dob" required style="display: none;">
+	        <input type="text" id="dob-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('dob').showPicker()">
+	    </div>
+	    <div class="field_date_input">
+	        <label for="current-day">Current Day:</label>
+	        <input type="date" id="current-day" name="current_day" required style="display: none;">
+	        <input type="text" id="current-day-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('current-day').showPicker()">
+	    </div>
+	</div>	
 	    <!--  
             <label for="age">Age (month):</label>
             <input type="number" id="age" name="age" required>
@@ -118,6 +123,34 @@
     </div>
 </div>
     <script>
+	  // Đặt ngày hiện tại cho "Current Day" khi trang tải
+	  window.addEventListener('DOMContentLoaded', () => {
+	    const today = new Date();
+	    const formattedToday = formatDate(today);
+	    document.getElementById("current-day").valueAsDate = today;
+	    document.getElementById("current-day-formatted").value = formattedToday;
+	  });
+	
+	  // Hàm định dạng ngày thành dd/mm/yyyy
+	  function formatDate(date) {
+	    const day = ('0' + date.getDate()).slice(-2);
+	    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+	    const year = date.getFullYear();
+	    return `${day}/${month}/${year}`;
+	  }
+	
+	  // Khi chọn ngày sinh, cập nhật trường hiển thị
+	  document.getElementById("dob").addEventListener("change", function() {
+	    const date = new Date(this.value);
+	    document.getElementById("dob-formatted").value = formatDate(date);
+	  });
+	
+	  // Khi chọn ngày hiện tại, cập nhật trường hiển thị
+	  document.getElementById("current-day").addEventListener("change", function() {
+	    const date = new Date(this.value);
+	    document.getElementById("current-day-formatted").value = formatDate(date);
+	  });
+	    
         function calculateAgeInDays(dob, currentDay) {
             const birthDate = new Date(dob);
             const currentDate = new Date(currentDay);
