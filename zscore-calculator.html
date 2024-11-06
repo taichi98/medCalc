@@ -87,6 +87,7 @@
                     <button type="button" id="female-btn" onclick="selectGender('female')">Female</button>
                 </div>
 	    <input type="hidden" id="gender" name="sex" required>
+	    <span id="gender-error" style="color: red; display: none;">Please select a gender.</span>
             <br>
 
 	<div class="container_date_input">
@@ -164,6 +165,11 @@
 
         document.getElementById('zscore-form').addEventListener('submit', function(event) {
             event.preventDefault();
+	// Kiểm tra nếu giới tính chưa được chọn
+        if (!gender) {
+            document.getElementById('gender-error').style.display = 'block';
+            event.preventDefault(); // Ngăn chặn form gửi đi nếu chưa chọn giới tính
+        }
             const formData = new FormData(this);
             // Lấy giá trị của 'dob' và 'current-day' từ form
             const dob = document.getElementById('dob').value;
