@@ -85,7 +85,8 @@ def index():
 def zscore_calculator():
     if request.method == "POST":
         sex = request.form.get("sex")
-        age_months = int(request.form.get("age"))  # Nhận tuổi theo tháng
+        #age_months = int(request.form.get("age"))  # Nhận tuổi theo tháng
+        age_days = int(request.form.get("ageInDays"))
         height = float(request.form.get("height"))
         weight = float(request.form.get("weight"))
 
@@ -95,7 +96,7 @@ def zscore_calculator():
         # Chuyển đổi giới tính thành dạng số (1 = Nam, 2 = Nữ)
         sex_value = 1 if sex.lower() == "male" else 2
         
-        age_days = age_to_days(age_months, is_age_in_month=True)
+        #age_days = age_to_days(age_months, is_age_in_month=True)
         
         # Tính toán Z-score
         bmi_age = calculate_zscore_bmi(age_days, sex_value, bmi)
