@@ -100,8 +100,9 @@
             <button type="submit">Caculate</button>
         </form>
         <div id="result">
-		<p id="zscore-result"></p>
+		<p id="bmiage-result"></p>
                 <p id="bmi-result"></p> <!-- Thêm phần tử để hiển thị BMI -->
+		<p id="wei-result"></p> 
 	</div>
 	</div>
     </div>
@@ -117,7 +118,8 @@
             .then(response => response.json())
             .then(data => {
 		document.getElementById('bmi-result').innerText = `BMI: ${data.bmi}`;
-                document.getElementById('zscore-result').innerText = `BMI for Age: ${data.z_score}`;
+                document.getElementById('bmiage-result').innerText = `BMI for Age: ${data.bmi_age}`;
+	        document.getElementById('wei-result').innerText = `BMI for Age: ${data.wei}`;
             });
         });
     </script>
