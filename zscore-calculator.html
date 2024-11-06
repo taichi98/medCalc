@@ -168,7 +168,7 @@
 	// Kiểm tra nếu giới tính chưa được chọn
         if (!gender) {
             document.getElementById('gender-error').style.display = 'block';
-            event.preventDefault(); // Ngăn chặn form gửi đi nếu chưa chọn giới tính
+            return // Ngăn chặn form gửi đi nếu chưa chọn giới tính
         }
             const formData = new FormData(this);
             // Lấy giá trị của 'dob' và 'current-day' từ form
