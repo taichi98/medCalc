@@ -1,10 +1,5 @@
 let sidebarOpen = false;
 let gender = '';
-// Đặt lại giá trị của trường giới tính khi tải trang
-window.addEventListener('DOMContentLoaded', () => {
-    gender = ''; // Đặt lại giá trị gender khi trang tải lại
-    document.getElementById('gender').value = ''; // Đặt lại trường ẩn
-});
 
 function toggleSidebar() {
     const sidebar = document.getElementById("mySidebar");
