@@ -94,8 +94,8 @@ def zscore_calculator():
         bmi = weight / ((height / 100) ** 2)
         
         # Chuyển đổi giới tính thành dạng số (1 = Nam, 2 = Nữ)
-        sex_value = 1 if sex.lower() == "male" else
-        sex_value = 2 if sex.lower() == "female"
+        sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
+
         #age_days = age_to_days(age_months, is_age_in_month=True)
         
         # Tính toán Z-score
