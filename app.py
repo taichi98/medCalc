@@ -12,6 +12,7 @@ def make_standard(name):
 
 # Tải các bảng dữ liệu tiêu chuẩn
 growthstandards_bmianthro = make_standard("bmianthro")
+growthstandards_weianthro = make_standard("weianthro")
 
 # Hàm tính Z-score cho BMI theo tuổi
 def calculate_zscore_bmi(age, sex, bmi):
@@ -25,11 +26,25 @@ def calculate_zscore_bmi(age, sex, bmi):
         s = subset.iloc[0]['s']
         
         # Tính Z-score
-        z_score = ((bmi / m)**l - 1) / (s * l)
-        return z_score
+        bmi_age = ((bmi / m)**l - 1) / (s * l)
+        return bmi_age
     else:
         return None
 
+def calculate_zscore_weight(age, sex, weight):
+    subset = growthstandards_weianthro[(growthstandards_weianthro['sex'] == sex) & 
+                                       (growthstandards_weianthro['age'] == age)]
+    
+    if not subset.empty:
+        l = subset.iloc[0]['l']
+        m = subset.iloc[0]['m']
+        s = subset.iloc[0]['s']
+        
+        # Calculate Z-score
+        wei = ((weight / m)**l - 1) / (s * l)
+        return wei
+    else:
+        return None
 # Số ngày trung bình trong một tháng theo WHO
 ANTHRO_DAYS_OF_MONTH = 30.4375
 
@@ -83,10 +98,11 @@ def zscore_calculator():
         age_days = age_to_days(age_months, is_age_in_month=True)
         
         # Tính toán Z-score
-        z_score = calculate_zscore_bmi(age_days, sex_value, bmi)
+        bmi_age = calculate_zscore_bmi(age_days, sex_value, bmi)
+        wei = calculate_zscore_weight(age_days, sex_value, weight)
         
-        if z_score is not None:
-            return jsonify({"bmi": round(bmi, 2), "z_score": round(z_score, 2)})
+        if bmi_age is not None and wei is not None:
+            return jsonify({"bmi": round(bmi, 2), "bmi_age": round(z_score, 2), "wei": round(z_score, 2)})
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
     else:
