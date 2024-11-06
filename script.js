@@ -277,6 +277,7 @@ function calculateLightCriteria() {
             document.getElementById('female-btn').classList.add('active');
         }
         document.getElementById('gender').value = gender; // Cập nhật giá trị trường ẩn với giới tính đã chọn
+    	document.getElementById('gender-error').style.display = 'none'; // Ẩn thông báo lỗi khi chọn giới tính
     }
 
     function calculateIBW() {
