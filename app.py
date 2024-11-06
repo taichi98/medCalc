@@ -102,7 +102,7 @@ def zscore_calculator():
         wei = calculate_zscore_weight(age_days, sex_value, weight)
         
         if bmi_age is not None and wei is not None:
-            return jsonify({"bmi": round(bmi, 2), "bmi_age": round(z_score, 2), "wei": round(z_score, 2)})
+            return jsonify({"bmi": round(bmi, 2), "bmi_age": round(bmi_age, 2), "wei": round(wei, 2)})
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
     else:
