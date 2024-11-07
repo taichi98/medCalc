@@ -8,36 +8,15 @@
     <script src="/script.js"></script> <!-- Cập nhật đường dẫn -->
     <title>Tính Z-score</title>
     <link rel="icon" href="/icon.png" type="image/png">
-	<style>
-		.zscore-form {
-		   margin-bottom: 20px;
-		}
-		.zscore-form label {
-                   display: block;
-                   margin-bottom: 5px;
-                   font-weight: bold;
-		}
-		.gender-select {
-	            margin-top: 10px;
-		    display: flex;
-		    justify-content: space-between;
-		}
-		.gender-select button {
-		    
-		    width: 48%;
-		    padding: 10px;
-		    border: 1px solid #ccc;
-		    border-radius: 5px;
-		    cursor: pointer;
-		    background-color: #f0f0f0;
-		    color: #000;
-		}
-		.gender-select button.active {
-		    background-color: #1bb193;
-		    color: #fff;
-		}
-	</style>
+    <style>
+        .zscore-form { margin-bottom: 20px; }
+        .zscore-form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .gender-select { margin-top: 10px; display: flex; justify-content: space-between; }
+        .gender-select button { width: 48%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; background-color: #f0f0f0; color: #000; }
+        .gender-select button.active { background-color: #1bb193; color: #fff; }
+    </style>
 </head>
+	
 <body onload="highlightSelected('item6');">
    <div class="header">
         <div class="icon-container" onclick="toggleSidebar()">
@@ -166,27 +145,28 @@
             return ageInDays;
         }
 	    
-document.getElementById('dob').addEventListener('blur', function() {
-    const dob = new Date(this.value);
-    const today = new Date();
-    let ageYears = today.getFullYear() - dob.getFullYear();
-    let ageMonths = today.getMonth() - dob.getMonth();
-    let ageDays = today.getDate() - dob.getDate();
+        function updateAgeDisplay() {
+            const dob = document.getElementById("dob").value;
+            const currentDay = document.getElementById("current-day").value;
+            if (dob && currentDay) {
+                const birthDate = new Date(dob);
+                const currentDate = new Date(currentDay);
+                let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
+                let ageMonths = currentDate.getMonth() - birthDate.getMonth();
+                let ageDays = currentDate.getDate() - birthDate.getDate();
 
-    // Điều chỉnh nếu ngày sinh trong năm này chưa tới
-    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-        ageYears--;
-        ageMonths += 12;
-    }
-    if (ageDays < 0) {
-        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-        ageDays += prevMonth.getDate();
-        ageMonths--;
-    }
-
-    // Cập nhật hiển thị tuổi
-    document.getElementById('age-display').innerHTML = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
-});
+                if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                    ageYears--;
+                    ageMonths += 12;
+                }
+                if (ageDays < 0) {
+                    const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+                    ageDays += prevMonth.getDate();
+                    ageMonths--;
+                }
+                document.getElementById('age-display').innerHTML = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
+            }
+        }
 
         document.getElementById('zscore-form').addEventListener('submit', function(event) {
             event.preventDefault();
