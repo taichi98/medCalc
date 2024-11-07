@@ -129,12 +129,14 @@
 	  document.getElementById("dob").addEventListener("change", function() {
 	    const date = new Date(this.value);
 	    document.getElementById("dob-formatted").value = formatDate(date);
+	    updateAgeDisplay();
 	  });
 	
 	  // Khi chọn ngày hiện tại, cập nhật trường hiển thị
 	  document.getElementById("current-day").addEventListener("change", function() {
 	    const date = new Date(this.value);
 	    document.getElementById("current-day-formatted").value = formatDate(date);
+	    updateAgeDisplay();
 	  });
 	    
         function calculateAgeInDays(dob, currentDay) {
