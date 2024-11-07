@@ -13,6 +13,8 @@ def make_standard(name):
 # Tải các bảng dữ liệu tiêu chuẩn
 growthstandards_bmianthro = make_standard("bmianthro")
 growthstandards_weianthro = make_standard("weianthro")
+growthstandards_lenanthro = make_standard("lenanthro")
+growthstandards_hcanthro = make_standard("hcanthro")
 
 # Hàm tính Z-score cho BMI theo tuổi
 def calculate_zscore_bmi(age, sex, bmi):
