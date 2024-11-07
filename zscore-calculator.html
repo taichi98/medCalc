@@ -127,27 +127,6 @@
     </div>
 </div>
     <script>
-document.getElementById('dob').addEventListener('blur', function() {
-    const dob = new Date(this.value);
-    const today = new Date();
-    let ageYears = today.getFullYear() - dob.getFullYear();
-    let ageMonths = today.getMonth() - dob.getMonth();
-    let ageDays = today.getDate() - dob.getDate();
-
-    // Điều chỉnh nếu ngày sinh trong năm này chưa tới
-    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-        ageYears--;
-        ageMonths += 12;
-    }
-    if (ageDays < 0) {
-        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-        ageDays += prevMonth.getDate();
-        ageMonths--;
-    }
-
-    // Cập nhật hiển thị tuổi
-    document.getElementById('age-display').innerHTML = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
-});
 	  // Đặt ngày hiện tại cho "Current Day" khi trang tải
 	  window.addEventListener('DOMContentLoaded', () => {
 		const today = new Date();
@@ -186,6 +165,28 @@ document.getElementById('dob').addEventListener('blur', function() {
             const ageInDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
             return ageInDays;
         }
+	    
+document.getElementById('dob').addEventListener('blur', function() {
+    const dob = new Date(this.value);
+    const today = new Date();
+    let ageYears = today.getFullYear() - dob.getFullYear();
+    let ageMonths = today.getMonth() - dob.getMonth();
+    let ageDays = today.getDate() - dob.getDate();
+
+    // Điều chỉnh nếu ngày sinh trong năm này chưa tới
+    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+        ageYears--;
+        ageMonths += 12;
+    }
+    if (ageDays < 0) {
+        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        ageDays += prevMonth.getDate();
+        ageMonths--;
+    }
+
+    // Cập nhật hiển thị tuổi
+    document.getElementById('age-display').innerHTML = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
+});
 
         document.getElementById('zscore-form').addEventListener('submit', function(event) {
             event.preventDefault();
