@@ -147,28 +147,45 @@
             return ageInDays;
         }
 	    
-        function updateAgeDisplay() {
-            const dob = document.getElementById("dob").value;
-            const currentDay = document.getElementById("current-day").value;
-            if (dob && currentDay) {
-                const birthDate = new Date(dob);
-                const currentDate = new Date(currentDay);
-                let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
-                let ageMonths = currentDate.getMonth() - birthDate.getMonth();
-                let ageDays = currentDate.getDate() - birthDate.getDate();
+	function updateAgeDisplay() {
+	    const dob = document.getElementById("dob").value;
+	    const currentDay = document.getElementById("current-day").value;
+	    
+	    if (dob && currentDay) {
+	        const birthDate = new Date(dob);
+	        const currentDate = new Date(currentDay);
+	        let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
+	        let ageMonths = currentDate.getMonth() - birthDate.getMonth();
+	        let ageDays = currentDate.getDate() - birthDate.getDate();
+	
+	        if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+	            ageYears--;
+	            ageMonths += 12;
+	        }
+	        if (ageDays < 0) {
+	            const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+	            ageDays += prevMonth.getDate();
+	            ageMonths--;
+	        }
+	
+	        // Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
+	        let ageDisplayText = "";
+	        if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
+	            // Trường hợp tuổi <= 30 ngày
+	            ageDisplayText = `Age: <b>${ageDays}</b> day(s)`;
+	        } else if (ageYears === 0 && ageMonths <= 12) {
+	            // Trường hợp tuổi <= 12 tháng
+	            ageDisplayText = `Age: <b>${ageMonths}</b> month(s), ${ageDays} day(s)`;
+	        } else {
+	            // Trường hợp tuổi > 12 tháng
+	            ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
+	        }
+	
+	        // Cập nhật kết quả hiển thị
+	        document.getElementById('age-display').innerHTML = ageDisplayText;
+	    }
+	}
 
-                if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-                    ageYears--;
-                    ageMonths += 12;
-                }
-                if (ageDays < 0) {
-                    const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-                    ageDays += prevMonth.getDate();
-                    ageMonths--;
-                }
-                document.getElementById('age-display').innerHTML = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
-            }
-        }
 
         document.getElementById('zscore-form').addEventListener('submit', function(event) {
             event.preventDefault();
