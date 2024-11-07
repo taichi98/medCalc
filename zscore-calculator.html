@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css"> <!-- Cập nhật đường dẫn -->
     <script src="/script.js"></script> <!-- Cập nhật đường dẫn -->
-    <title>Tính Z-score</title>
+    <title>WHO Z-Score</title>
     <link rel="icon" href="/icon.png" type="image/png">
     <style>
 	 p { margin-top: 4px; margin-bottom: 4px; padding-left: 5px; }
@@ -81,7 +81,7 @@
 	</div>
 	    
 	<div class="calculation-box">
-          <h1>Tính Z-score</h1>
+          <h1>WHO Z-Score Tool</h1>
           <form id="zscore-form">
             <label for="gender">Sex</label>
                 <div class="gender-select">
@@ -195,7 +195,14 @@
 	            ageDays += prevMonth.getDate();
 	            ageMonths--;
 	        }
-	
+		// Tính tổng số tháng tuổi
+	        const totalMonths = ageYears * 12 + ageMonths;
+	        // Kiểm tra nếu tuổi vượt quá 60 tháng
+	        if (totalMonths > 60) {
+	            alert("We only compute z-scores for children age < 60 months.");
+	            document.getElementById('age-display').innerHTML = ""; // Xóa kết quả nếu có
+	            return; // Ngăn không cho tiếp tục tính toán
+	        }  
 	        // Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
 	        let ageDisplayText = "";
 	        if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
