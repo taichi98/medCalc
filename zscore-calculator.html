@@ -14,6 +14,26 @@
         .gender-select { margin-top: 10px; display: flex; justify-content: space-between; }
         .gender-select button { width: 48%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; background-color: #f0f0f0; color: #000; }
         .gender-select button.active { background-color: #1bb193; color: #fff; }
+        .result-container {
+		max-width: 400px;
+		justify-content: space-between;
+		align-items: center;
+		background-color: #117D67;
+		padding: 10px;
+		border-radius: 10px;
+		color: white;
+		margin: 20px 0;
+		box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm shadow */
+	}
+	.result-item {
+		display: flex;
+		flex-direction: column;
+		align-items: left;
+		justify-content: left;
+		font-size: 17px;
+		flex: 1; /* Chia đều không gian cho các item */
+		padding: 5px 10px;
+	}
     </style>
 </head>
 	
@@ -97,11 +117,18 @@
             <br>
             <button type="submit">Caculate</button>
         </form>
-        <div id="result">
-		<p id="bmiage-result"></p>
-		<p id="wei-result"></p>
-                <p id="bmi-result"></p> <!-- Thêm phần tử để hiển thị BMI --> 
-	</div>
+	<div id="result" class="result-container">
+		<div style="font-size: 1.17em; font-weight: bold; margin-top: 4px; margin-bottom: 4px; padding-left: 5px;">Result:</div>
+		<p id="text1">Please fill out required fields.</p>
+		<div id="resultZS" style="display: none;">
+		<div class="result-item">
+			<p id="bmiage-result"></p>
+			<p id="wei-result"></p>
+			<p id="bmi-result"></p> <!-- Thêm phần tử để hiển thị BMI --> 
+		</div>
+		</div>                
+	</div>	
+		
 	</div>
     </div>
 </div>
@@ -187,8 +214,8 @@
 	}
 
 
-        document.getElementById('zscore-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+  document.getElementById('zscore-form').addEventListener('submit', function(event) {
+        event.preventDefault();
 	// Kiểm tra nếu giới tính chưa được chọn
         if (!gender) {
             document.getElementById('gender-error').style.display = 'block';
@@ -213,6 +240,8 @@
                 document.getElementById('bmiage-result').innerText = `BMI for Age: ${data.bmi_age}`;
                 document.getElementById('wei-result').innerText = `Weight for Age: ${data.wei}`;
             });
+	document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
+	document.getElementById('resultZS').style.display = 'flex'; // Hiển thị kết quả
         });
     </script>
 </body>
