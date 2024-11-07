@@ -103,7 +103,8 @@
 	        <input type="date" id="current-day" name="current_day" required style="display: none;">
 	        <input type="text" id="current-day-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('current-day').showPicker()">
 	    </div>
-	</div>	
+	</div>
+	<div id="age-display" style="font-weight: bold; color: red;"></div>
 	    <!--  
             <label for="age">Age (month):</label>
             <input type="number" id="age" name="age" required>
@@ -126,6 +127,27 @@
     </div>
 </div>
     <script>
+document.getElementById('dob').addEventListener('blur', function() {
+    const dob = new Date(this.value);
+    const today = new Date();
+    let ageYears = today.getFullYear() - dob.getFullYear();
+    let ageMonths = today.getMonth() - dob.getMonth();
+    let ageDays = today.getDate() - dob.getDate();
+
+    // Điều chỉnh nếu ngày sinh trong năm này chưa tới
+    if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+        ageYears--;
+        ageMonths += 12;
+    }
+    if (ageDays < 0) {
+        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        ageDays += prevMonth.getDate();
+        ageMonths--;
+    }
+
+    // Cập nhật hiển thị tuổi
+    document.getElementById('age-display').innerHTML = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
+});
 	  // Đặt ngày hiện tại cho "Current Day" khi trang tải
 	  window.addEventListener('DOMContentLoaded', () => {
 		const today = new Date();
