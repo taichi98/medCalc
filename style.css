@@ -207,6 +207,7 @@
 	
 	.gender-select button {
 		flex: 1;
+		margin-top: 10px
 		padding: 10px 0;
 		border: 1px solid #ccc;
 		background-color: #f5f5f5;
@@ -224,6 +225,10 @@
 		border-left: none;
 	}
 
+	.gender-select button.active {
+	    background-color: #1bb193;
+	    color: #fff;
+	}
 	@media only screen and (max-width: 768px) {
 	   .overlay {
 		    position: fixed;
