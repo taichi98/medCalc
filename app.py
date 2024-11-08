@@ -60,41 +60,7 @@ def calculate_zscore_lenhei(age, sex, lenhei):
         lenhei_age = ((lenhei / m)**l - 1) / (s * l)
         return lenhei_age
     else:
-        return None
-
-# Hàm tính Z-score cho Weight-for-Length/Height theo chiều dài/chiều cao
-def calculate_zscore_weight_for_lenhei(weight, lenhei, lenhei_unit, age_days, sex):
-    # Điều kiện tham chiếu tiêu chuẩn dựa trên tuổi và đơn vị đo
-    join_on_l = age_days < 731 or (lenhei_unit == "l" or (lenhei < 87))
-    join_on_h = age_days >= 731 or (lenhei_unit == "h" or (lenhei >= 87))
-    
-    # Điều chỉnh độ dài để nội suy
-    low_lenhei = int(lenhei * 10) / 10
-    upp_lenhei = (int(lenhei * 10) + 1) / 10
-    diff_lenhei = (lenhei - low_lenhei) / 0.1
-    
-    growthstandards = pd.concat([growthstandards_wflanthro, growthstandards_wfhanthro])
-    growthstandards["lorh"] = growthstandards["lorh"].str.lower()
-    
-    # Lọc theo giới tính và giá trị length/height gần nhất
-    subset_lower = growthstandards[(growthstandards["sex"] == sex) &
-                                   (growthstandards["lenhei"] == low_lenhei) &
-                                   (growthstandards["lorh"] == ("L" if join_on_l else "H"))]
-    subset_upper = growthstandards[(growthstandards["sex"] == sex) &
-                                   (growthstandards["lenhei"] == upp_lenhei) &
-                                   (growthstandards["lorh"] == ("L" if join_on_l else "H"))]
-    if subset_lower.empty or subset_upper.empty:
-        return None
-
-    # Nội suy các giá trị l, m, s
-    l = subset_lower["l"].values[0] + diff_lenhei * (subset_upper["l"].values[0] - subset_lower["l"].values[0])
-    m = subset_lower["m"].values[0] + diff_lenhei * (subset_upper["m"].values[0] - subset_lower["m"].values[0])
-    s = subset_lower["s"].values[0] + diff_lenhei * (subset_upper["s"].values[0] - subset_lower["s"].values[0])
-
-    # Tính Z-score
-    weight_lenhei = ((weight / m) ** l - 1) / (s * l)
-    return weight_lenhei
-    
+        return None 
 # Số ngày trung bình trong một tháng theo WHO
 ANTHRO_DAYS_OF_MONTH = 30.4375
 
@@ -161,15 +127,13 @@ def zscore_calculator():
         bmi_age = calculate_zscore_bmi(age_days, sex_value, bmi)
         wei = calculate_zscore_weight(age_days, sex_value, weight)
         lenhei_age = calculate_zscore_lenhei(age_days, sex_value, adjusted_lenhei)
-        weight_lenhei = calculate_zscore_weight_for_lenhei(weight, adjusted_lenhei, measure, age_days, sex_value)
         # Trả kết quả
-        if all(v is not None for v in [bmi_age, wei, lenhei_age, weight_lenhei]):
+        if all(v is not None for v in [bmi_age, wei, lenhei_age]):
             return jsonify({
                 "bmi": round(bmi, 2),
                 "bmi_age": round(bmi_age, 2),
                 "wei": round(wei, 2),
                 "lenhei_age": round(lenhei_age, 2),
-                "weight_lenhei": round(weight_lenhei, 2)
             })
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
