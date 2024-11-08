@@ -74,7 +74,7 @@
     <div class="container_of_content">
         <div class="description-box">
 	     <h3>Child growth standards</h3>
-		<p>This web site presents the WHO Child Growth Standards. These standards were developed using data collected in the WHO Multicentre Growth Reference Study. The site presents documentation on how the physical growth curves and motor milestone windows of achievement were developed as well as application tools to support the implementation of the standards</p>
+	     <p>This web site presents the WHO Child Growth Standards. These standards were developed using data collected in the WHO Multicentre Growth Reference Study. The site presents documentation on how the physical growth curves and motor milestone windows of achievement were developed as well as application tools to support the implementation of the standards</p>
 	</div>
 	    
 	<div class="calculation-box">
@@ -87,7 +87,6 @@
                 </div>
 	    <input type="hidden" id="gender" name="sex" required>
 	    <span id="gender-error" style="margin-bottom: 5px; color: red; display: none;">Please select a gender.</span>
-            <br>
 
 	<div class="container_date_input">
 	    <div class="field_date_input">
@@ -103,12 +102,12 @@
 	</div>
 	<div id="age-display" style="margin-bottom: 10px; font-weight: bold; color: red;"></div>
  
-<label for="measured">Measured:</label>
-<div class="select-group">
-    <button type="button" id="recumbent-btn" onclick="selectMeasured('recumbent')" class="active">Recumbent</button>
-    <button type="button" id="standing-btn" onclick="selectMeasured('standing')">Standing</button>
-</div>	
-<input type="hidden" id="measured" name="measured" value="Recumbent">
+	<label for="measured">Measured:</label>
+	<div class="select-group">
+	    <button type="button" id="recumbent-btn" onclick="selectMeasured('recumbent')" class="active">Recumbent</button>
+	    <button type="button" id="standing-btn" onclick="selectMeasured('standing')">Standing</button>
+	</div>	
+	<input type="hidden" id="measured" name="measured" value="Recumbent">
 		  
             <label for="height">Height (cm):</label>
             <input type="number" id="height" name="height" step="0.1" required>
