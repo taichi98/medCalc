@@ -163,7 +163,7 @@ def zscore_calculator():
         lenhei_age = calculate_zscore_lenhei(age_days, sex_value, adjusted_lenhei)
         #weight_lenhei = calculate_zscore_weight_for_lenhei(weight, adjusted_lenhei, measure, age_days, sex_value)
         # Trả kết quả
-        if all(v is not None for v in [bmi_age, wei, lenhei_age, zscore_weight_lenhei]):
+        if all(v is not None for v in [bmi_age, wei, lenhei_age, weight_lenhei]):
             return jsonify({
                 "bmi": round(bmi, 2),
                 "bmi_age": round(bmi_age, 2),
