@@ -204,6 +204,9 @@
 	            document.getElementById('age-display').innerHTML = ""; // Xóa kết quả nếu có
 	            return; // Ngăn không cho tiếp tục tính toán
 	        }  
+		if (totalMonths >=12) {
+		   selectMeasured('h');
+		} else { selectMeasured('l');}
 	        // Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
 	        let ageDisplayText = "";
 	        if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
