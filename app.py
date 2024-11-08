@@ -47,6 +47,19 @@ def calculate_zscore_weight(age, sex, weight):
         return wei
     else:
         return None
+# Hàm tính Z-score cho chiều dài/chiều cao theo tuổi
+def calculate_zscore_lenhei(age, sex, lenhei):
+    subset = growthstandards_lenanthro[(growthstandards_lenanthro['sex'] == sex) & 
+                                       (growthstandards_lenanthro['age'] == age)]
+    if not subset.empty:
+        l = subset.iloc[0]['l']
+        m = subset.iloc[0]['m']
+        s = subset.iloc[0]['s']
+        lenhei_age = ((lenhei / m)**l - 1) / (s * l)
+        return lenhei_age
+    else:
+        return None
+        
 # Số ngày trung bình trong một tháng theo WHO
 ANTHRO_DAYS_OF_MONTH = 30.4375
 
@@ -78,7 +91,16 @@ def age_to_days(age, is_age_in_month):
     else:
         res = age
     return int(round_up(res))
-    
+
+# Hàm điều chỉnh chiều dài/chiều cao theo tuổi và theo cách đo
+def adjust_lenhei(age_in_days, measure, lenhei):
+    age_in_days = round_up(age_in_days)
+    if age_in_days < 731 and measure == "h":
+        lenhei += 0.7
+    elif age_in_days >= 731 and measure == "l":
+        lenhei -= 0.7
+    return lenhei
+
 @app.route("/")
 def index():
     return send_from_directory(os.getcwd(), 'index.html')
@@ -91,21 +113,28 @@ def zscore_calculator():
         age_days = int(request.form.get("ageInDays"))
         height = float(request.form.get("height"))
         weight = float(request.form.get("weight"))
-
+        measure = request.form.get("measure", "h").lower()  # Nhận dạng đo là "l" hoặc "h"
+        # Điều chỉnh chiều dài/chiều cao dựa trên đơn vị đo
+        adjusted_lenhei = adjust_lenhei(age_days, measure, height)
         # Tính BMI
-        bmi = weight / ((height / 100) ** 2)
+        bmi = weight / ((adjusted_lenhei / 100) ** 2)
         
         # Chuyển đổi giới tính thành dạng số (1 = Nam, 2 = Nữ)
         sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
-
         #age_days = age_to_days(age_months, is_age_in_month=True)
         
         # Tính toán Z-score
         bmi_age = calculate_zscore_bmi(age_days, sex_value, bmi)
         wei = calculate_zscore_weight(age_days, sex_value, weight)
-        
-        if bmi_age is not None and wei is not None:
-            return jsonify({"bmi": round(bmi, 2), "bmi_age": round(bmi_age, 2), "wei": round(wei, 2)})
+        lenhei_age = calculate_zscore_lenhei(age_days, sex_value, adjusted_lenhei)
+
+        if bmi_age is not None and wei is not None and lenhei_age is not None:
+            return jsonify({
+                "bmi": round(bmi, 2), 
+                "bmi_age": round(bmi_age, 2), 
+                "wei": round(wei, 2),
+                "lenhei_age": round(lenhei_age, 2)
+            })
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
     else:
