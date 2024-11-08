@@ -105,10 +105,10 @@
  
 	<label for="measured">Measured:</label>
 	<div class="select-group">
-	    <button type="button" id="recumbent-btn" onclick="selectMeasured('recumbent')" class="active">Recumbent</button>
-	    <button type="button" id="standing-btn" onclick="selectMeasured('standing')">Standing</button>
+	    <button type="button" id="recumbent-btn" onclick="selectMeasured('l')" class="active">Recumbent</button>
+	    <button type="button" id="standing-btn" onclick="selectMeasured('h')">Standing</button>
 	</div>	
-	<input type="hidden" id="measured" name="measured" value="Recumbent">
+	<input type="hidden" id="measured" name="measure" value="l">
 		  
             <label for="height">Height (cm):</label>
             <input type="number" id="height" name="height" step="0.1" required>
@@ -125,7 +125,8 @@
 		<div class="result-item">
 			<p id="bmiage-result"></p>
 			<p id="wei-result"></p>
-			<p id="bmi-result"></p> <!-- Thêm phần tử để hiển thị BMI --> 
+			<p id="bmi-result"></p>
+			<p id="lenhei_age_result"></p>
 		</div>
 		</div>                
 	</div>	
@@ -247,6 +248,7 @@
                 document.getElementById('bmi-result').innerText = `BMI: ${data.bmi}`;
                 document.getElementById('bmiage-result').innerText = `BMI for Age: ${data.bmi_age}`;
                 document.getElementById('wei-result').innerText = `Weight for Age: ${data.wei}`;
+		document.getElementById('lenhei_age_result').innerText = `Height for Age: ${data.lenhei_age}`;
             });
 	document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
 	document.getElementById('resultZS').style.display = 'flex'; // Hiển thị kết quả
