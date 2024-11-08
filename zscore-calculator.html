@@ -81,7 +81,7 @@
           <h1>WHO Z-Score Tool</h1>
           <form id="zscore-form">
             <label for="gender">Sex</label>
-                <div class="gender-select">
+                <div class="select-group">
                     <button type="button" id="male-btn" onclick="selectGender('male')">Male</button>
                     <button type="button" id="female-btn" onclick="selectGender('female')">Female</button>
                 </div>
@@ -102,10 +102,13 @@
 	    </div>
 	</div>
 	<div id="age-display" style="margin-bottom: 10px; font-weight: bold; color: red;"></div>
-	    <!--  
-            <label for="age">Age (month):</label>
-            <input type="number" id="age" name="age" required>
-            <br> --> 
+ 
+<label for="measured">Measured:</label>
+<div class="select-group">
+    <button type="button" id="recumbent-btn" onclick="selectMeasured('recumbent')" class="active">Recumbent</button>
+    <button type="button" id="standing-btn" onclick="selectMeasured('standing')">Standing</button>
+</div>	
+<input type="hidden" id="measured" name="measured" value="Recumbent">
 		  
             <label for="height">Height (cm):</label>
             <input type="number" id="height" name="height" step="0.1" required>
