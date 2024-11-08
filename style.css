@@ -201,11 +201,11 @@
         table th {
             background-color: #f2f2f2;
         }
-	.gender-select {
+	.select-group {
 	    display: flex;
 	}
 	
-	.gender-select button {
+	.select-group button {
 		flex: 1;
 		margin-top: 10px;
 		padding: 10px 0;
@@ -216,16 +216,16 @@
 		color: #000;
 	}
 
-	.gender-select button:first-child {
+	.select-group button:first-child {
 		border-radius: 5px 0 0 5px;
 	}
 
-	.gender-select button:last-child {
+	.select-group button:last-child {
 		border-radius: 0 5px 5px 0;
 		border-left: none;
 	}
 
-	.gender-select button.active {
+	.select-group button.active {
 	    background-color: #1bb193;
 	    color: #fff;
 	}
