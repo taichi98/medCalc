@@ -123,10 +123,11 @@
 		<p id="text1">Please fill out required fields.</p>
 		<div id="resultZS" style="display: none;">
 		<div class="result-item">
+			<p id="bmi-result"></p>
 			<p id="bmiage-result"></p>
 			<p id="wei-result"></p>
-			<p id="bmi-result"></p>
 			<p id="lenhei_age_result"></p>
+			<p id="weight_lenhei_result"></p>
 		</div>
 		</div>                
 	</div>	
@@ -252,6 +253,7 @@
                 document.getElementById('bmiage-result').innerText = `BMI for Age: ${data.bmi_age}`;
                 document.getElementById('wei-result').innerText = `Weight for Age: ${data.wei}`;
 		document.getElementById('lenhei_age_result').innerText = `Height for Age: ${data.lenhei_age}`;
+		document.getElementById('weight_lenhei_result').innerText = `Height for Age: ${data.weight_lenhei}`;
             });
 	document.getElementById('text1').style.display = 'none'; // Ẩn placeholder
 	document.getElementById('resultZS').style.display = 'flex'; // Hiển thị kết quả
