@@ -5,47 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Light's Criteria Calculator</title>
     <style>
-        .container {
-            max-width: 450px;
-        }
-        h2 {
-            color: #333;
-        }
+        .container { max-width: 450px; }
+        h2 { color: #333; }
         
-    .input-group {
-        display: flex;
-        position: relative;
-        align-items: center;
-    }
-    
-    .input-group input {
-        flex: 1;
-        padding-right: 40px; /* Đảm bảo khoảng trống cho nút bên phải */
-        box-sizing: border-box;
-        height: 38px; /* Đặt chiều cao của ô nhập liệu */
-        font-size: 16px;
-    }
-    
-    .input-group button {
-        position: absolute;
-        right: 0;
-        height: 38px; /* Độ cao bằng ô nhập liệu */
-        background-color: #ffffff; /* Nền trắng */
-        color: #000000; /* Chữ đen */
-        border: 1px solid #000000; /* Viền đen */
-        box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.3); /* Đổ bóng phía trong */
-        border-radius: 0 3px 3px 0; /* Bo góc phải */
-        cursor: pointer;
-        padding: 6px 2px; /* Đệm nhỏ hơn */
-        font-size: 14px; /* Kích thước chữ */
-        width: 110px; /* Độ rộng nhỏ hơn */
-    }
-        .form-group {
-            margin-bottom: 15px;
+        .input-group {
+            display: flex;
+            position: relative;
+            align-items: center;
         }
+        .input-group input {
+            flex: 1;
+            padding-right: 40px; /* Đảm bảo khoảng trống cho nút bên phải */
+            box-sizing: border-box;
+            height: 38px; /* Đặt chiều cao của ô nhập liệu */
+            font-size: 16px;
+        }
+    
+        .input-group button {
+            position: absolute;
+            right: 0;
+            height: 38px; /* Độ cao bằng ô nhập liệu */
+            background-color: #ffffff; /* Nền trắng */
+            color: #000000; /* Chữ đen */
+            border: 1px solid #000000; /* Viền đen */
+            box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.3); /* Đổ bóng phía trong */
+            border-radius: 0 3px 3px 0; /* Bo góc phải */
+            cursor: pointer;
+            padding: 6px 2px; /* Đệm nhỏ hơn */
+            font-size: 14px; /* Kích thước chữ */
+            width: 110px; /* Độ rộng nhỏ hơn */
+        }
+
         .form-group label {
             display: block;
-            margin-bottom: 5px;
         }
         .form-group input {
             width: 100%;
@@ -53,24 +45,23 @@
             box-sizing: border-box;
         }
       .result-container {
-        max-width: 400px;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #117D67;
-        padding: 10px;
-        border-radius: 10px;
-        color: white;
-        margin: 10px 0;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm shadow */
-     }
-    .result-item {
-        display: flex;
-        align-items: left;
-        justify-content: left;
-        font-size: 17px;
-        padding: 5px 10px;
-    }
-        
+            max-width: 400px;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #117D67;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            margin: 10px 0;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm shadow */
+       }
+        .result-item {
+            display: flex;
+            align-items: left;
+            justify-content: left;
+            font-size: 17px;
+            padding: 5px 10px;
+        }
         #result {
             margin-top: 10px;
         }
