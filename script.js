@@ -280,11 +280,11 @@ function calculateLightCriteria() {
     	document.getElementById('gender-error').style.display = 'none'; // Ẩn thông báo lỗi khi chọn giới tính
     }
 function selectMeasured(measured) {
-    document.getElementById('measured').value = measured;
+    document.getElementById('measured').value = measure;
     document.getElementById('recumbent-btn').classList.remove('active');
     document.getElementById('standing-btn').classList.remove('active');
     
-    if (measured === 'recumbent') {
+    if (measured === 'l') {
         document.getElementById('recumbent-btn').classList.add('active');
     } else {
         document.getElementById('standing-btn').classList.add('active');
