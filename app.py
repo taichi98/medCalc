@@ -59,6 +59,31 @@ def adjust_lenhei(age_in_days, measure, lenhei):
         lenhei -= 0.7
     return lenhei
 
+# Hàm tính Z-score cho cân nặng theo chiều dài/chiều cao
+def calculate_zscore_weight_for_lenhei(weight, lenhei, sex, age_in_days, lenhei_unit):
+    growthstandards_wfl = growthstandards["wfl"]
+    growthstandards_wfh = growthstandards["wfh"]
+    
+    # Điều kiện cho độ dài/chiều cao hợp lệ
+    if weight < 0.9 or weight > 58.0 or lenhei < 38.0 or lenhei > 150.0:
+        return None
+
+    # Xác định mức chuẩn dựa trên chiều dài hoặc chiều cao
+    join_on_l = (age_in_days is not None and age_in_days < 731) or (lenhei_unit == "l" and lenhei < 87)
+    join_on_h = (age_in_days is not None and age_in_days >= 731) or (lenhei_unit == "h" and lenhei >= 87)
+
+    growth_data = growthstandards_wfl if join_on_l else growthstandards_wfh
+    subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == lenhei)]
+    
+    if not subset.empty:
+        l = subset.iloc[0]['l']
+        m = subset.iloc[0]['m']
+        s = subset.iloc[0]['s']
+        z_score = ((weight / m) ** l - 1) / (s * l)
+        return round(z_score, 2)
+    else:
+        return None
+        
 @app.route("/")
 def index():
     return send_from_directory(os.getcwd(), 'index.html')
@@ -85,14 +110,16 @@ def zscore_calculator():
         bmi_age = calculate_zscore(growthstandards["bmi"], age_days, sex_value, bmi)
         wei = calculate_zscore(growthstandards["weight"], age_days, sex_value, weight)
         lenhei_age = calculate_zscore(growthstandards["length"], age_days, sex_value, adjusted_lenhei)
+        wfl = calculate_zscore_weight_for_lenhei(weight, adjusted_lenhei, sex_value, age_days, measure)
         
         # Trả kết quả
-        if all(v is not None for v in [bmi_age, wei, lenhei_age]):
+        if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
             return jsonify({
                 "bmi": round(bmi, 2),
                 "bmi_age": round(bmi_age, 2),
                 "wei": round(wei, 2),
                 "lenhei_age": round(lenhei_age, 2),
+                "wfl": round(wfl, 2),
             })
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
