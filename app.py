@@ -77,10 +77,13 @@ def adjust_lenhei(age_in_days, measure, lenhei):
 # Hàm tính z-score weight-for-length/height
 def anthro_zscore_weight_for_lenhei(weight, lenhei, lenhei_unit, age_in_days, age_in_months, sex,
                                     growthstandards_wfl=None, growthstandards_wfh=None):
-    # Input validation
-    assert isinstance(weight, (float, int, np.ndarray))
-    assert isinstance(lenhei, (float, int, np.ndarray))
-    assert isinstance(age_in_months, (float, int))
+    # Check if `weight` and `lenhei` are single values (not list/array) and convert them to arrays
+    if isinstance(weight, (float, int)):
+        weight = np.array([weight])
+    if isinstance(lenhei, (float, int)):
+        lenhei = np.array([lenhei])
+    
+    # Validation checks
     assert_valid_sex(sex)
     age_in_days = assert_valid_age_in_days(age_in_days)
     assert_growthstandards(growthstandards_wfl)
