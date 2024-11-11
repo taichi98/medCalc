@@ -60,24 +60,93 @@ def adjust_lenhei(age_in_days, measure, lenhei):
     return lenhei
 
 # Hàm tính z-score weight-for-length/height
-def calculate_wfl_zscore(weight, lenhei, lenhei_unit, age_in_days, sex):
-    # Điều chỉnh và xác định chuẩn tăng trưởng để sử dụng
-    lenhei_adjusted = adjust_lenhei(age_in_days, lenhei_unit, lenhei)
-    join_col = "l" if (age_in_days < 731 or lenhei_adjusted < 87) else "h"
-    
-    growth_data = pd.concat([growthstandards["wfl"], growthstandards["wfh"]])
-    growth_data = growth_data[growth_data["lorh"].str.lower() == join_col]
-    
-    # Xác định các giá trị m, l, s từ dữ liệu tiêu chuẩn cho lenhei đã điều chỉnh
-    subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == lenhei_adjusted)]
-    if not subset.empty:
-        l = subset.iloc[0]['l']
-        m = subset.iloc[0]['m']
-        s = subset.iloc[0]['s']
-        z_score = ((weight / m) ** l - 1) / (s * l)
-        return z_score
-    else:
-        return None
+def anthro_zscore_weight_for_lenhei(weight, lenhei, lenhei_unit, age_in_days, age_in_months, sex,
+                                    growthstandards_wfl=None, growthstandards_wfh=None):
+    # Input validation
+    assert isinstance(weight, (float, int, np.ndarray))
+    assert isinstance(lenhei, (float, int, np.ndarray))
+    assert isinstance(age_in_months, (float, int))
+    assert_valid_sex(sex)
+    age_in_days = assert_valid_age_in_days(age_in_days)
+    assert_growthstandards(growthstandards_wfl)
+    assert_growthstandards(growthstandards_wfh)
+
+    n = len(lenhei)
+
+    # Clean weight/lenhei
+    weight = np.where((weight < 0.9) | (weight > 58.0), np.nan, weight)
+    lenhei = np.where((lenhei < 38.0) | (lenhei > 150.0), np.nan, lenhei)
+
+    # Interpolate lenhei under certain conditions
+    low_lenhei = np.floor(lenhei * 10) / 10
+    upp_lenhei = (np.floor(lenhei * 10) + 1) / 10
+    diff_lenhei = (lenhei - low_lenhei) / 0.1
+
+    # Harmonize growthstandards for joining on both units
+    growthstandards_wfl.columns = ["sex", "lenhei", "l", "m", "s", "lorh"]
+    growthstandards_wfh.columns = ["sex", "lenhei", "l", "m", "s", "lorh"]
+    growthstandards = pd.concat([growthstandards_wfl, growthstandards_wfh], ignore_index=True)
+    growthstandards["lorh"] = growthstandards["lorh"].str.lower()
+
+    # Determine which standards to join on
+    join_on_l = (
+        (not np.isnan(age_in_days) and age_in_days < 731) or
+        (np.isnan(age_in_days) and lenhei_unit == "l") or
+        (np.isnan(age_in_days) and lenhei < 87)
+    )
+    join_on_h = (
+        (not np.isnan(age_in_days) and age_in_days >= 731) or
+        (np.isnan(age_in_days) and lenhei_unit == "h") or
+        (np.isnan(age_in_days) and lenhei >= 87)
+    )
+
+    # Prepare input DataFrame
+    input_df = pd.DataFrame({
+        "weight": weight,
+        "sex": sex,
+        "lenhei_unit": lenhei_unit,
+        "low_lenhei": low_lenhei,
+        "upp_lenhei": upp_lenhei,
+        "diff_lenhei": diff_lenhei,
+        "ordering": range(n),
+        "join_col": np.where(join_on_l, "l", np.where(join_on_h, "h", np.nan))
+    })
+
+    # Merge with growth standards
+    merged_df = input_df.merge(
+        growthstandards, left_on=["sex", "low_lenhei", "join_col"],
+        right_on=["sex", "lenhei", "lorh"], how="left", suffixes=("", "_lower")
+    ).merge(
+        growthstandards, left_on=["sex", "upp_lenhei", "join_col"],
+        right_on=["sex", "lenhei", "lorh"], how="left", suffixes=("", "_upper")
+    ).sort_values("ordering")
+
+    y = merged_df["weight"]
+    m = np.where(diff_lenhei > 0,
+                 merged_df["m"] + diff_lenhei * (merged_df["m_upper"] - merged_df["m"]),
+                 merged_df["m"]).astype(float)
+    l = np.where(diff_lenhei > 0,
+                 merged_df["l"] + diff_lenhei * (merged_df["l_upper"] - merged_df["l"]),
+                 merged_df["l"]).astype(float)
+    s = np.where(diff_lenhei > 0,
+                 merged_df["s"] + diff_lenhei * (merged_df["s_upper"] - merged_df["s"]),
+                 merged_df["s"]).astype(float)
+
+    # Calculate zscore
+    zscore = compute_zscore_adjusted(y, m, l, s)
+    zscore = np.round(zscore, 2)
+
+    # Determine valid zscore conditions
+    valid_zscore = (
+        (~np.isnan(lenhei)) &
+        np.where(join_on_l, (lenhei >= 45) & (lenhei <= 110),
+                 np.where(join_on_h, (lenhei >= 65) & (lenhei <= 120), False)) &
+        (np.isnan(age_in_days) or (age_in_days <= 1856)) &
+        (age_in_months < 60)
+    )
+
+    return zscore
+
         
 @app.route("/")
 def index():
@@ -105,15 +174,25 @@ def zscore_calculator():
         bmi_age = calculate_zscore(growthstandards["bmi"], age_days, sex_value, bmi)
         wei = calculate_zscore(growthstandards["weight"], age_days, sex_value, weight)
         lenhei_age = calculate_zscore(growthstandards["length"], age_days, sex_value, adjusted_lenhei)
-        wfl = calculate_wfl_zscore(weight, height, measure, age_days, sex_value)
-        # Trả kết quả
-        if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
+        # Calculate weight-for-length/height Z-score using `anthro_zscore_weight_for_lenhei`
+        wfl_zscore = anthro_zscore_weight_for_lenhei(
+            weight=weight,
+            lenhei=adjusted_lenhei,
+            lenhei_unit=measure,
+            age_in_days=age_days,
+            age_in_months=age_days / ANTHRO_DAYS_OF_MONTH,
+            sex=sex_value,
+            growthstandards_wfl=growthstandards["wfl"],
+            growthstandards_wfh=growthstandards["wfh"]
+        )
+        # Return results if all Z-scores are calculated successfully
+        if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl_zscore]):
             return jsonify({
                 "bmi": round(bmi, 2),
                 "bmi_age": round(bmi_age, 2),
                 "wei": round(wei, 2),
                 "lenhei_age": round(lenhei_age, 2),
-                "wfl": round(wfl, 2),
+                "wfl": round(wfl_zscore, 2),
             })
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
