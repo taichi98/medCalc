@@ -73,7 +73,7 @@ def calculate_zscore_weight_for_lenhei(weight, lenhei, sex, age_in_days, lenhei_
     join_on_h = (age_in_days is not None and age_in_days >= 731) or (lenhei_unit == "h" and lenhei >= 87)
 
     growth_data = growthstandards_wfl if join_on_l else growthstandards_wfh
-    subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == lenhei)]
+    subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == round(lenhei))]
     
     if not subset.empty:
         l = subset.iloc[0]['l']
