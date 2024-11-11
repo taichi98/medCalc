@@ -21,6 +21,20 @@ growthstandards = {
     "wfh": make_standard("wfhanthro")
 }
 
+# Validation functions
+def assert_valid_sex(sex):
+    if sex not in [1, 2]:
+        raise ValueError("Sex must be 1 (male) or 2 (female).")
+
+def assert_valid_age_in_days(age_in_days):
+    if not isinstance(age_in_days, int) or age_in_days < 0:
+        raise ValueError("Age in days must be a non-negative integer.")
+    return age_in_days
+
+def assert_growthstandards(growthstandard):
+    if growthstandard is None or growthstandard.empty:
+        raise ValueError("Invalid or empty growth standard data.")
+        
 # Hàm tính Z-score chung
 def calculate_zscore(data, age, sex, measure_value):
     subset = data[(data['sex'] == sex) & (data['age'] == age)]
