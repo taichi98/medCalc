@@ -21,20 +21,6 @@ growthstandards = {
     "wfh": make_standard("wfhanthro")
 }
 
-# Validation functions
-def assert_valid_sex(sex):
-    if sex not in [1, 2]:
-        raise ValueError("Sex must be 1 (male) or 2 (female).")
-
-def assert_valid_age_in_days(age_in_days):
-    if not isinstance(age_in_days, int) or age_in_days < 0:
-        raise ValueError("Age in days must be a non-negative integer.")
-    return age_in_days
-
-def assert_growthstandards(growthstandard):
-    if growthstandard is None or growthstandard.empty:
-        raise ValueError("Invalid or empty growth standard data.")
-        
 # Hàm tính Z-score chung
 def calculate_zscore(data, age, sex, measure_value):
     subset = data[(data['sex'] == sex) & (data['age'] == age)]
@@ -75,9 +61,17 @@ def adjust_lenhei(age_in_days, measure, lenhei):
     return lenhei
     
 def calculate_zscore_weight_for_lenhei(height, sex, weight):
-    standard_type = "wfl" if height < 85 else "wfh"  # Sử dụng wfl cho chiều dài, wfh cho chiều cao
+    # Xác định loại chuẩn dựa trên chiều dài hoặc chiều cao
+    standard_type = "wfl" if height < 85 else "wfh"  
     data = growthstandards[standard_type]
-    subset = data[(data['sex'] == sex) & (data['height'] == round(height))]
+    
+    # Sử dụng đúng tên cột dựa trên loại chuẩn
+    height_column = 'length' if standard_type == 'wfl' else 'height'
+    
+    # Lọc dữ liệu với cột chiều dài/chiều cao và giới tính
+    subset = data[(data['sex'] == sex) & (data[height_column] == round(height))]
+    
+    # Kiểm tra xem có dữ liệu không và tính Z-score
     if not subset.empty:
         l = subset.iloc[0]['l']
         m = subset.iloc[0]['m']
