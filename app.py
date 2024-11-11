@@ -73,30 +73,17 @@ def adjust_lenhei(age_in_days, measure, lenhei):
     elif age_in_days >= 731 and measure == "l":
         lenhei -= 0.7
     return lenhei
-
-# Hàm tính z-score weight-for-length/height
-# Hàm tính Z-score cho cân nặng theo chiều dài/chiều cao
-def calculate_zscore_weight_for_lenhei(weight, lenhei, sex, age_in_days, lenhei_unit):
-    growthstandards_wfl = growthstandards["wfl"]
-    growthstandards_wfh = growthstandards["wfh"]
     
-    # Điều kiện cho độ dài/chiều cao hợp lệ
-    if weight < 0.9 or weight > 58.0 or lenhei < 38.0 or lenhei > 150.0:
-        return None
-
-    # Xác định mức chuẩn dựa trên chiều dài hoặc chiều cao
-    join_on_l = (age_in_days is not None and age_in_days < 731) or (lenhei_unit == "l" and lenhei < 87)
-    join_on_h = (age_in_days is not None and age_in_days >= 731) or (lenhei_unit == "h" and lenhei >= 87)
-
-    growth_data = growthstandards_wfl if join_on_l else growthstandards_wfh
-    subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == round(lenhei))]
-    
+def calculate_zscore_weight_for_lenhei(height, sex, weight):
+    standard_type = "wfl" if height < 85 else "wfh"  # Sử dụng wfl cho chiều dài, wfh cho chiều cao
+    data = growthstandards[standard_type]
+    subset = data[(data['sex'] == sex) & (data['height'] == round(height))]
     if not subset.empty:
         l = subset.iloc[0]['l']
         m = subset.iloc[0]['m']
         s = subset.iloc[0]['s']
         z_score = ((weight / m) ** l - 1) / (s * l)
-        return round(z_score, 2)
+        return z_score
     else:
         return None
 
@@ -127,7 +114,7 @@ def zscore_calculator():
         bmi_age = calculate_zscore(growthstandards["bmi"], age_days, sex_value, bmi)
         wei = calculate_zscore(growthstandards["weight"], age_days, sex_value, weight)
         lenhei_age = calculate_zscore(growthstandards["length"], age_days, sex_value, adjusted_lenhei)
-        wfl = calculate_zscore_weight_for_lenhei(weight, adjusted_lenhei, sex_value, age_days, measure)
+        wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight)
 
         # Return results if all Z-scores are calculated successfully
         if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
