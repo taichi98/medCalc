@@ -59,19 +59,44 @@ def adjust_lenhei(age_in_days, measure, lenhei):
     elif age_in_days >= 731 and measure == "l":
         lenhei -= 0.7
     return lenhei
+
+def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhei_unit=None):
+    # Bước 1: Kiểm tra và làm sạch dữ liệu
+    if weight < 0.9 or weight > 58.0:
+        return None
+    if lenhei < 38.0 or lenhei > 150.0:
+        return None
+
+    # Bước 2: Nội suy chiều dài/chiều cao
+    low_lenhei = np.trunc(lenhei * 10) / 10
+    upp_lenhei = np.trunc(lenhei * 10 + 1) / 10
+    diff_lenhei = (lenhei - low_lenhei) / 0.1
+
+    # Bước 3: Hợp nhất dữ liệu `wfl` và `wfh`
+    growthstandards_wfl = growthstandards['wfl'].copy()
+    growthstandards_wfh = growthstandards['wfh'].copy()
+    growthstandards_wfl.columns = ["sex", "lenhei", "l", "m", "s", "lorh"]
+    growthstandards_wfh.columns = ["sex", "lenhei", "l", "m", "s", "lorh"]
+    growth_data = pd.concat([growthstandards_wfl, growthstandards_wfh])
+    growth_data['lorh'] = growth_data['lorh'].str.lower()
+
+    # Bước 4: Xác định chuẩn để sử dụng (wfl hoặc wfh)
+    join_on_l = ((age_days is not None and age_days < 731) or
+                 (age_days is None and lenhei_unit == "l") or
+                 (age_days is None and lenhei_unit is None and lenhei < 87))
+    join_on_h = ((age_days is not None and age_days >= 731) or
+                 (age_days is None and lenhei_unit == "h") or
+                 (age_days is None and lenhei_unit is None and lenhei >= 87))
     
-def calculate_zscore_weight_for_lenhei(height, sex, weight):
-    # Xác định loại chuẩn dựa trên chiều dài hoặc chiều cao
-    standard_type = "wfl" if height < 85 else "wfh"  
-    data = growthstandards[standard_type]
-    
-    # Sử dụng đúng tên cột dựa trên loại chuẩn
-    height_column = 'length' if standard_type == 'wfl' else 'height'
-    
-    # Lọc dữ liệu với cột chiều dài/chiều cao và giới tính
-    subset = data[(data['sex'] == sex) & (data[height_column] == round(height))]
-    
-    # Kiểm tra xem có dữ liệu không và tính Z-score
+    # Chọn chuẩn phù hợp từ `growth_data`
+    if join_on_l:
+        subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == round(low_lenhei))]
+    elif join_on_h:
+        subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == round(upp_lenhei))]
+    else:
+        return None
+
+    # Bước 5: Tính Z-score nếu có dữ liệu phù hợp
     if not subset.empty:
         l = subset.iloc[0]['l']
         m = subset.iloc[0]['m']
@@ -108,7 +133,7 @@ def zscore_calculator():
         bmi_age = calculate_zscore(growthstandards["bmi"], age_days, sex_value, bmi)
         wei = calculate_zscore(growthstandards["weight"], age_days, sex_value, weight)
         lenhei_age = calculate_zscore(growthstandards["length"], age_days, sex_value, adjusted_lenhei)
-        wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight)
+        wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight, age_days=age_days, lenhei_unit=measure)
 
         # Return results if all Z-scores are calculated successfully
         if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
