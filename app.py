@@ -88,23 +88,26 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
                  (age_days is None and lenhei_unit == "h") or
                  (age_days is None and lenhei_unit is None and lenhei >= 87))
     
-    # Chọn chuẩn phù hợp từ `growth_data`
-    if join_on_l:
-        subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == round(low_lenhei))]
-    elif join_on_h:
-        subset = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == round(upp_lenhei))]
+    # Bước 5: Chọn chuẩn phù hợp từ `growth_data`
+    subset_low = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == low_lenhei)]
+    subset_upp = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == upp_lenhei)]
+
+    # Bước 6: Nội suy m, l, s nếu có dữ liệu phù hợp ở cả low_lenhei và upp_lenhei
+    if not subset_low.empty and not subset_upp.empty:
+        l = subset_low.iloc[0]['l'] + diff_lenhei * (subset_upp.iloc[0]['l'] - subset_low.iloc[0]['l'])
+        m = subset_low.iloc[0]['m'] + diff_lenhei * (subset_upp.iloc[0]['m'] - subset_low.iloc[0]['m'])
+        s = subset_low.iloc[0]['s'] + diff_lenhei * (subset_upp.iloc[0]['s'] - subset_low.iloc[0]['s'])
+    elif not subset_low.empty:
+        l, m, s = subset_low.iloc[0]['l'], subset_low.iloc[0]['m'], subset_low.iloc[0]['s']
+    elif not subset_upp.empty:
+        l, m, s = subset_upp.iloc[0]['l'], subset_upp.iloc[0]['m'], subset_upp.iloc[0]['s']
     else:
         return None
 
-    # Bước 5: Tính Z-score nếu có dữ liệu phù hợp
-    if not subset.empty:
-        l = subset.iloc[0]['l']
-        m = subset.iloc[0]['m']
-        s = subset.iloc[0]['s']
-        z_score = ((weight / m) ** l - 1) / (s * l)
-        return z_score
-    else:
-        return None
+    # Bước 7: Tính Z-score
+    z_score = ((weight / m) ** l - 1) / (s * l) if l != 0 else (np.log(weight / m)) / s
+    return z_score
+
 
         
 @app.route("/")
