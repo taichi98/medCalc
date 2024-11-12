@@ -105,9 +105,8 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
         return None
 
     # Bước 7: Tính Z-score
-    z_score = ((weight / m) ** l - 1) / (s * l) if l != 0 else (np.log(weight / m)) / s
+    z_score = ((weight / m) ** l - 1) / (s * l)
     return z_score
-
 
         
 @app.route("/")
