@@ -46,7 +46,7 @@ def compute_zscore_adjusted(y, m, l, s):
     return zscore
 
 # Hàm áp dụng Z-score và tiêu chuẩn tăng trưởng
-def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days, sex, measure, upper_threshold, lower_threshold):
+def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days, sex, measure):
     # Đảm bảo đầu vào là dạng mảng numpy để tránh lỗi scalar
     input_df = pd.DataFrame({
         'measure': np.array([measure]),
@@ -67,7 +67,7 @@ def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days, s
     zscore_adjusted = compute_zscore_adjusted(y, m, l, s)
     
     # Sử dụng Z-score điều chỉnh khi vượt ngưỡng, giữ nguyên nếu không
-    zscore = np.where((zscore > upper_threshold) | (zscore < lower_threshold), zscore_adjusted, zscore)
+    zscore = np.where((zscore > 3) | (zscore < -3), zscore_adjusted, zscore)
     
     return np.round(zscore, 2)
 
@@ -110,7 +110,7 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
     upp_lenhei = np.trunc(lenhei * 10 + 1) / 10
     diff_lenhei = (lenhei - low_lenhei) / 0.1
 
-    # Bước 3: Hợp nhất dữ liệu `wfl` và `wfh`
+    # Bước 3: Hợp nhất dữ liệu wfl và wfh
     growthstandards_wfl = growthstandards['wfl'].copy()
     growthstandards_wfh = growthstandards['wfh'].copy()
     growthstandards_wfl.columns = ["sex", "lenhei", "l", "m", "s", "lorh"]
@@ -126,7 +126,7 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
                  (age_days is None and lenhei_unit == "h") or
                  (age_days is None and lenhei_unit is None and lenhei >= 87))
     
-    # Bước 5: Chọn chuẩn phù hợp từ `growth_data`
+    # Bước 5: Chọn chuẩn phù hợp từ growth_data
     subset_low = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == low_lenhei)]
     subset_upp = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == upp_lenhei)]
 
@@ -143,12 +143,8 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
         return None
 
     # Bước 7: Tính Z-score
-    zscore = compute_zscore(weight, m, l, s)
-    zscore_adjusted = compute_zscore_adjusted(weight, m, l, s)
-    # Sử dụng Z-score điều chỉnh khi vượt ngưỡng, giữ nguyên nếu không
-    zscore = np.where((zscore > 5) | (zscore < -5), zscore_adjusted, zscore)
-    
-    return np.round(zscore, 2)
+    z_score = compute_zscore_adjusted(weight, m, l, s)
+    return z_score
 
         
 @app.route("/")
@@ -174,9 +170,9 @@ def zscore_calculator():
         sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
         
         # Tính toán Z-score cho các chỉ số
-        bmi_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["bmi"], age_days, sex_value, bmi, 5, -5)
-        wei = apply_zscore_and_growthstandards(compute_zscore, growthstandards["weight"], age_days, sex_value, weight, 5, -6)
-        lenhei_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["length"], age_days, sex_value, adjusted_lenhei, 6, -6)
+        bmi_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["bmi"], age_days, sex_value, bmi)
+        wei = apply_zscore_and_growthstandards(compute_zscore, growthstandards["weight"], age_days, sex_value, weight)
+        lenhei_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["length"], age_days, sex_value, adjusted_lenhei)
         wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight, age_days=age_days, lenhei_unit=measure)
 
         if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
@@ -199,3 +195,4 @@ def static_files(filename):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
