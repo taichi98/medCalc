@@ -21,17 +21,53 @@ growthstandards = {
     "wfh": make_standard("wfhanthro")
 }
 
-# Hàm tính Z-score chung
-def calculate_zscore(data, age, sex, measure_value):
-    subset = data[(data['sex'] == sex) & (data['age'] == age)]
-    if not subset.empty:
-        l = subset.iloc[0]['l']
-        m = subset.iloc[0]['m']
-        s = subset.iloc[0]['s']
-        z_score = ((measure_value / m) ** l - 1) / (s * l)
-        return z_score
-    else:
-        return None
+# Hàm tính Z-score
+def compute_zscore(y, m, l, s):
+    return ((y / m)**l - 1) / (s * l) if l != 0 else np.log(y / m) / s
+
+# Hàm tính Z-score điều chỉnh khi vượt ngưỡng
+def compute_zscore_adjusted(y, m, l, s):
+    def calc_sd(sd_val):
+        return m * ((1 + l * s * sd_val)**(1 / l))
+    
+    zscore = compute_zscore(y, m, l, s)
+    SD3pos = calc_sd(3)
+    SD3neg = calc_sd(-3)
+    SD23pos = SD3pos - calc_sd(2)
+    SD23neg = calc_sd(-2) - SD3neg
+    
+    zscore = np.where((~np.isnan(zscore)) & (zscore > 3),
+                      3 + (y - SD3pos) / SD23pos,
+                      zscore)
+    zscore = np.where((~np.isnan(zscore)) & (zscore < -3),
+                      -3 + (y - SD3neg) / SD23neg,
+                      zscore)
+    return zscore
+
+# Hàm áp dụng Z-score và tiêu chuẩn tăng trưởng
+def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days, sex, measure):
+    input_df = pd.DataFrame({
+        'measure': measure,
+        'age_in_days': np.round(age_in_days).astype(int),
+        'sex': sex
+    })
+    merged_df = pd.merge(input_df, growthstandards, how='left', left_on=['age_in_days', 'sex'], right_on=['age', 'sex'])
+    
+    y = merged_df['measure']
+    m = merged_df['m']
+    l = merged_df['l']
+    s = merged_df['s']
+    
+    # Tính Z-score ban đầu
+    zscore = zscore_fun(y, m, l, s)
+    
+    # Tính Z-score điều chỉnh khi vượt ngưỡng
+    zscore_adjusted = compute_zscore_adjusted(y, m, l, s)
+    
+    # Sử dụng Z-score điều chỉnh khi vượt ngưỡng, giữ nguyên nếu không
+    zscore = np.where((zscore > 3) | (zscore < -3), zscore_adjusted, zscore)
+    
+    return np.round(zscore, 2)
 
 # Số ngày trung bình trong một tháng theo WHO
 ANTHRO_DAYS_OF_MONTH = 30.4375
@@ -105,7 +141,7 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
         return None
 
     # Bước 7: Tính Z-score
-    z_score = ((weight / m) ** l - 1) / (s * l)
+    z_score = compute_zscore_adjusted(weight, m, l, s)
     return z_score
 
         
@@ -132,9 +168,9 @@ def zscore_calculator():
         sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
         
         # Tính toán Z-score cho các chỉ số
-        bmi_age = calculate_zscore(growthstandards["bmi"], age_days, sex_value, bmi)
-        wei = calculate_zscore(growthstandards["weight"], age_days, sex_value, weight)
-        lenhei_age = calculate_zscore(growthstandards["length"], age_days, sex_value, adjusted_lenhei)
+        bmi_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["bmi"], age_days, sex_value, bmi)
+        wei = apply_zscore_and_growthstandards(compute_zscore, growthstandards["weight"], age_days, sex_value, weight)
+        lenhei_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["length"], age_days, sex_value, adjusted_lenhei)
         wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight, age_days=age_days, lenhei_unit=measure)
 
         # Return results if all Z-scores are calculated successfully
