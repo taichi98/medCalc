@@ -60,14 +60,8 @@ def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days, s
     l = merged_df['l']
     s = merged_df['s']
     
-    # Tính Z-score ban đầu
+    # Tính Z-score
     zscore = zscore_fun(y, m, l, s)
-    
-    # Tính Z-score điều chỉnh khi vượt ngưỡng
-    zscore_adjusted = compute_zscore_adjusted(y, m, l, s)
-    
-    # Sử dụng Z-score điều chỉnh khi vượt ngưỡng, giữ nguyên nếu không
-    zscore = np.where((zscore > 3) | (zscore < -3), zscore_adjusted, zscore)
     
     return np.round(zscore, 2)
 
