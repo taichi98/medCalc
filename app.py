@@ -175,14 +175,13 @@ def zscore_calculator():
         lenhei_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["length"], age_days, sex_value, adjusted_lenhei)
         wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight, age_days=age_days, lenhei_unit=measure)
 
-        # Return results if all Z-scores are calculated successfully
         if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
             return jsonify({
                 "bmi": round(bmi, 2),
-                "bmi_age": round(bmi_age, 2),
-                "wei": round(wei, 2),
-                "lenhei_age": round(lenhei_age, 2),
-                "wfl": round(wfl, 2),
+                "bmi_age": round(float(bmi_age[0]), 2) if isinstance(bmi_age, np.ndarray) else round(bmi_age, 2),
+                "wei": round(float(wei[0]), 2) if isinstance(wei, np.ndarray) else round(wei, 2),
+                "lenhei_age": round(float(lenhei_age[0]), 2) if isinstance(lenhei_age, np.ndarray) else round(lenhei_age, 2),
+                "wfl": round(float(wfl), 2) if isinstance(wfl, (np.ndarray, np.float64)) else round(wfl, 2),
             })
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
