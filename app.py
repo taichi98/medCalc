@@ -46,10 +46,11 @@ def compute_zscore_adjusted(y, m, l, s):
 
 # Hàm áp dụng Z-score và tiêu chuẩn tăng trưởng
 def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days, sex, measure):
+    # Đảm bảo đầu vào là dạng mảng numpy để tránh lỗi scalar
     input_df = pd.DataFrame({
-        'measure': measure,
-        'age_in_days': np.round(age_in_days).astype(int),
-        'sex': sex
+        'measure': np.array([measure]),
+        'age_in_days': np.array([age_in_days]),
+        'sex': np.array([sex])
     })
     merged_df = pd.merge(input_df, growthstandards, how='left', left_on=['age_in_days', 'sex'], right_on=['age', 'sex'])
     
