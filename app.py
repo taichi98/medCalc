@@ -23,7 +23,8 @@ growthstandards = {
 
 # Hàm tính Z-score
 def compute_zscore(y, m, l, s):
-    return ((y / m)**l - 1) / (s * l) if l != 0 else np.log(y / m) / s
+    return np.where(l != 0, ((y / m)**l - 1) / (s * l), np.log(y / m) / s)
+
 
 # Hàm tính Z-score điều chỉnh khi vượt ngưỡng
 def compute_zscore_adjusted(y, m, l, s):
