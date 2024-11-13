@@ -143,7 +143,7 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
         return None
 
     # Bước 7: Tính Z-score
-    z_score = compute_zscore(weight, m, l, s)
+    zscore = compute_zscore(weight, m, l, s)
     zscore_adjusted = compute_zscore_adjusted(weight, m, l, s)
     # Sử dụng Z-score điều chỉnh khi vượt ngưỡng, giữ nguyên nếu không
     zscore = np.where((zscore > 5) | (zscore < -5), zscore_adjusted, zscore)
