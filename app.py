@@ -174,9 +174,9 @@ def zscore_calculator():
         sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
         
         # Tính toán Z-score cho các chỉ số
-        bmi_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["bmi"], age_days, sex_value, bmi, upper_threshold=5, lower_threshold=-5)
-        wei = apply_zscore_and_growthstandards(compute_zscore, growthstandards["weight"], age_days, sex_value, weight, upper_threshold=5, lower_threshold=-6)
-        lenhei_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["length"], age_days, sex_value, adjusted_lenhei, upper_threshold=6, lower_threshold=-6)
+        bmi_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["bmi"], age_days, sex_value, bmi, 5, -5)
+        wei = apply_zscore_and_growthstandards(compute_zscore, growthstandards["weight"], age_days, sex_value, weight, 5, -6)
+        lenhei_age = apply_zscore_and_growthstandards(compute_zscore, growthstandards["length"], age_days, sex_value, adjusted_lenhei, 6, -6)
         wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight, age_days=age_days, lenhei_unit=measure)
 
         if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
