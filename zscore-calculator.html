@@ -191,6 +191,43 @@
 	    updateAgeDisplay();
 	  });
 	    
+	document.getElementById('age-option').addEventListener('change', function() {
+	    const dobInput = document.getElementById('dob');
+	    const currentDayInput = document.getElementById('current-day');
+	    const ageMonthsInput = document.getElementById('age-months');
+	    const ageDaysInput = document.getElementById('age-days');
+	    
+	    // Đặt tất cả các trường required là false ban đầu
+	    dobInput.required = false;
+	    currentDayInput.required = false;
+	    ageMonthsInput.required = false;
+	    ageDaysInput.required = false;
+	    
+	    // Hiển thị và yêu cầu các trường tương ứng theo lựa chọn
+	    if (this.value === "dob") {
+	        dobInput.style.display = "inline";
+	        currentDayInput.style.display = "inline";
+	        ageMonthsInput.style.display = "none";
+	        ageDaysInput.style.display = "none";
+	        
+	        dobInput.required = true;
+	        currentDayInput.required = true;
+	    } else if (this.value === "months") {
+	        dobInput.style.display = "none";
+	        currentDayInput.style.display = "none";
+	        ageMonthsInput.style.display = "inline";
+	        ageDaysInput.style.display = "none";
+	        
+	        ageMonthsInput.required = true;
+	    } else if (this.value === "days") {
+	        dobInput.style.display = "none";
+	        currentDayInput.style.display = "none";
+	        ageMonthsInput.style.display = "none";
+	        ageDaysInput.style.display = "inline";
+	        
+	        ageDaysInput.required = true;
+	    }
+	});
         function calculateAgeInDays(dob, currentDay) {
             const birthDate = new Date(dob);
             const currentDate = new Date(currentDay);
