@@ -180,13 +180,20 @@
 	    });
 	});
 
-        function calculateAgeInDays(dob, currentDay) {
-            const birthDate = new Date(dob);
-            const currentDate = new Date(currentDay);
-            const timeDifference = currentDate - birthDate;
-            const ageInDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-            return ageInDays;
-        }
+function calculateAgeInDays(dob, currentDay) {
+    const [dobDay, dobMonth, dobYear] = dob.split('/').map(Number);
+    const [currentDayDay, currentDayMonth, currentDayYear] = currentDay.split('/').map(Number);
+
+    // Tạo đối tượng Date từ các giá trị đã phân tích
+    const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
+    const currentDate = new Date(currentDayYear, currentDayMonth - 1, currentDayDay);
+
+    // Tính tuổi bằng ngày
+    const timeDifference = currentDate - birthDate;
+    const ageInDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+    return ageInDays;
+}
 	
 	function updateAgeDisplay() {
 	    const dob = document.getElementById("dob").value;
