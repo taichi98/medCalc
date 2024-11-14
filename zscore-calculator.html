@@ -270,15 +270,15 @@
 			return;
 		}
 	} else if (selectedOption === "months") {
-		const ageMonths = parseInt(document.getElementById('age-months').value, 10);
+		const ageMonths = parseInt(document.getElementById('age_months').value, 10);
 		if (!isNaN(ageMonths)) {
-			ageInDays = ageMonths * 30; // Giả định mỗi tháng có 30 ngày
+			ageInDays = ageMonths * 30.4375; // Giả định mỗi tháng có 30 ngày
 		} else {
 			alert("Please enter a valid age in months.");
 			return;
 		}
 	} else if (selectedOption === "days") {
-		const ageDays = parseInt(document.getElementById('age-days').value, 10);
+		const ageDays = parseInt(document.getElementById('age_days').value, 10);
 		if (!isNaN(ageDays)) {
 			ageInDays = ageDays;
 		} else {
