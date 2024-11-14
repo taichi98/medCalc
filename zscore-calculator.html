@@ -115,12 +115,12 @@
 	
 	    <div id="months-input" class="field_date_input" style="display: none;">
 	        <label for="age-months">Age in Months:</label>
-	        <input type="number" id="age-months" name="age_months" min="0" placeholder="Enter age in months">
+	        <input type="number" id="age-months" name="age-months" min="0" placeholder="Enter age in months">
 	    </div>
 	
 	    <div id="days-input" class="field_date_input" style="display: none;">
 	        <label for="age-days">Age in Days:</label>
-	        <input type="number" id="age-days" name="age_days" min="0" placeholder="Enter age in days">
+	        <input type="number" id="age-days" name="age-days" min="0" placeholder="Enter age in days">
 	    </div>
 	</div>
 	<div id="age-display" style="margin-bottom: 10px; font-weight: bold; color: red;"></div>
@@ -270,7 +270,7 @@
 			return;
 		}
 	} else if (selectedOption === "months") {
-		const ageMonths = parseInt(document.getElementById('age_months').value, 10);
+		const ageMonths = parseInt(document.getElementById('age-months').value, 10);
 		if (!isNaN(ageMonths)) {
 			ageInDays = ageMonths * 30.4375; // Giả định mỗi tháng có 30 ngày
 		} else {
@@ -278,7 +278,7 @@
 			return;
 		}
 	} else if (selectedOption === "days") {
-		const ageDays = parseInt(document.getElementById('age_days').value, 10);
+		const ageDays = parseInt(document.getElementById('age-days').value, 10);
 		if (!isNaN(ageDays)) {
 			ageInDays = ageDays;
 		} else {
