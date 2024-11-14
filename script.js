@@ -6,14 +6,23 @@ function toggleAgeInput() {
 
     if (selectedOption === "dob") {
         document.getElementById("dob-container").style.display = "flex";
+        document.getElementById("dob").style.display = "inline-block"; // Đảm bảo hiển thị dob
+        document.getElementById("current-day").style.display = "inline-block"; // Đảm bảo hiển thị current-day
+
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "none";
     } else if (selectedOption === "months") {
         document.getElementById("dob-container").style.display = "none";
+        document.getElementById("dob").style.display = "none";
+        document.getElementById("current-day").style.display = "none";
+
         document.getElementById("months-input").style.display = "flex";
         document.getElementById("days-input").style.display = "none";
     } else if (selectedOption === "days") {
         document.getElementById("dob-container").style.display = "none";
+        document.getElementById("dob").style.display = "none";
+        document.getElementById("current-day").style.display = "none";
+
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "flex";
     }
