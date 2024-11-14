@@ -102,14 +102,12 @@
 	    <div id="dob-container" class="input-row">
 	        <div id="dob-input" class="field_date_input">
 	            <label for="dob">Date of Birth:</label>
-	            <input type="date" id="dob" name="dob" required style="display: none;">
-	            <input type="text" id="dob-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('dob').showPicker()">
+            	    <input type="text" id="dob" placeholder="dd/mm/yyyy" required>
 	        </div>
 	
 	        <div id="current-day-input" class="field_date_input"> 
 	            <label for="current-day">Current Day:</label>
-	            <input type="date" id="current-day" name="current_day" required style="display: none;">
-	            <input type="text" id="current-day-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('current-day').showPicker()">
+	            <input type="text" id="current-day" placeholder="dd/mm/yyyy" required>
 	        </div>
 	    </div>
 	
@@ -158,76 +156,27 @@
     </div>
 </div>
     <script>
-	  // Đặt ngày hiện tại cho "Current Day" khi trang tải
-	  window.addEventListener('DOMContentLoaded', () => {
-		const today = new Date();
-		const formattedToday = formatDate(today);
-		document.getElementById("current-day").valueAsDate = today;
-		document.getElementById("current-day-formatted").value = formattedToday;
-		
-		// Đặt giới hạn cho ô "Date of Birth" để không cho phép chọn ngày sau ngày hiện tại
-		document.getElementById("dob").setAttribute("max", today.toISOString().split("T")[0]);
-	  });
+	document.addEventListener("DOMContentLoaded", function () {
+	    // Initialize Flatpickr for Date of Birth and Current Day inputs
+	    flatpickr("#dob", {
+	        dateFormat: "d/m/Y",
+			onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
+			maxDate: "today",
+			locale: {
+				firstDayOfWeek: 1 // Đặt thứ hai là ngày đầu tuần
+			}
+	    });
 	
-	  // Hàm định dạng ngày thành dd/mm/yyyy
-	  function formatDate(date) {
-	    const day = ('0' + date.getDate()).slice(-2);
-	    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-	    const year = date.getFullYear();
-	    return `${day}/${month}/${year}`;
-	  }
-	
-	  // Khi chọn ngày sinh, cập nhật trường hiển thị
-	  document.getElementById("dob").addEventListener("change", function() {
-	    const date = new Date(this.value);
-	    document.getElementById("dob-formatted").value = formatDate(date);
-	    updateAgeDisplay();
-	  });
-	
-	  // Khi chọn ngày hiện tại, cập nhật trường hiển thị
-	  document.getElementById("current-day").addEventListener("change", function() {
-	    const date = new Date(this.value);
-	    document.getElementById("current-day-formatted").value = formatDate(date);
-	    updateAgeDisplay();
-	  });
-	    
-	document.getElementById('age-option').addEventListener('change', function() {
-	    const dobInput = document.getElementById('dob');
-	    const currentDayInput = document.getElementById('current-day');
-	    const ageMonthsInput = document.getElementById('age-months');
-	    const ageDaysInput = document.getElementById('age-days');
-	    
-	    // Đặt tất cả các trường required là false ban đầu
-	    dobInput.required = false;
-	    currentDayInput.required = false;
-	    ageMonthsInput.required = false;
-	    ageDaysInput.required = false;
-	    
-	    // Hiển thị và yêu cầu các trường tương ứng theo lựa chọn
-	    if (this.value === "dob") {
-	        dobInput.style.display = "inline";
-	        currentDayInput.style.display = "inline";
-	        ageMonthsInput.style.display = "none";
-	        ageDaysInput.style.display = "none";
-	        
-	        dobInput.required = true;
-	        currentDayInput.required = true;
-	    } else if (this.value === "months") {
-	        dobInput.style.display = "none";
-	        currentDayInput.style.display = "none";
-	        ageMonthsInput.style.display = "inline";
-	        ageDaysInput.style.display = "none";
-	        
-	        ageMonthsInput.required = true;
-	    } else if (this.value === "days") {
-	        dobInput.style.display = "none";
-	        currentDayInput.style.display = "none";
-	        ageMonthsInput.style.display = "none";
-	        ageDaysInput.style.display = "inline";
-	        
-	        ageDaysInput.required = true;
-	    }
+	    flatpickr("#current-day", {
+	        dateFormat: "d/m/Y",
+	        defaultDate: new Date(), // Set current day as default
+	        onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
+			locale: {
+				firstDayOfWeek: 1 // Đặt thứ hai là ngày đầu tuần
+			}
+	    });
 	});
+
         function calculateAgeInDays(dob, currentDay) {
             const birthDate = new Date(dob);
             const currentDate = new Date(currentDay);
@@ -235,14 +184,19 @@
             const ageInDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
             return ageInDays;
         }
-	    
+	
 	function updateAgeDisplay() {
 	    const dob = document.getElementById("dob").value;
 	    const currentDay = document.getElementById("current-day").value;
 	    
 	    if (dob && currentDay) {
-	        const birthDate = new Date(dob);
-	        const currentDate = new Date(currentDay);
+	        // Chuyển đổi chuỗi "dd/mm/yyyy" thành đối tượng Date
+	        const [dobDay, dobMonth, dobYear] = dob.split('/').map(Number);
+	        const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
+	        
+	        const [currentDayDay, currentDayMonth, currentDayYear] = currentDay.split('/').map(Number);
+	        const currentDate = new Date(currentDayYear, currentDayMonth - 1, currentDayDay);
+	
 	        let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
 	        let ageMonths = currentDate.getMonth() - birthDate.getMonth();
 	        let ageDays = currentDate.getDate() - birthDate.getDate();
@@ -256,17 +210,7 @@
 	            ageDays += prevMonth.getDate();
 	            ageMonths--;
 	        }
-		// Tính tổng số tháng tuổi
-	        const totalMonths = ageYears * 12 + ageMonths;
-	        // Kiểm tra nếu tuổi vượt quá 60 tháng
-	        if (totalMonths > 60) {
-	            alert("We only compute z-scores for children age < 60 months.");
-	            document.getElementById('age-display').innerHTML = ""; // Xóa kết quả nếu có
-	            return; // Ngăn không cho tiếp tục tính toán
-	        }  
-		if (totalMonths >=24) {
-		   selectMeasured('h');
-		} else { selectMeasured('l');}
+	
 	        // Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
 	        let ageDisplayText = "";
 	        if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
@@ -279,10 +223,15 @@
 	            // Trường hợp tuổi > 12 tháng
 	            ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
 	        }
+	
 	        // Cập nhật kết quả hiển thị
 	        document.getElementById('age-display').innerHTML = ageDisplayText;
 	    }
 	}
+	
+	// Thêm sự kiện để cập nhật tuổi khi giá trị dob hoặc current-day thay đổi
+	document.getElementById("dob").addEventListener("change", updateAgeDisplay);
+	document.getElementById("current-day").addEventListener("change", updateAgeDisplay);
 
 
   document.getElementById('zscore-form').addEventListener('submit', function(event) {
