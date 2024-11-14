@@ -149,7 +149,7 @@ def index():
 def zscore_calculator():
     if request.method == "POST":
         sex = request.form.get("sex")
-        age_days = round_up(int(request.form.get("ageInDays")))
+        age_days = round_up(float(request.form.get("ageInDays")))
         height = float(request.form.get("height"))
         weight = float(request.form.get("weight"))
         measure = request.form.get("measure", "h").lower()
