@@ -5,7 +5,7 @@ function toggleAgeInput() {
     const selectedOption = document.getElementById("age-option").value;
 
     if (selectedOption === "dob") {
-        document.getElementById("dob-container").style.display = "flex";
+        document.getElementById("dob-container").style.display = "block";
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "none";
     } else if (selectedOption === "months") {
