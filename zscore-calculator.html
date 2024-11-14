@@ -90,15 +90,37 @@
 	    <span id="gender-error" style="margin-bottom: 5px; color: red; display: none;">Please select a gender.</span>
 
 	<div class="container_date_input">
-	    <div class="field_date_input">
-	        <label for="dob">Date of Birth:</label>
-	        <input type="date" id="dob" name="dob" required style="display: none;">
-	        <input type="text" id="dob-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('dob').showPicker()">
+	    <div class="age-method-container">
+	        <label for="age-option">Age Input Method:</label>
+	        <select id="age-option" onchange="toggleAgeInput()">
+	            <option value="dob">Date of Birth</option>
+	            <option value="months">Age in Months</option>
+	            <option value="days">Age in Days</option>
+	        </select>
 	    </div>
-	    <div class="field_date_input">
-	        <label for="current-day">Current Day:</label>
-	        <input type="date" id="current-day" name="current_day" required style="display: none;">
-	        <input type="text" id="current-day-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('current-day').showPicker()">
+	    
+	    <div id="dob-container" class="input-row">
+	        <div id="dob-input" class="field_date_input">
+	            <label for="dob">Date of Birth:</label>
+	            <input type="date" id="dob" name="dob" required style="display: none;">
+	            <input type="text" id="dob-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('dob').showPicker()">
+	        </div>
+	
+	        <div id="current-day-input" class="field_date_input"> 
+	            <label for="current-day">Current Day:</label>
+	            <input type="date" id="current-day" name="current_day" required style="display: none;">
+	            <input type="text" id="current-day-formatted" readonly placeholder="dd/mm/yyyy" onclick="document.getElementById('current-day').showPicker()">
+	        </div>
+	    </div>
+	
+	    <div id="months-input" class="field_date_input" style="display: none;">
+	        <label for="age-months">Age in Months:</label>
+	        <input type="number" id="age-months" name="age_months" min="0" placeholder="Enter age in months">
+	    </div>
+	
+	    <div id="days-input" class="field_date_input" style="display: none;">
+	        <label for="age-days">Age in Days:</label>
+	        <input type="number" id="age-days" name="age_days" min="0" placeholder="Enter age in days">
 	    </div>
 	</div>
 	<div id="age-display" style="margin-bottom: 10px; font-weight: bold; color: red;"></div>
@@ -220,7 +242,6 @@
 	            // Trường hợp tuổi > 12 tháng
 	            ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
 	        }
-	
 	        // Cập nhật kết quả hiển thị
 	        document.getElementById('age-display').innerHTML = ageDisplayText;
 	    }
@@ -234,13 +255,38 @@
             document.getElementById('gender-error').style.display = 'block';
             return // Ngăn chặn form gửi đi nếu chưa chọn giới tính
         }
-            const formData = new FormData(this);
-            // Lấy giá trị của 'dob' và 'current-day' từ form
-            const dob = document.getElementById('dob').value;
-            const currentDay = document.getElementById('current-day').value;
-            // Tính toán ageInDays
-            const ageInDays = calculateAgeInDays(dob, currentDay);
-            // Thêm ageInDays vào FormData
+	const formData = new FormData(this);
+	const selectedOption = document.getElementById('age-option').value;
+	let ageInDays;
+
+	// Tính toán ageInDays theo lựa chọn của người dùng		
+	if (selectedOption === "dob") {
+		const dob = document.getElementById('dob').value;
+		const currentDay = document.getElementById('current-day').value;
+		if (dob && currentDay) {
+			ageInDays = calculateAgeInDays(dob, currentDay);
+		} else {
+			alert("Please enter both Date of Birth and Current Day.");
+			return;
+		}
+	} else if (selectedOption === "months") {
+		const ageMonths = parseInt(document.getElementById('age-months').value, 10);
+		if (!isNaN(ageMonths)) {
+			ageInDays = ageMonths * 30; // Giả định mỗi tháng có 30 ngày
+		} else {
+			alert("Please enter a valid age in months.");
+			return;
+		}
+	} else if (selectedOption === "days") {
+		const ageDays = parseInt(document.getElementById('age-days').value, 10);
+		if (!isNaN(ageDays)) {
+			ageInDays = ageDays;
+		} else {
+			alert("Please enter a valid age in days.");
+			return;
+		}
+	} 
+	  // Thêm ageInDays vào FormData
             formData.append('ageInDays', ageInDays);
 
             fetch('/zscore-calculator', {
