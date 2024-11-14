@@ -5,15 +5,15 @@ function toggleAgeInput() {
     const selectedOption = document.getElementById("age-option").value;
 
     if (selectedOption === "dob") {
-        document.getElementById("dob-container").style.display = "block";
+        document.getElementById("dob-container").style.visibility = "visible";
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "none";
     } else if (selectedOption === "months") {
-        document.getElementById("dob-container").style.display = "none";
+        document.getElementById("dob-container").style.visibility = "hidden";
         document.getElementById("months-input").style.display = "flex";
         document.getElementById("days-input").style.display = "none";
     } else if (selectedOption === "days") {
-        document.getElementById("dob-container").style.display = "none";
+        document.getElementById("dob-container").style.visibility = "hidden";
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "flex";
     }
