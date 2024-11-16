@@ -25,6 +25,26 @@
 		margin-left: 5px;
 		font-weight: bold;
 	}
+	# Box hiển thị BMI/Age ZScore---------------
+	fieldset {
+	    width: 97%;
+	    margin: 0 0 1rem 0;
+	    padding: 0 0 .2rem 0;
+	    border: 1px groove;
+	}
+	
+	legend {
+	    margin: 0 0 0 1em;
+	    color: #1B417D;
+	    font-weight: bold;
+	}
+	
+	fieldset ol {
+	    padding: 0 1em;
+	    margin: 0;
+	    list-style: none;
+	}
+	#---------------------------------------
 	.container_date_input {
 		display: flex;
 		flex-direction: column;
