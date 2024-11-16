@@ -1,3 +1,5 @@
 Flask
 numpy
 pandas
+matplotlib
+pyplot
