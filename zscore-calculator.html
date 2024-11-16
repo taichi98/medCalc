@@ -82,9 +82,9 @@
 	     <fieldset id="bfaresult">
                 <legend>BMI Results</legend>
                 <ol>
-                    <li class="results">BMI: <span class="scores" id="bmi-result"></span></li>
+                    <li class="results">BMI: <span class="scores" id="bmi-result-side"></span></li>
                     <li class="results">
-                        Z-Score: <span class="scores" id="bmiage-result"></span></li>
+                        Z-Score: <span class="scores" id="bmiage-result-side"></span></li>
                 </ol>
             </fieldset>
 	</div>
@@ -305,8 +305,12 @@ function calculateAgeInDays(dob, currentDay) {
             })
             .then(response => response.json())
             .then(data => {
+                document.getElementById('bmi-result-side').innerText = `${data.bmi}`;
                 document.getElementById('bmi-result').innerText = `BMI: ${data.bmi}`;
+		    
+                document.getElementById('bmiage-result-side').innerText = `${data.bmi_age}`;
                 document.getElementById('bmiage-result').innerText = `BMI for Age: ${data.bmi_age}`;
+		    
                 document.getElementById('wei-result').innerText = `Weight for Age: ${data.wei}`;
 		document.getElementById('lenhei_age_result').innerText = `Height for Age: ${data.lenhei_age}`;
 		document.getElementById('weight_lenhei_result').innerText = `Weight for Lenght: ${data.wfl}`;
