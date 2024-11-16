@@ -47,7 +47,7 @@
 	.container_date_input {
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
+		gap: 10px;
 	}
 	.age-method-container {
 		display: flex;
