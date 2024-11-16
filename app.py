@@ -112,19 +112,19 @@ def calculate_zscore_weight_for_lenhei(lenhei, sex, weight, age_days=None, lenhe
     growth_data = pd.concat([growthstandards_wfl, growthstandards_wfh])
     growth_data['lorh'] = growth_data['lorh'].str.lower()
 
-    # Bước 4: Xác định chuẩn để sử dụng (wfl hoặc wfh)
+   # Bước 4: Xác định chuẩn để sử dụng (wfl hoặc wfh) dựa trên age_days
     join_on_l = ((age_days is not None and age_days < 731) or
                  (age_days is None and lenhei_unit == "l") or
                  (age_days is None and lenhei_unit is None and lenhei < 87))
     join_on_h = ((age_days is not None and age_days >= 731) or
                  (age_days is None and lenhei_unit == "h") or
                  (age_days is None and lenhei_unit is None and lenhei >= 87))
-    
-    # Bước 5: Chọn chuẩn phù hợp từ growth_data
-    subset_low = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == low_lenhei)]
-    subset_upp = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == upp_lenhei)]
 
-    # Bước 6: Nội suy m, l, s nếu có dữ liệu phù hợp ở cả low_lenhei và upp_lenhei
+    # Chọn chuẩn phù hợp từ growth_data
+    subset_low = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == low_lenhei) & (growth_data['lorh'] == ('l' if join_on_l else 'h'))]
+    subset_upp = growth_data[(growth_data['sex'] == sex) & (growth_data['lenhei'] == upp_lenhei) & (growth_data['lorh'] == ('l' if join_on_l else 'h'))]
+
+    # Kiểm tra nội suy cho các giá trị m, l, s
     if not subset_low.empty and not subset_upp.empty:
         l = subset_low.iloc[0]['l'] + diff_lenhei * (subset_upp.iloc[0]['l'] - subset_low.iloc[0]['l'])
         m = subset_low.iloc[0]['m'] + diff_lenhei * (subset_upp.iloc[0]['m'] - subset_low.iloc[0]['m'])
