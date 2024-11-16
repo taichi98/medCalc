@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
+RUN pip install plotly
 
 # Cài đặt các gói Python từ requirements.txt
 WORKDIR /app
