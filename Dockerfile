@@ -1,5 +1,5 @@
 # Sử dụng image cơ bản của Python
-FROM python:3.11
+FROM python:3.10-slim
 
 # Cài đặt R và các thư viện cần thiết
 RUN apt-get update && apt-get install -y r-base
