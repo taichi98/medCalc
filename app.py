@@ -154,7 +154,7 @@ def zscore_calculator():
         height = float(request.form.get("height"))
         weight = float(request.form.get("weight"))
         measure = request.form.get("measure", "h").lower()
-        
+        age_months = age_days / 30.4375
         # Điều chỉnh chiều dài/chiều cao
         adjusted_lenhei = adjust_lenhei(age_days, measure, height)
         
