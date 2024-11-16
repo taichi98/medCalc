@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
+from drawchart import draw_bmi_chart
 import pandas as pd
 import numpy as np
 import math
@@ -163,6 +164,9 @@ def zscore_calculator():
         # Chuyển giới tính thành số
         sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
         
+        # Gọi hàm vẽ biểu đồ và lấy JSON
+        chart_json = draw_bmi_chart(bmi, age_months, sex_value)
+        
         # Tính toán Z-score cho các chỉ số
         bmi_age = apply_zscore_and_growthstandards(compute_zscore_adjusted, growthstandards["bmi"], age_days, sex_value, bmi)
         wei = apply_zscore_and_growthstandards(compute_zscore_adjusted, growthstandards["weight"], age_days, sex_value, weight)
@@ -176,6 +180,7 @@ def zscore_calculator():
                 "wei": round(float(wei[0]), 2) if isinstance(wei, np.ndarray) else round(wei, 2),
                 "lenhei_age": round(float(lenhei_age[0]), 2) if isinstance(lenhei_age, np.ndarray) else round(lenhei_age, 2),
                 "wfl": round(float(wfl), 2) if isinstance(wfl, (np.ndarray, np.float64)) else round(wfl, 2),
+                "chart_data":chart_json
             })
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
