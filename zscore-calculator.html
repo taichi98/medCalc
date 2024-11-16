@@ -220,7 +220,13 @@ function calculateAgeInDays(dob, currentDay) {
 	            ageDays += prevMonth.getDate();
 	            ageMonths--;
 	        }
-	
+		    
+		const totalMonths = ageYears * 12 + ageMonths;
+		if (totalMonths >= 24) {
+			selectMeasured("h");
+		} else {
+			selectMeasured("l");
+		}
 	        // Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
 	        let ageDisplayText = "";
 	        if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
