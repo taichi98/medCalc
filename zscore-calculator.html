@@ -89,6 +89,16 @@
                 </ol>
             </fieldset>
 	    <div class="plot-container" id="bmi-chart"></div>
+
+	<fieldset id="wfaresult"">
+		<legend>WFA Results</legend>
+		<ol>
+		<li class="results">
+			Z-Score: <span class="scores" id="wei-result-side"></span>
+		</li>
+		</ol>
+	</fieldset>
+	<div class="plot-container" id="wfa-chart"></div>
 	</div>
 	    
 	<div class="calculation-box">
@@ -311,13 +321,19 @@ function calculateAgeInDays(dob, currentDay) {
 			const chartData = JSON.parse(data.chart_data);
 			Plotly.react("bmi-chart", chartData.data, chartData.layout);
 		}
+		if (data.wfa_chart_data) {
+			const chartData = JSON.parse(data.wfa_chart_data);
+			Plotly.react("wfa-chart", chartData.data, chartData.layout);
+		}
                 document.getElementById('bmi-result-side').innerText = `${data.bmi}`;
                 document.getElementById('bmi-result').innerText = `BMI: ${data.bmi}`;
 		    
                 document.getElementById('bmiage-result-side').innerText = `${data.bmi_age}`;
                 document.getElementById('bmiage-result').innerText = `BMI for Age: ${data.bmi_age}`;
 		    
+		document.getElementById("wei-result-side").innerText =`${data.wei}`;		    
                 document.getElementById('wei-result').innerText = `Weight for Age: ${data.wei}`;
+		    
 		document.getElementById('lenhei_age_result').innerText = `Height for Age: ${data.lenhei_age}`;
 		document.getElementById('weight_lenhei_result').innerText = `Weight for Lenght: ${data.wfl}`;
             });
