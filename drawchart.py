@@ -46,13 +46,15 @@ def draw_bmi_chart(bmi, age_months, sex):
                 zorder=5)
 
     # Thêm tiêu đề và nhãn
-    #plt.title(title, fontsize=12)
     plt.xlabel('Age (months)', fontsize=10)
     plt.ylabel('BMI (kg/m²)', fontsize=10)
 
     # Chuyển đổi Matplotlib sang Plotly
     plotly_fig = tls.mpl_to_plotly(plt.gcf())
-
+    # Cập nhật hovertemplate (giới hạn số thập phân)
+    plotly_fig.update_traces(
+        hovertemplate="%{x:.2f}, %{y:.2f}"
+    )
     # Cấu hình trục hoành trong Plotly
     plotly_fig.update_xaxes(tickvals=[0, 12, 24, 36, 48, 60],
                             ticktext=[
@@ -221,7 +223,10 @@ def draw_wfa_chart(weight, age_months, sex):
 
     # Chuyển đổi Matplotlib sang Plotly
     plotly_fig = tls.mpl_to_plotly(plt.gcf())
-
+    # Cập nhật hovertemplate (giới hạn số thập phân)
+    plotly_fig.update_traces(
+        hovertemplate="%{x:.2f}, %{y:.2f}"
+    )
     # Cấu hình trục hoành trong Plotly
     plotly_fig.update_xaxes(tickvals=[0, 12, 24, 36, 48, 60],
                             ticktext=[
