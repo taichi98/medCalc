@@ -1,28 +1,17 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-			rel="stylesheet"
-		/>
-		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css"
-		/>
-		<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-		<link rel="stylesheet" href="/style.css" />
-		<!-- Cập nhật đường dẫn -->
-		<script src="/script.js"></script>
-		<!-- Cập nhật đường dẫn -->
-		<title>WHO Z-Score</title>
-		<link rel="icon" href="/icon.png" type="image/png" />
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet"/>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css" />
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<link rel="stylesheet" href="/style.css" />
+	<script src="/script.js"></script>
+	<title>WHO Z-Score</title>
+	<link rel="icon" href="/icon.png" type="image/png" />
 		<style>
 			p {
 				margin-top: 4px;
@@ -138,27 +127,41 @@
 		<div id="main">
 			<div class="container_of_content">
 				<div class="description-box">
-					<h3>Child growth standards</h3>
-					<p>
-						This web site presents the WHO Child Growth Standards. These
-						standards were developed using data collected in the WHO Multicentre
-						Growth Reference Study. The site presents documentation on how the
-						physical growth curves and motor milestone windows of achievement
-						were developed as well as application tools to support the
-						implementation of the standards
-					</p>
-					<fieldset id="bfaresult">
-						<legend>BMI Results</legend>
-						<ol>
-							<li class="results">
-								BMI: <span class="scores" id="bmi-result-side"></span>
-							</li>
-							<li class="results">
-								Z-Score: <span class="scores" id="bmiage-result-side"></span>
-							</li>
-						</ol>
-					</fieldset>
-					<div class="plot-container" id="bmi-chart"></div>
+    <h3>Understanding Your Child's Growth with WHO Standards</h3>
+    <p>This interactive tool leverages the <strong>WHO Child Growth Standards</strong>, developed from extensive data collected through the WHO Multicentre Growth Reference Study. These standards are designed to help parents, caregivers, and healthcare professionals assess the physical growth and nutritional status of children in a standardized way, ensuring consistent monitoring worldwide.</p>
+    <p>The platform offers insights into how growth patterns and milestones were established and explains their significance in evaluating a child’s health. By inputting specific data such as age, sex, height, and weight, the tool calculates several key metrics:</p>
+    <ul>
+        <li>
+            <strong>BMI (Body Mass Index):</strong> A widely-used indicator that relates a child’s weight to their height, providing a quick snapshot of whether the child is underweight, overweight, or within the normal range for their age and sex.
+        </li>
+        <li>
+            <strong>Z-Score:</strong> A statistical measure that shows how much a child’s BMI deviates from the median BMI of their peer group, expressed in terms of standard deviations. A Z-Score helps identify potential concerns, such as malnutrition or obesity, and facilitates early intervention.
+        </li>
+        <li>
+            <strong>Weight-for-Age:</strong> Indicates whether a child's weight is appropriate for their age. This measure is particularly useful for younger children and can help detect undernutrition or excessive weight gain.
+        </li>
+        <li>
+            <strong>Height-for-Age:</strong> Assesses whether a child’s height is within the expected range for their age. It is an important indicator of linear growth and can signal stunted growth or potential developmental concerns.
+        </li>
+        <li>
+            <strong>Weight-for-Height/Lenght:</strong> Examines the proportionality of a child’s weight relative to their height, providing insights into acute malnutrition or overweight conditions regardless of age.
+        </li>
+    </ul>
+    <p>In addition to these calculations, the tool visually maps these indicators on growth charts, displaying how they compare to the expected ranges for the child's age and sex. This visual representation helps caregivers and healthcare professionals easily identify trends in growth over time.</p>
+    <p>Whether you're a parent looking to ensure your child’s growth is on track or a healthcare professional seeking precise growth assessment tools, this platform provides an invaluable resource for promoting child health and well-being.</p>
+			
+	<fieldset id="bfaresult">
+		<legend>BMI Results</legend>
+		<ol>
+			<li class="results">
+				BMI: <span class="scores" id="bmi-result-side"></span>
+			</li>
+			<li class="results">
+				Z-Score: <span class="scores" id="bmiage-result-side"></span>
+			</li>
+		</ol>
+	</fieldset>
+	<div class="plot-container" id="bmi-chart"></div>
 					
 					<fieldset id="wfaresult"">
 						<legend>WFA Results</legend>
