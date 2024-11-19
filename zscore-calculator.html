@@ -1,66 +1,62 @@
 <!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet"/>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css" />
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 	<link rel="stylesheet" href="/style.css" />
 	<script src="/script.js"></script>
 	<title>WHO Z-Score</title>
 	<link rel="icon" href="/icon.png" type="image/png" />
-		<style>
-			p {
-				margin-top: 4px;
-				margin-bottom: 4px;
-				padding-left: 5px;
-			}
-			.zscore-form {
-				margin-bottom: 20px;
-			}
-			.zscore-form label {
-				display: block;
-				margin-bottom: 5px;
-				font-weight: bold;
-			}
-			.result-container {
-				max-width: 400px;
-				justify-content: space-between;
-				align-items: center;
-				background-color: #117d67;
-				padding: 10px;
-				border-radius: 10px;
-				color: white;
-				margin: 20px 0;
-				box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm shadow */
-			}
-			.result-item {
-				display: flex;
-				flex-direction: column;
-				align-items: left;
-				justify-content: left;
-				font-size: 17px;
-				flex: 1; /* Chia đều không gian cho các item */
-				padding: 5px 10px;
-			}
-		</style>
-	</head>
+	<style>
+		p {margin-top: 4px;margin-bottom: 4px;padding-left: 5px;}
 
-	<body onload="highlightSelected('item6');">
-		<div class="header">
-			<div class="icon-container" onclick="toggleSidebar()">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="30"
-					height="30"
-					viewBox="0 0 24 24"
-					fill="none"
-				>
-					<path
-						d="M8.85719 3H15.1428C16.2266 2.99999 17.1007 2.99998 17.8086 3.05782C18.5375 3.11737 19.1777 3.24318 19.77 3.54497C20.7108 
+		.zscore-form {
+			margin-bottom: 20px;
+		}
+
+		.zscore-form label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+		}
+
+		.result-container {
+			max-width: 400px;
+			justify-content: space-between;
+			align-items: center;
+			background-color: #117d67;
+			padding: 10px;
+			border-radius: 10px;
+			color: white;
+			margin: 20px 0;
+			box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+			/* Thêm shadow */
+		}
+
+		.result-item {
+			display: flex;
+			flex-direction: column;
+			align-items: left;
+			justify-content: left;
+			font-size: 17px;
+			flex: 1;
+			/* Chia đều không gian cho các item */
+			padding: 5px 10px;
+		}
+	</style>
+</head>
+
+<body onload="highlightSelected('item6');">
+	<div class="header">
+		<div class="icon-container" onclick="toggleSidebar()">
+			<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none">
+				<path d="M8.85719 3H15.1428C16.2266 2.99999 17.1007 2.99998 17.8086 3.05782C18.5375 3.11737 19.1777 3.24318 19.77 3.54497C20.7108 
 			4.02433 21.4757 4.78924 21.955 5.73005C22.2568 6.32234 22.3826 6.96253 22.4422 7.69138C22.5 8.39925 22.5 9.27339 22.5 10.3572V13.6428C22.5 
 			14.7266 22.5 15.6008 22.4422 16.3086C22.3826 17.0375 22.2568 17.6777 21.955 18.27C21.4757 19.2108 20.7108 19.9757 19.77 20.455C19.1777 20.7568 
 			18.5375 20.8826 17.8086 20.9422C17.1008 21 16.2266 21 15.1428 21H8.85717C7.77339 21 6.89925 21 6.19138 20.9422C5.46253 20.8826 4.82234 20.7568 
@@ -74,494 +70,392 @@
 			20.4488 16.1458C20.4992 15.5289 20.5 14.7366 20.5 13.6V10.4C20.5 9.26339 20.4992 8.47108 20.4488 7.85424C20.3994 7.24907 20.3072 6.90138 20.173 6.63803C19.8854 
 			6.07354 19.4265 5.6146 18.862 5.32698C18.5986 5.19279 18.2509 5.10062 17.6458 5.05118C17.0289 5.00078 16.2366 5 15.1 5H11.5ZM5 8.5C5 7.94772 5.44772 7.5 6 
 			7.5H7C7.55229 7.5 8 7.94772 8 8.5C8 9.05229 7.55229 9.5 7 9.5H6C5.44772 9.5 5 9.05229 5 8.5ZM5 12C5 11.4477 5.44772 11 6 11H7C7.55229 11 8 11.4477 8 12C8 
-			12.5523 7.55229 13 7 13H6C5.44772 13 5 12.5523 5 12Z"
-						fill="#FFFFFF"
-					/>
-				</svg>
-				<span class="tooltip-text">Mở Sidebar</span>
-			</div>
-			<div class="header-title">MEDICAL CALCULATOR</div>
+			12.5523 7.55229 13 7 13H6C5.44772 13 5 12.5523 5 12Z" fill="#FFFFFF" />
+			</svg>
+			<span class="tooltip-text">Mở Sidebar</span>
 		</div>
-
-		<div id="mySidebar" class="sidebar">
-			<a
-				id="item1"
-				href="/"
-				onclick="loadPage('cpap.html'); highlightSelected('item1');"
-				>CPAP Calculator</a
-			>
-			<a
-				id="item2"
-				href="/"
-				onclick="loadPage('ett.html'); highlightSelected('item2');"
-				>ETT Size</a
-			>
-			<a
-				id="item3"
-				href="/"
-				onclick="loadPage('bmi.html'); highlightSelected('item3');"
-				>BMI & BSA Calculator</a
-			>
-			<a
-				id="item4"
-				href="/"
-				onclick="loadPage('lightCriteria.html'); highlightSelected('item4');"
-				>Light's Criteria</a
-			>
-			<a
-				id="item5"
-				href="/"
-				onclick="loadPage('ibw.html'); highlightSelected('item5');"
-				>Ideal Body Weight</a
-			>
-			<a
-				id="item6"
-				href="javascript:void(0)"
-				onclick="highlightSelected('item6');"
-				>WHO Z-Score</a
-			>
-		</div>
-
-		<div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
-
-		<div id="main">
-			<div class="container_of_content">
-				<div class="description-box">
-    <h3>Understanding Your Child's Growth with WHO Standards</h3>
-    <p>This interactive tool leverages the <strong>WHO Child Growth Standards</strong>, developed from extensive data collected through the WHO Multicentre Growth Reference Study. These standards are designed to help parents, caregivers, and healthcare professionals assess the physical growth and nutritional status of children in a standardized way, ensuring consistent monitoring worldwide.</p>
-    <p>The platform offers insights into how growth patterns and milestones were established and explains their significance in evaluating a child’s health. By inputting specific data such as age, sex, height, and weight, the tool calculates several key metrics:</p>
-    <ul>
-        <li>
-            <strong>BMI (Body Mass Index):</strong> A widely-used indicator that relates a child’s weight to their height, providing a quick snapshot of whether the child is underweight, overweight, or within the normal range for their age and sex.
-        </li>
-        <li>
-            <strong>Z-Score:</strong> A statistical measure that shows how much a child’s BMI deviates from the median BMI of their peer group, expressed in terms of standard deviations. A Z-Score helps identify potential concerns, such as malnutrition or obesity, and facilitates early intervention.
-        </li>
-        <li>
-            <strong>Weight-for-Age:</strong> Indicates whether a child's weight is appropriate for their age. This measure is particularly useful for younger children and can help detect undernutrition or excessive weight gain.
-        </li>
-        <li>
-            <strong>Height-for-Age:</strong> Assesses whether a child’s height is within the expected range for their age. It is an important indicator of linear growth and can signal stunted growth or potential developmental concerns.
-        </li>
-        <li>
-            <strong>Weight-for-Height/Lenght:</strong> Examines the proportionality of a child’s weight relative to their height, providing insights into acute malnutrition or overweight conditions regardless of age.
-        </li>
-    </ul>
-    <p>In addition to these calculations, the tool visually maps these indicators on growth charts, displaying how they compare to the expected ranges for the child's age and sex. This visual representation helps caregivers and healthcare professionals easily identify trends in growth over time.</p>
-    <p>Whether you're a parent looking to ensure your child’s growth is on track or a healthcare professional seeking precise growth assessment tools, this platform provides an invaluable resource for promoting child health and well-being.</p>
-			
-	<fieldset id="bfaresult">
-		<legend>BMI Results</legend>
-		<ol>
-			<li class="results">
-				BMI: <span class="scores" id="bmi-result-side"></span>
-			</li>
-			<li class="results">
-				Z-Score: <span class="scores" id="bmiage-result-side"></span>
-			</li>
-		</ol>
-	</fieldset>
-	<div class="plot-container" id="bmi-chart"></div>
-			
-		<fieldset id="wfaresult"">
-			<legend>WFA Results</legend>
-			<ol>
-				<li class="results">
-					Z-Score: <span class="scores" id="wei-result-side"></span>
-				</li>
-			</ol>
-		</fieldset>
-		<div class="plot-container" id="wfa-chart"></div>
-					
-						<fieldset id="lhfaresult">
-								<legend>LHFA Results</legend>
-								<ol>
-										<li class="results">
-												Z-Score: <span class="scores" id="lenhei_age_result_side"></span>
-										</li>
-								</ol>
-						</fieldset>
-						<div class="plot-container" id="lhfa-chart"></div>
-
-						<fieldset id="wflhresult">
-								<legend>WFLH Results</legend>
-								<ol>
-										<li class="results">
-												Z-Score: <span class="scores" id="weight_lenhei_result_side"></span>
-										</li>
-								</ol>
-						</fieldset>
-						<div class="plot-container" id="wflh-chart"></div>
-					
+		<div class="header-title">MEDICAL CALCULATOR</div>
 	</div>
 
-				<div class="calculation-box">
-					<h1>WHO Z-Score Tool</h1>
-					<form id="zscore-form">
-						<label for="gender">Sex</label>
-						<div class="select-group">
-							<button
-								type="button"
-								id="male-btn"
-								onclick="selectGender('male')"
-							>
-								Male
-							</button>
-							<button
-								type="button"
-								id="female-btn"
-								onclick="selectGender('female')"
-							>
-								Female
-							</button>
+	<div id="mySidebar" class="sidebar">
+		<a id="item1" href="/" onclick="loadPage('cpap.html'); highlightSelected('item1');">CPAP Calculator</a>
+		<a id="item2" href="/" onclick="loadPage('ett.html'); highlightSelected('item2');">ETT Size</a>
+		<a id="item3" href="/" onclick="loadPage('bmi.html'); highlightSelected('item3');">BMI & BSA Calculator</a>
+		<a id="item4" href="/" onclick="loadPage('lightCriteria.html'); highlightSelected('item4');">Light's Criteria</a>
+		<a id="item5" href="/" onclick="loadPage('ibw.html'); highlightSelected('item5');">Ideal Body Weight</a>
+		<a id="item6" href="javascript:void(0)" onclick="highlightSelected('item6');">WHO Z-Score</a>
+	</div>
+
+	<div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
+
+	<div id="main">
+		<div class="container_of_content">
+			<div class="description-box">
+				<h3>Growth Chart Results (WHO Standards)</h3>
+
+				<fieldset id="bfaresult">
+					<legend>BMI Results</legend>
+					<ol>
+						<li class="results">
+							BMI: <span class="scores" id="bmi-result-side"></span>
+						</li>
+						<li class="results">
+							Z-Score: <span class="scores" id="bmiage-result-side"></span>
+						</li>
+					</ol>
+				</fieldset>
+				<div class="plot-container" id="bmi-chart"></div>
+
+				<fieldset id="wfaresult">
+					<legend>WFA Results</legend>
+					<ol>
+						<li class="results">
+							Z-Score: <span class="scores" id="wei-result-side"></span>
+						</li>
+					</ol>
+				</fieldset>
+				<div class="plot-container" id="wfa-chart"></div>
+
+				<fieldset id="lhfaresult">
+					<legend>LHFA Results</legend>
+					<ol>
+						<li class="results">
+							Z-Score:
+							<span class="scores" id="lenhei_age_result_side"></span>
+						</li>
+					</ol>
+				</fieldset>
+				<div class="plot-container" id="lhfa-chart"></div>
+
+				<fieldset id="wflhresult">
+					<legend>WFLH Results</legend>
+					<ol>
+						<li class="results">
+							Z-Score:
+							<span class="scores" id="weight_lenhei_result_side"></span>
+						</li>
+					</ol>
+				</fieldset>
+				<div class="plot-container" id="wflh-chart"></div>
+			</div>
+
+			<div class="calculation-box">
+				<h1>WHO Z-Score Tool</h1>
+				<form id="zscore-form">
+					<label for="gender">Sex</label>
+					<div class="select-group">
+						<button type="button" id="male-btn" onclick="selectGender('male')">
+							Male
+						</button>
+						<button type="button" id="female-btn" onclick="selectGender('female')">
+							Female
+						</button>
+					</div>
+					<input type="hidden" id="gender" name="sex" required />
+					<span id="gender-error" style="margin-bottom: 5px; color: red; display: none">Please select a gender.</span>
+
+					<div class="container_date_input">
+						<div class="age-method-container">
+							<label for="age-option">Age Input Method:</label>
+							<select id="age-option" onchange="toggleAgeInput()">
+								<option value="dob">Date of Birth</option>
+								<option value="months">Age in Months</option>
+								<option value="days">Age in Days</option>
+							</select>
 						</div>
-						<input type="hidden" id="gender" name="sex" required />
-						<span
-							id="gender-error"
-							style="margin-bottom: 5px; color: red; display: none"
-							>Please select a gender.</span
-						>
 
-						<div class="container_date_input">
-							<div class="age-method-container">
-								<label for="age-option">Age Input Method:</label>
-								<select id="age-option" onchange="toggleAgeInput()">
-									<option value="dob">Date of Birth</option>
-									<option value="months">Age in Months</option>
-									<option value="days">Age in Days</option>
-								</select>
+						<div id="dob-container" class="input-row">
+							<div id="dob-input" class="field_date_input">
+								<label for="dob">Date of Birth:</label>
+								<input type="text" id="dob" placeholder="dd/mm/yyyy" required />
 							</div>
 
-							<div id="dob-container" class="input-row">
-								<div id="dob-input" class="field_date_input">
-									<label for="dob">Date of Birth:</label>
-									<input
-										type="text"
-										id="dob"
-										placeholder="dd/mm/yyyy"
-										required
-									/>
-								</div>
-
-								<div id="current-day-input" class="field_date_input">
-									<label for="current-day">Current Day:</label>
-									<input
-										type="text"
-										id="current-day"
-										placeholder="dd/mm/yyyy"
-										required
-									/>
-								</div>
-							</div>
-
-							<div
-								id="months-input"
-								class="field_date_input"
-								style="display: none"
-							>
-								<label for="age-months">Age in Months:</label>
-								<input
-									type="number"
-									id="age-months"
-									name="age-months"
-									min="0"
-									placeholder="Enter age in months"
-								/>
-							</div>
-
-							<div
-								id="days-input"
-								class="field_date_input"
-								style="display: none"
-							>
-								<label for="age-days">Age in Days:</label>
-								<input
-									type="number"
-									id="age-days"
-									name="age-days"
-									min="0"
-									placeholder="Enter age in days"
-								/>
+							<div id="current-day-input" class="field_date_input">
+								<label for="current-day">Current Day:</label>
+								<input type="text" id="current-day" placeholder="dd/mm/yyyy" required />
 							</div>
 						</div>
-						<div
-							id="age-display"
-							style="margin-bottom: 10px; font-weight: bold; color: red"
-						></div>
 
-						<label for="measured">Measured:</label>
-						<div class="select-group">
-							<button
-								type="button"
-								id="recumbent-btn"
-								onclick="selectMeasured('l')"
-								class="active"
-							>
-								Recumbent
-							</button>
-							<button
-								type="button"
-								id="standing-btn"
-								onclick="selectMeasured('h')"
-							>
-								Standing
-							</button>
+						<div id="months-input" class="field_date_input" style="display: none">
+							<label for="age-months">Age in Months:</label>
+							<input type="number" id="age-months" name="age-months" min="0" placeholder="Enter age in months" />
 						</div>
-						<input type="hidden" id="measured" name="measure" value="l" />
 
-						<label for="height">Height (cm):</label>
-						<input
-							type="number"
-							id="height"
-							name="height"
-							step="0.1"
-							required
-						/>
-						<br />
-						<label for="weight">Weight(kg):</label>
-						<input
-							type="number"
-							id="weight"
-							name="weight"
-							step="0.1"
-							required
-						/>
-						<br />
-						<button type="submit">Calculate</button>
-					</form>
-					<div id="result" class="result-container">
-						<div
-							style="
+						<div id="days-input" class="field_date_input" style="display: none">
+							<label for="age-days">Age in Days:</label>
+							<input type="number" id="age-days" name="age-days" min="0" placeholder="Enter age in days" />
+						</div>
+					</div>
+					<div id="age-display" style="margin-bottom: 10px; font-weight: bold; color: red"></div>
+
+					<label for="measured">Measured:</label>
+					<div class="select-group">
+						<button type="button" id="recumbent-btn" onclick="selectMeasured('l')" class="active">
+							Recumbent
+						</button>
+						<button type="button" id="standing-btn" onclick="selectMeasured('h')">
+							Standing
+						</button>
+					</div>
+					<input type="hidden" id="measured" name="measure" value="l" />
+
+					<label for="height">Height (cm):</label>
+					<input type="number" id="height" name="height" step="0.1" required />
+					<br />
+					<label for="weight">Weight(kg):</label>
+					<input type="number" id="weight" name="weight" step="0.1" required />
+					<br />
+					<button type="submit">Calculate</button>
+				</form>
+				<div id="result" class="result-container">
+					<div style="
 								font-size: 1.17em;
 								font-weight: bold;
 								margin-bottom: 8px;
 								padding-left: 5px;
-							"
-						>
-							Result:
-						</div>
-						<p id="text1">Please fill out required fields.</p>
-						<div id="resultZS" style="display: none">
-							<div class="result-item">
-								<p id="bmi-result"></p>
-								<p id="weight_lenhei_result"></p>
-								<p id="wei-result"></p>
-								<p id="lenhei_age_result"></p>
-								<p id="bmiage-result"></p>
-							</div>
+							">
+						Result:
+					</div>
+					<div id="spinner" style="display: none; text-align: center;">
+						<img src="data/spinner.gif" style="width: 100px; height: 100px;">
+					</div>
+					<p id="text1">Please fill out required fields.</p>
+					<div id="resultZS" style="display: none">
+						<div class="result-item">
+							<p id="bmi-result"></p>
+							<p id="weight_lenhei_result"></p>
+							<p id="wei-result"></p>
+							<p id="lenhei_age_result"></p>
+							<p id="bmiage-result"></p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<script>
-			document.addEventListener("DOMContentLoaded", function () {
-				// Initialize Flatpickr for Date of Birth and Current Day inputs
-				flatpickr("#dob", {
-					dateFormat: "d/m/Y",
-					onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
-					maxDate: "today",
-					locale: {
-						firstDayOfWeek: 1, // Đặt thứ hai là ngày đầu tuần
-					},
-				});
-
-				flatpickr("#current-day", {
-					dateFormat: "d/m/Y",
-					defaultDate: new Date(), // Set current day as default
-					onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
-					locale: {
-						firstDayOfWeek: 1, // Đặt thứ hai là ngày đầu tuần
-					},
-				});
+	</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// Initialize Flatpickr for Date of Birth and Current Day inputs
+			flatpickr("#dob", {
+				dateFormat: "d/m/Y",
+				onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
+				maxDate: "today",
+				locale: {
+					firstDayOfWeek: 1, // Đặt thứ hai là ngày đầu tuần
+				},
 			});
 
-			function calculateAgeInDays(dob, currentDay) {
+			flatpickr("#current-day", {
+				dateFormat: "d/m/Y",
+				defaultDate: new Date(), // Set current day as default
+				onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
+				locale: {
+					firstDayOfWeek: 1, // Đặt thứ hai là ngày đầu tuần
+				},
+			});
+		});
+
+		function calculateAgeInDays(dob, currentDay) {
+			const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
+			const [currentDayDay, currentDayMonth, currentDayYear] = currentDay
+				.split("/")
+				.map(Number);
+
+			// Tạo đối tượng Date từ các giá trị đã phân tích
+			const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
+			const currentDate = new Date(
+				currentDayYear,
+				currentDayMonth - 1,
+				currentDayDay,
+			);
+
+			// Tính tuổi bằng ngày
+			const timeDifference = currentDate - birthDate;
+			const ageInDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+			return ageInDays;
+		}
+
+		function updateAgeDisplay() {
+			const dob = document.getElementById("dob").value;
+			const currentDay = document.getElementById("current-day").value;
+
+			if (dob && currentDay) {
+				// Chuyển đổi chuỗi "dd/mm/yyyy" thành đối tượng Date
 				const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
+				const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
+
 				const [currentDayDay, currentDayMonth, currentDayYear] = currentDay
 					.split("/")
 					.map(Number);
-
-				// Tạo đối tượng Date từ các giá trị đã phân tích
-				const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
 				const currentDate = new Date(
 					currentDayYear,
 					currentDayMonth - 1,
 					currentDayDay,
 				);
 
-				// Tính tuổi bằng ngày
-				const timeDifference = currentDate - birthDate;
-				const ageInDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+				let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
+				let ageMonths = currentDate.getMonth() - birthDate.getMonth();
+				let ageDays = currentDate.getDate() - birthDate.getDate();
 
-				return ageInDays;
-			}
-
-			function updateAgeDisplay() {
-				const dob = document.getElementById("dob").value;
-				const currentDay = document.getElementById("current-day").value;
-
-				if (dob && currentDay) {
-					// Chuyển đổi chuỗi "dd/mm/yyyy" thành đối tượng Date
-					const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
-					const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
-
-					const [currentDayDay, currentDayMonth, currentDayYear] = currentDay
-						.split("/")
-						.map(Number);
-					const currentDate = new Date(
-						currentDayYear,
-						currentDayMonth - 1,
-						currentDayDay,
-					);
-
-					let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
-					let ageMonths = currentDate.getMonth() - birthDate.getMonth();
-					let ageDays = currentDate.getDate() - birthDate.getDate();
-
-					if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-						ageYears--;
-						ageMonths += 12;
-					}
-					if (ageDays < 0) {
-						const prevMonth = new Date(
-							currentDate.getFullYear(),
-							currentDate.getMonth(),
-							0,
-						);
-						ageDays += prevMonth.getDate();
-						ageMonths--;
-					}
-					const totalMonths = ageYears * 12 + ageMonths;
-					if (totalMonths >= 24) {
-						selectMeasured("h");
-					} else {
-						selectMeasured("l");
-					}
-
-					// Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
-					let ageDisplayText = "";
-					if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
-						// Trường hợp tuổi <= 30 ngày
-						ageDisplayText = `Age: <b>${ageDays}</b> day(s)`;
-					} else if (ageYears === 0 && ageMonths <= 12) {
-						// Trường hợp tuổi <= 12 tháng
-						ageDisplayText = `Age: <b>${ageMonths}</b> month(s), ${ageDays} day(s)`;
-					} else {
-						// Trường hợp tuổi > 12 tháng
-						ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
-					}
-
-					// Cập nhật kết quả hiển thị
-					document.getElementById("age-display").innerHTML = ageDisplayText;
+				if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+					ageYears--;
+					ageMonths += 12;
 				}
+				if (ageDays < 0) {
+					const prevMonth = new Date(
+						currentDate.getFullYear(),
+						currentDate.getMonth(),
+						0,
+					);
+					ageDays += prevMonth.getDate();
+					ageMonths--;
+				}
+				const totalMonths = ageYears * 12 + ageMonths;
+				if (totalMonths >= 24) {
+					selectMeasured("h");
+				} else {
+					selectMeasured("l");
+				}
+
+				// Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
+				let ageDisplayText = "";
+				if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
+					// Trường hợp tuổi <= 30 ngày
+					ageDisplayText = `Age: <b>${ageDays}</b> day(s)`;
+				} else if (ageYears === 0 && ageMonths <= 12) {
+					// Trường hợp tuổi <= 12 tháng
+					ageDisplayText = `Age: <b>${ageMonths}</b> month(s), ${ageDays} day(s)`;
+				} else {
+					// Trường hợp tuổi > 12 tháng
+					ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
+				}
+
+				// Cập nhật kết quả hiển thị
+				document.getElementById("age-display").innerHTML = ageDisplayText;
 			}
+		}
 
-			// Thêm sự kiện để cập nhật tuổi khi giá trị dob hoặc current-day thay đổi
-			document
-				.getElementById("dob")
-				.addEventListener("change", updateAgeDisplay);
-			document
-				.getElementById("current-day")
-				.addEventListener("change", updateAgeDisplay);
+		// Thêm sự kiện để cập nhật tuổi khi giá trị dob hoặc current-day thay đổi
+		document.getElementById("dob").addEventListener("change", updateAgeDisplay);
+		document.getElementById("current-day").addEventListener("change", updateAgeDisplay);
 
-			document
-				.getElementById("zscore-form")
-				.addEventListener("submit", function (event) {
-					event.preventDefault();
-					// Kiểm tra nếu giới tính chưa được chọn
-					if (!gender) {
-						document.getElementById("gender-error").style.display = "block";
-						return; // Ngăn chặn form gửi đi nếu chưa chọn giới tính
-					}
-					const formData = new FormData(this);
-					const selectedOption = document.getElementById("age-option").value;
-					let ageInDays;
+		document.getElementById("zscore-form").addEventListener("submit", function (event) {
+				event.preventDefault();
 
-					// Tính toán ageInDays theo lựa chọn của người dùng
-					if (selectedOption === "dob") {
+				const spinner = document.getElementById("spinner");
+				const resultBox = document.getElementById("resultZS");
+				const genderError = document.getElementById("gender-error");
+				const formData = new FormData(this);
+				const selectedOption = document.getElementById("age-option").value;
+				let ageInDays;
+
+				// Ẩn resultBox và hiển thị spinner
+				resultBox.style.display = "none";
+				spinner.style.display = "block";
+
+				// Kiểm tra giới tính
+				if (!gender) {
+						spinner.style.display = "none";
+						genderError.style.display = "block";
+						return;
+				}
+
+				// Tính toán ageInDays
+				if (selectedOption === "dob") {
 						const dob = document.getElementById("dob").value;
 						const currentDay = document.getElementById("current-day").value;
 						if (dob && currentDay) {
-							ageInDays = calculateAgeInDays(dob, currentDay);
+								ageInDays = calculateAgeInDays(dob, currentDay);
 						} else {
-							alert("Please enter both Date of Birth and Current Day.");
-							return;
+								alert("Please enter both Date of Birth and Current Day.");
+								spinner.style.display = "none";
+								return;
 						}
-					} else if (selectedOption === "months") {
-						const ageMonths = parseInt(
-							document.getElementById("age-months").value,
-							10,
-						);
+				} else if (selectedOption === "months") {
+						const ageMonths = parseInt(document.getElementById("age-months").value, 10);
 						if (!isNaN(ageMonths)) {
-							ageInDays = ageMonths * 30.4375; // Giả định mỗi tháng có 30 ngày
+								ageInDays = ageMonths * 30.4375;
 						} else {
-							alert("Please enter a valid age in months.");
-							return;
+								alert("Please enter a valid age in months.");
+								spinner.style.display = "none";
+								return;
 						}
-					} else if (selectedOption === "days") {
-						const ageDays = parseInt(
-							document.getElementById("age-days").value,
-							10,
-						);
+				} else if (selectedOption === "days") {
+						const ageDays = parseInt(document.getElementById("age-days").value, 10);
 						if (!isNaN(ageDays)) {
-							ageInDays = ageDays;
+								ageInDays = ageDays;
 						} else {
-							alert("Please enter a valid age in days.");
-							return;
+								alert("Please enter a valid age in days.");
+								spinner.style.display = "none";
+								return;
 						}
-					}
-					// Thêm ageInDays vào FormData
-					formData.append("ageInDays", ageInDays);
+				}
 
-					fetch("/zscore-calculator", {
+				// Thêm ageInDays vào FormData
+				formData.append("ageInDays", ageInDays);
+
+				// Gửi request
+				fetch("/zscore-calculator", {
 						method: "POST",
 						body: formData,
-					})
-						.then((response) => response.json())
-						.then((data) => {
-							if (data.bmi_chart_data) {
+				})
+				.then((response) => {
+						if (!response.ok) {
+								throw new Error("Network response was not ok");
+						}
+						return response.json();
+				})
+				.then((data) => {
+						// Ẩn spinner
+						spinner.style.display = "none";
+
+						// Hiển thị kết quả
+						if (data.bmi_chart_data) {
 								const chartData = JSON.parse(data.bmi_chart_data);
 								Plotly.react("bmi-chart", chartData.data, chartData.layout);
-							}
-							
-							if (data.wfa_chart_data) {
+						}
+
+						if (data.wfa_chart_data) {
 								const chartData = JSON.parse(data.wfa_chart_data);
 								Plotly.react("wfa-chart", chartData.data, chartData.layout);
-							}
-							if (data.lhfa_chart_data) {
+						}
+
+						if (data.lhfa_chart_data) {
 								const chartData = JSON.parse(data.lhfa_chart_data);
 								Plotly.react("lhfa-chart", chartData.data, chartData.layout);
-							}
-							document.getElementById("bmi-result-side").innerText =
-								`${data.bmi}`;
-							document.getElementById("bmi-result").innerText =
-								`BMI: ${data.bmi}`;
+						}
 
-							document.getElementById("bmiage-result-side").innerText =
-								`${data.bmi_age}`;
-							document.getElementById("bmiage-result").innerText =
-								`BMI for Age: ${data.bmi_age}`;
+						// Cập nhật kết quả z-score
+						document.getElementById("bmi-result-side").innerText = `${data.bmi}`;
+						document.getElementById("bmi-result").innerText = `BMI: ${data.bmi}`;
 
-							document.getElementById("wei-result-side").innerText =
-								`${data.wei}`;
-							document.getElementById("wei-result").innerText =
-								`Weight for Age: ${data.wei}`;
+						document.getElementById("bmiage-result-side").innerText = `${data.bmi_age}`;
+						document.getElementById("bmiage-result").innerText = `BMI for Age: ${data.bmi_age}`;
 
-							document.getElementById("lenhei_age_result_side").innerText =
-								`${data.lenhei_age}`;
-							document.getElementById("lenhei_age_result").innerText =
-								`Height for Age: ${data.lenhei_age}`;
+						document.getElementById("wei-result-side").innerText = `${data.wei}`;
+						document.getElementById("wei-result").innerText = `Weight for Age: ${data.wei}`;
 
-							document.getElementById("weight_lenhei_result_side").innerText =
-								`${data.wfl}`;
-							document.getElementById("weight_lenhei_result").innerText =
-								`Weight for Lenght: ${data.wfl}`;
-						});
+						document.getElementById("lenhei_age_result_side").innerText = `${data.lenhei_age}`;
+						document.getElementById("lenhei_age_result").innerText = `Height for Age: ${data.lenhei_age}`;
 
-					document.getElementById("text1").style.display = "none"; // Ẩn placeholder
-					document.getElementById("resultZS").style.display = "flex"; // Hiển thị kết quả
+						document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl}`;
+						document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl}`;
+
+						// Hiển thị resultBox
+						resultBox.style.display = "flex";
+				})
+				.catch((error) => {
+						console.error("There was a problem with the fetch operation:", error);
+						alert("An error occurred while processing the request.");
+						spinner.style.display = "none";
 				});
-		</script>
-	</body>
+
+				// Ẩn placeholder
+				document.getElementById("text1").style.display = "none";
+		});
+
+	</script>
+</body>
+
 </html>
