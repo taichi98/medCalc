@@ -312,6 +312,8 @@
 		    }
 		    .description-box {
 		      order: 2;
+		      overflow-x: auto; /* Thêm thanh cuộn ngang nếu nội dung quá lớn */
+                      white-space: nowrap; /* Ngăn nội dung xuống dòng, nếu cần */
 		    }
 	}
 /* Đối với màn hình lớn hơn, sidebar vẫn sẽ đẩy nội dung */
