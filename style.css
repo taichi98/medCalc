@@ -316,7 +316,7 @@
 		.plot-container {
                     display: inline-block; /* Giữ mỗi biểu đồ trong khung của nó */
                     max-height: 300px; /* Đặt chiều rộng tối thiểu cho các biểu đồ */
-                    max-width: 100%; /* Đảm bảo không vượt quá chiều rộng khung */
+                    max-width: 400px; /* Đảm bảo không vượt quá chiều rộng khung */
 		}
 	}
 /* Đối với màn hình lớn hơn, sidebar vẫn sẽ đẩy nội dung */
