@@ -3,19 +3,29 @@ let gender = '';
 
 function toggleAgeInput() {
     const selectedOption = document.getElementById("age-option").value;
+	const dobFlatpickr = document.querySelector("#dob")._flatpickr;
 
     if (selectedOption === "dob") {
         document.getElementById("dob-container").style.display = "flex";
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "none";
+		document.getElementById("age-display").innerHTML = "";
+		// Reset giá trị dob
+        if (dobFlatpickr) {
+            dobFlatpickr.clear(); 
+        }
     } else if (selectedOption === "months") {
         document.getElementById("dob-container").style.display = "none";
         document.getElementById("months-input").style.display = "flex";
         document.getElementById("days-input").style.display = "none";
+		document.getElementById("age-display").innerHTML = "";
+
     } else if (selectedOption === "days") {
         document.getElementById("dob-container").style.display = "none";
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "flex";
+		document.getElementById("age-display").innerHTML = "";
+
     }
 }
 
