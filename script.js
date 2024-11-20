@@ -2,29 +2,38 @@ let sidebarOpen = false;
 let gender = '';
 
 function toggleAgeInput() {
-    const selectedOption = document.getElementById("age-option").value;
+	const selectedOption = document.getElementById("age-option").value;
 	const dobFlatpickr = document.querySelector("#dob")._flatpickr;
+	    // Reset required attributes
+	document.getElementById("dob").required = false;
+	document.getElementById("current-day").required = false;
+	document.getElementById("age-months").required = false;
+	document.getElementById("age-days").required = false;
 
     if (selectedOption === "dob") {
         document.getElementById("dob-container").style.display = "flex";
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "none";
-		document.getElementById("age-display").innerHTML = "";
+	document.getElementById("age-display").innerHTML = "";
 		// Reset giá trị dob
         if (dobFlatpickr) {
             dobFlatpickr.clear(); 
         }
+	document.getElementById("dob").required = true;
+        document.getElementById("current-day").required = true;
     } else if (selectedOption === "months") {
         document.getElementById("dob-container").style.display = "none";
         document.getElementById("months-input").style.display = "flex";
         document.getElementById("days-input").style.display = "none";
-		document.getElementById("age-display").innerHTML = "";
+	document.getElementById("age-display").innerHTML = "";
+        document.getElementById("age-months").required = true;
 
     } else if (selectedOption === "days") {
         document.getElementById("dob-container").style.display = "none";
         document.getElementById("months-input").style.display = "none";
         document.getElementById("days-input").style.display = "flex";
-		document.getElementById("age-display").innerHTML = "";
+	document.getElementById("age-display").innerHTML = "";
+        document.getElementById("age-days").required = true;
 
     }
 }
