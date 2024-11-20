@@ -166,8 +166,8 @@ def draw_bmi_chart(bmi, age_months, sex):
     # Cập nhật layout
     plotly_fig.update_layout(
         autosize=True,
-        width=600,  # Chiều rộng của biểu đồ
-        height=400,  # Chiều cao của biểu đồ
+        width=none,  # Chiều rộng của biểu đồ
+        height=none,  # Chiều cao của biểu đồ
         margin=dict(l=30, r=30, t=20, b=20),  # Điều chỉnh biên
         annotations=annotations,
         plot_bgcolor="white",  # Đổi nền thành màu trắng
@@ -309,8 +309,8 @@ def draw_wfa_chart(weight, age_months, sex):
 
     # Cập nhật layout
     plotly_fig.update_layout(autosize=True,
-                             width=600,
-                             height=400,
+                             width=none,
+                             height=none,
                              margin=dict(l=30, r=30, t=20, b=20),
                              annotations=annotations,
                              plot_bgcolor="white",
@@ -458,9 +458,8 @@ def draw_lhfa_chart(adjusted_lenhei, age_months, sex):
          xaxis_title="Age (months)",
          yaxis_title="Lenght/Height (cm)",
          shapes=shapes,
-         width=600,
-         height=400, 
-
+         width=none,
+         height=none, 
      )
 
      # Chuyển đổi biểu đồ thành JSON
