@@ -427,6 +427,10 @@
 						const lhfaChart = data.charts.lhfa;
 						Plotly.react("lhfa-chart", JSON.parse(lhfaChart.data).data, JSON.parse(lhfaChart.data).layout, lhfaChart.config);
 					}
+					if (data.charts.wflh) {
+						const wflhChart = data.charts.wflh;
+						Plotly.react("wflh-chart", JSON.parse(wflhChart.data).data, JSON.parse(wflhChart.data).layout, wflhChart.config);
+					}
 
 					// Cập nhật kết quả z-score
 					document.getElementById("bmi-result-side").innerText = `${data.bmi}`;
