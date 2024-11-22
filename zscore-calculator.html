@@ -14,12 +14,50 @@
 	<title>WHO Z-Score</title>
 	<link rel="icon" href="/icon.png" type="image/png" />
 	<style>
-		p { margin-top: 4px; margin-bottom: 4px; padding-left: 5px; }
-		.zscore-form { margin-bottom: 20px; }
-		.zscore-form label { display: block; margin-bottom: 5px; font-weight: bold; }
-		.result-container { max-width: 400px; justify-content: space-between; align-items: center; background-color: #117d67; padding: 10px; border-radius: 10px; color: white; margin: 20px 0; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); }
-		.result-item { display: flex; flex-direction: column; align-items: left; justify-content: left; font-size: 17px; flex: 1; padding: 5px 10px; }
-		.dropbtn { padding: 5px; font-size: 14px; cursor: pointer; border-radius: 5px; }
+		p {
+			margin-top: 4px;
+			margin-bottom: 4px;
+			padding-left: 5px;
+		}
+
+		.zscore-form {
+			margin-bottom: 20px;
+		}
+
+		.zscore-form label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+		}
+
+		.result-container {
+			max-width: 400px;
+			justify-content: space-between;
+			align-items: center;
+			background-color: #117d67;
+			padding: 10px;
+			border-radius: 10px;
+			color: white;
+			margin: 20px 0;
+			box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+		.result-item {
+			display: flex;
+			flex-direction: column;
+			align-items: left;
+			justify-content: left;
+			font-size: 17px;
+			flex: 1;
+			padding: 5px 10px;
+		}
+
+		.dropbtn {
+			padding: 5px;
+			font-size: 14px;
+			cursor: pointer;
+			border-radius: 5px;
+		}
 	</style>
 </head>
 
@@ -305,118 +343,118 @@
 		document.getElementById("current-day").addEventListener("change", updateAgeDisplay);
 
 		document.getElementById("zscore-form").addEventListener("submit", function (event) {
-				event.preventDefault();
+			event.preventDefault();
 
-				const spinner = document.getElementById("spinner");
-				const resultBox = document.getElementById("resultZS");
-				const genderError = document.getElementById("gender-error");
-				const formData = new FormData(this);
-				const selectedOption = document.getElementById("age-option").value;
-				let ageInDays;
+			const spinner = document.getElementById("spinner");
+			const resultBox = document.getElementById("resultZS");
+			const genderError = document.getElementById("gender-error");
+			const formData = new FormData(this);
+			const selectedOption = document.getElementById("age-option").value;
+			let ageInDays;
 
-				// Ẩn resultBox và hiển thị spinner
-				resultBox.style.display = "none";
-				spinner.style.display = "block";
+			// Ẩn resultBox và hiển thị spinner
+			resultBox.style.display = "none";
+			spinner.style.display = "block";
 
-				// Kiểm tra giới tính
-				if (!gender) {
-						spinner.style.display = "none";
-						genderError.style.display = "block";
-						return;
+			// Kiểm tra giới tính
+			if (!gender) {
+				spinner.style.display = "none";
+				genderError.style.display = "block";
+				return;
+			}
+
+			// Tính toán ageInDays
+			if (selectedOption === "dob") {
+				const dob = document.getElementById("dob").value;
+				const currentDay = document.getElementById("current-day").value;
+				if (dob && currentDay) {
+					ageInDays = calculateAgeInDays(dob, currentDay);
+				} else {
+					alert("Please enter both Date of Birth and Current Day.");
+					spinner.style.display = "none";
+					return;
 				}
-
-				// Tính toán ageInDays
-				if (selectedOption === "dob") {
-						const dob = document.getElementById("dob").value;
-						const currentDay = document.getElementById("current-day").value;
-						if (dob && currentDay) {
-								ageInDays = calculateAgeInDays(dob, currentDay);
-						} else {
-								alert("Please enter both Date of Birth and Current Day.");
-								spinner.style.display = "none";
-								return;
-						}
-				} else if (selectedOption === "months") {
-						const ageMonths = parseInt(document.getElementById("age-months").value, 10);
-						if (!isNaN(ageMonths)) {
-								ageInDays = ageMonths * 30.4375;
-						} else {
-								alert("Please enter a valid age in months.");
-								spinner.style.display = "none";
-								return;
-						}
-				} else if (selectedOption === "days") {
-						const ageDays = parseInt(document.getElementById("age-days").value, 10);
-						if (!isNaN(ageDays)) {
-								ageInDays = ageDays;
-						} else {
-								alert("Please enter a valid age in days.");
-								spinner.style.display = "none";
-								return;
-						}
+			} else if (selectedOption === "months") {
+				const ageMonths = parseInt(document.getElementById("age-months").value, 10);
+				if (!isNaN(ageMonths)) {
+					ageInDays = ageMonths * 30.4375;
+				} else {
+					alert("Please enter a valid age in months.");
+					spinner.style.display = "none";
+					return;
 				}
+			} else if (selectedOption === "days") {
+				const ageDays = parseInt(document.getElementById("age-days").value, 10);
+				if (!isNaN(ageDays)) {
+					ageInDays = ageDays;
+				} else {
+					alert("Please enter a valid age in days.");
+					spinner.style.display = "none";
+					return;
+				}
+			}
 
-				// Thêm ageInDays vào FormData
-				formData.append("ageInDays", ageInDays);
+			// Thêm ageInDays vào FormData
+			formData.append("ageInDays", ageInDays);
 
-				// Gửi request
-				fetch("/zscore-calculator", {
-						method: "POST",
-						body: formData,
-				})
+			// Gửi request
+			fetch("/zscore-calculator", {
+				method: "POST",
+				body: formData,
+			})
 				.then((response) => {
-						if (!response.ok) {
-								throw new Error("Network response was not ok");
-						}
-						return response.json();
+					if (!response.ok) {
+						throw new Error("Network response was not ok");
+					}
+					return response.json();
 				})
 				.then((data) => {
-						// Ẩn spinner
-						spinner.style.display = "none";
+					// Ẩn spinner
+					spinner.style.display = "none";
 
-						// Hiển thị kết quả
-						if (data.bmi_chart_data) {
-								const chartData = JSON.parse(data.bmi_chart_data);
-								Plotly.react("bmi-chart", chartData.data, chartData.layout);
-						}
+					// Hiển thị kết quả
+					if (data.charts.bmi) {
+						const bmiChart = data.charts.bmi;
+						Plotly.react("bmi-chart", JSON.parse(bmiChart.data).data, JSON.parse(bmiChart.data).layout, bmiChart.config);
+					}
 
-						if (data.wfa_chart_data) {
-								const chartData = JSON.parse(data.wfa_chart_data);
-								Plotly.react("wfa-chart", chartData.data, chartData.layout);
-						}
+					if (data.charts.wfa) {
+						const wfaChart = data.charts.wfa;
+						Plotly.react("wfa-chart", JSON.parse(wfaChart.data).data, JSON.parse(wfaChart.data).layout, wfaChart.config);
+					}
 
-						if (data.lhfa_chart_data) {
-								const chartData = JSON.parse(data.lhfa_chart_data);
-								Plotly.react("lhfa-chart", chartData.data, chartData.layout);
-						}
+					if (data.charts.lhfa) {
+						const lhfaChart = data.charts.lhfa;
+						Plotly.react("lhfa-chart", JSON.parse(lhfaChart.data).data, JSON.parse(lhfaChart.data).layout, lhfaChart.config);
+					}
 
-						// Cập nhật kết quả z-score
-						document.getElementById("bmi-result-side").innerText = `${data.bmi}`;
-						document.getElementById("bmi-result").innerText = `BMI: ${data.bmi}`;
+					// Cập nhật kết quả z-score
+					document.getElementById("bmi-result-side").innerText = `${data.bmi}`;
+					document.getElementById("bmi-result").innerText = `BMI: ${data.bmi}`;
 
-						document.getElementById("bmiage-result-side").innerText = `${data.bmi_age}`;
-						document.getElementById("bmiage-result").innerText = `BMI for Age: ${data.bmi_age}`;
+					document.getElementById("bmiage-result-side").innerText = `${data.bmi_age}`;
+					document.getElementById("bmiage-result").innerText = `BMI for Age: ${data.bmi_age}`;
 
-						document.getElementById("wei-result-side").innerText = `${data.wei}`;
-						document.getElementById("wei-result").innerText = `Weight for Age: ${data.wei}`;
+					document.getElementById("wei-result-side").innerText = `${data.wei}`;
+					document.getElementById("wei-result").innerText = `Weight for Age: ${data.wei}`;
 
-						document.getElementById("lenhei_age_result_side").innerText = `${data.lenhei_age}`;
-						document.getElementById("lenhei_age_result").innerText = `Height for Age: ${data.lenhei_age}`;
+					document.getElementById("lenhei_age_result_side").innerText = `${data.lenhei_age}`;
+					document.getElementById("lenhei_age_result").innerText = `Height for Age: ${data.lenhei_age}`;
 
-						document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl}`;
-						document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl}`;
+					document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl}`;
+					document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl}`;
 
-						// Hiển thị resultBox
-						resultBox.style.display = "flex";
+					// Hiển thị resultBox
+					resultBox.style.display = "flex";
 				})
 				.catch((error) => {
-						console.error("There was a problem with the fetch operation:", error);
-						alert("An error occurred while processing the request.");
-						spinner.style.display = "none";
+					console.error("There was a problem with the fetch operation:", error);
+					alert("An error occurred while processing the request.");
+					spinner.style.display = "none";
 				});
 
-				// Ẩn placeholder
-				document.getElementById("text1").style.display = "none";
+			// Ẩn placeholder
+			document.getElementById("text1").style.display = "none";
 		});
 
 	</script>
