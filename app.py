@@ -7,6 +7,10 @@ import os
 
 app = Flask(__name__)
 
+# Tạo thư mục lưu ảnh nếu chưa có
+IMAGE_DIR = "data/images"
+os.makedirs(IMAGE_DIR, exist_ok=True)
+
 
 # Hàm để đọc dữ liệu chuẩn từ các file txt
 def make_standard(name):
@@ -195,11 +199,11 @@ def zscore_calculator():
         # Chuyển giới tính thành số
         sex_value = 1 if sex.lower() == "male" else 2 if sex.lower(
         ) == "female" else None
-        # Gọi hàm vẽ biểu đồ và lấy JSON
-        bmia_chart_json = draw_bmi_chart(bmi, age_months, sex_value)
-        wfa_chart_json = draw_wfa_chart(weight, age_months, sex_value)
-        lhfa_chart_json = draw_lhfa_chart(adjusted_lenhei, age_months, sex_value)
-        
+        # Gọi hàm vẽ biểu đồ và nhận JSON cùng cấu hình
+        bmia_chart_json, bmia_config = draw_bmi_chart(bmi, age_months, sex_value)
+        wfa_chart_json, wfa_config = draw_wfa_chart(weight, age_months, sex_value)
+        lhfa_chart_json, lhfa_config = draw_lhfa_chart(adjusted_lenhei, age_months, sex_value)
+
         # Tính toán Z-score cho các chỉ số
         bmi_age = apply_zscore_and_growthstandards(compute_zscore_adjusted,
                                                    growthstandards["bmi"],
@@ -218,23 +222,16 @@ def zscore_calculator():
 
         if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
             return jsonify({
-                "bmi":
-                round(bmi, 2),
-                "bmi_age":
-                round(float(bmi_age[0]), 2)
-                if isinstance(bmi_age, np.ndarray) else round(bmi_age, 2),
-                "wei":
-                round(float(wei[0]), 2)
-                if isinstance(wei, np.ndarray) else round(wei, 2),
-                "lenhei_age":
-                round(float(lenhei_age[0]), 2) if isinstance(
-                    lenhei_age, np.ndarray) else round(lenhei_age, 2),
-                "wfl":
-                round(float(wfl), 2) if isinstance(
-                    wfl, (np.ndarray, np.float64)) else round(wfl, 2),
-                "bmi_chart_data":bmia_chart_json,
-                "wfa_chart_data":wfa_chart_json,
-                "lhfa_chart_data":lhfa_chart_json
+                "bmi":round(bmi, 2),
+                "bmi_age": round(float(bmi_age[0]), 2) if isinstance(bmi_age, np.ndarray) else round(bmi_age, 2),
+                "wei": round(float(wei[0]), 2) if isinstance(wei, np.ndarray) else round(wei, 2),
+                "lenhei_age": round(float(lenhei_age[0]), 2) if isinstance(lenhei_age, np.ndarray) else round(lenhei_age, 2),
+                "wfl": round(float(wfl), 2) if isinstance(wfl, (np.ndarray, np.float64)) else round(wfl, 2),
+                "charts": {
+                    "bmi": {"data": bmia_chart_json, "config": bmia_config},
+                    "wfa": {"data": wfa_chart_json,"config": wfa_config},
+                    "lhfa": {"data": lhfa_chart_json,"config": lhfa_config}
+                }
             })
         else:
             return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
