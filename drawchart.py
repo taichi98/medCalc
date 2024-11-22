@@ -325,3 +325,113 @@ def draw_lhfa_chart(adjusted_lenhei, age_months, sex):
 
     # Trả về biểu đồ dạng JSON
     return fig.to_json(), config
+
+def draw_wfl_wfh_chart(weight, length_or_height, sex, measure_type):
+    # Determine the file path based on sex and measurement type
+    if length_or_height < 65:
+        file_type = 'wfl'
+    elif length_or_height > 110:
+        file_type = 'wfh'
+    else:
+        file_type = 'wfl' if measure_type == 'l' else 'wfh'
+
+    if sex == 1:  # Boys
+        file_path = f"data/{file_type}-boys-zscore-expanded-tables.xlsx"
+    elif sex == 2:  # Girls
+        file_path = f"data/{file_type}-girls-zscore-expanded-tables.xlsx"
+    else:
+        raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
+
+    # Load data from Excel file
+    data = pd.read_excel(file_path)
+    length_or_height_data = data['Length'] if file_type == 'wfl' else data[
+        'Height']
+
+    # Create traces for SD lines
+    sd_lines = ['SD3neg', 'SD2neg', 'SD1neg', 'SD0', 'SD1', 'SD2', 'SD3']
+    colors = ['black', 'red', '#DAA41F', 'green', '#DAA41F', 'red', 'black']
+    labels = ['-3SD', '-2SD', '-1SD', 'Mean', '+1SD', '+2SD', '+3SD']
+    traces = [
+        go.Scatter(x=length_or_height_data,
+                   y=data[sd],
+                   mode='lines',
+                   name=label,
+                   line=dict(color=color),
+                   showlegend=False)
+        for sd, color, label in zip(sd_lines, colors, labels)
+    ]
+
+    # Add the child data point
+    traces.append(
+        go.Scatter(x=[length_or_height],
+                   y=[weight],
+                   mode='markers',
+                   name='Child Data Point',
+                   marker=dict(color='red', size=10),
+                   showlegend=False))
+
+    # Add layout configurations
+    shapes = [
+        dict(type="line",
+             x0=length_or_height_data.min(),
+             y0=y,
+             x1=length_or_height_data.max(),
+             y1=y,
+             line=dict(color="gray", width=0.2, dash="dash"))
+        for y in [5, 10, 15, 20, 25]
+    ] + [
+        dict(type="rect",
+             xref="paper",
+             yref="paper",
+             x0=0,
+             y0=0,
+             x1=1,
+             y1=1,
+             line=dict(color="black", width=1))
+    ]
+
+    # Add annotations for SD labels
+    annotations = [
+        dict(x=1.001,
+             y=data[sd].iloc[-1],
+             text=label,
+             font=dict(color=color, size=8),
+             xref="paper",
+             yref="y",
+             showarrow=False,
+             xanchor="left")
+        for sd, label, color in zip(sd_lines, labels, colors)
+    ]
+
+    # Determine axis titles
+    axis_title = "Length (cm)" if file_type == 'wfl' else "Height (cm)"
+
+    # Create layout
+    layout = go.Layout(xaxis=dict(
+        title=axis_title,
+        range=[length_or_height_data.min(),
+               length_or_height_data.max()]),
+                       yaxis=dict(title="Weight (kg)"),
+                       margin=dict(l=30, r=30, t=20, b=20),
+                       shapes=shapes,
+                       annotations=annotations,
+                       plot_bgcolor="white",
+                       dragmode="pan")
+
+    # Configure the chart
+    config = {
+        'modeBarButtonsToRemove': [
+            'toImage', 'sendDataToCloud', 'autoScale2d',
+            'hoverCompareCartesian', 'hoverClosestCartesian', 'zoom2d',
+            'toggleSpikelines'
+        ],
+        'displaylogo':
+        False
+    }
+
+    # Create the figure and return as JSON
+    fig = go.Figure(data=traces, layout=layout)
+    fig.update_traces(hovertemplate="%{x:.2f}, %{y:.2f}")
+
+    return fig.to_json(), config
+
