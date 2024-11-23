@@ -18,12 +18,15 @@
 	    z-index: 100;
 	    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 	}
-	.header-title {
-		color: #fff;
-		font-weight: bold;
-		font-size: 20px; /* Adjust size as needed */
-		margin-left: 5px;
-		font-weight: bold;
+	.header-title img {
+		height: 30px;
+		width: auto;
+		margin-top: -4px;
+		margin-left: -10px;
+		object-fit: contain;
+		display: flex;
+		justify-content: left;
+		align-items: center;
 	}
 	/*Box hiển thị BMI/Age ZScore---------------*/
 	fieldset {
