@@ -107,12 +107,8 @@
 				<fieldset id="bfaresult">
 					<legend>BMI Results</legend>
 					<ol>
-						<li class="results">
-							BMI: <span class="scores" id="bmi-result-side"></span>
-						</li>
-						<li class="results">
-							Z-Score: <span class="scores" id="bmiage-result-side"></span>
-						</li>
+						<li class="results">BMI: <span class="scores" id="bmi-result-side"></span></li>
+						<li class="results">Z-Score: <span class="scores" id="bmiage-result-side"></span></li>
 					</ol>
 				</fieldset>
 				<div class="plot-container" id="bmi-chart"></div>
@@ -120,9 +116,7 @@
 				<fieldset id="wfaresult">
 					<legend>WFA Results</legend>
 					<ol>
-						<li class="results">
-							Z-Score: <span class="scores" id="wei-result-side"></span>
-						</li>
+						<li class="results">Z-Score: <span class="scores" id="wei-result-side"></span></li>
 					</ol>
 				</fieldset>
 				<div class="plot-container" id="wfa-chart"></div>
@@ -130,10 +124,7 @@
 				<fieldset id="lhfaresult">
 					<legend>LHFA Results</legend>
 					<ol>
-						<li class="results">
-							Z-Score:
-							<span class="scores" id="lenhei_age_result_side"></span>
-						</li>
+						<li class="results">Z-Score:<span class="scores" id="lenhei_age_result_side"></span></li>
 					</ol>
 				</fieldset>
 				<div class="plot-container" id="lhfa-chart"></div>
@@ -141,10 +132,7 @@
 				<fieldset id="wflhresult">
 					<legend>WFLH Results</legend>
 					<ol>
-						<li class="results">
-							Z-Score:
-							<span class="scores" id="weight_lenhei_result_side"></span>
-						</li>
+						<li class="results">Z-Score:<span class="scores" id="weight_lenhei_result_side"></span></li>
 					</ol>
 				</fieldset>
 				<div class="plot-container" id="wflh-chart"></div>
@@ -155,12 +143,8 @@
 				<form id="zscore-form">
 					<label for="gender">Sex</label>
 					<div class="select-group">
-						<button type="button" id="male-btn" onclick="selectGender('male')">
-							Male
-						</button>
-						<button type="button" id="female-btn" onclick="selectGender('female')">
-							Female
-						</button>
+						<button type="button" id="male-btn" onclick="selectGender('male')">Male</button>
+						<button type="button" id="female-btn" onclick="selectGender('female')">Female</button>
 					</div>
 					<input type="hidden" id="gender" name="sex" required />
 					<span id="gender-error" style="margin-bottom: 5px; color: red; display: none">Please select a gender.</span>
@@ -201,12 +185,8 @@
 
 					<label for="measured">Measured:</label>
 					<div class="select-group">
-						<button type="button" id="recumbent-btn" onclick="selectMeasured('l')" class="active">
-							Recumbent
-						</button>
-						<button type="button" id="standing-btn" onclick="selectMeasured('h')">
-							Standing
-						</button>
+						<button type="button" id="recumbent-btn" onclick="selectMeasured('l')" class="active">Recumbent</button>
+						<button type="button" id="standing-btn" onclick="selectMeasured('h')">Standing</button>
 					</div>
 					<input type="hidden" id="measured" name="measure" value="l" />
 
@@ -279,63 +259,56 @@
 
 			return ageInDays;
 		}
+		// Hàm kiểm tra và cập nhật trạng thái đo dựa trên tuổi (tính bằng tháng)
+		function updateMeasuredButton(totalMonths) {
+			if (totalMonths >= 24) {
+				selectMeasured("h"); // Chọn Standing
+			} else {
+				selectMeasured("l"); // Chọn Recumbent
+			}
+		}
+
+		// Hàm tính tổng tháng từ tuổi nhập vào
+		function calculateTotalMonths(ageYears, ageMonths) {
+			return ageYears * 12 + ageMonths;
+		}
 
 		function updateAgeDisplay() {
 			const dob = document.getElementById("dob").value;
 			const currentDay = document.getElementById("current-day").value;
 
 			if (dob && currentDay) {
-				// Chuyển đổi chuỗi "dd/mm/yyyy" thành đối tượng Date
 				const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
 				const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
 
-				const [currentDayDay, currentDayMonth, currentDayYear] = currentDay
-					.split("/")
-					.map(Number);
-				const currentDate = new Date(
-					currentDayYear,
-					currentDayMonth - 1,
-					currentDayDay,
-				);
+				const [currentDayDay, currentDayMonth, currentDayYear] = currentDay.split("/").map(Number);
+				const currentDate = new Date(currentDayYear, currentDayMonth - 1, currentDayDay);
 
 				let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
 				let ageMonths = currentDate.getMonth() - birthDate.getMonth();
 				let ageDays = currentDate.getDate() - birthDate.getDate();
 
-				if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-					ageYears--;
-					ageMonths += 12;
-				}
+				if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {ageYears--; ageMonths += 12;}
 				if (ageDays < 0) {
-					const prevMonth = new Date(
-						currentDate.getFullYear(),
-						currentDate.getMonth(),
-						0,
-					);
+					const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
 					ageDays += prevMonth.getDate();
 					ageMonths--;
 				}
-				const totalMonths = ageYears * 12 + ageMonths;
-				if (totalMonths >= 24) {
-					selectMeasured("h");
-				} else {
-					selectMeasured("l");
-				}
 
-				// Tạo chuỗi hiển thị tuổi dựa trên các điều kiện
+				const totalMonths = calculateTotalMonths(ageYears, ageMonths);
+
+				// Gọi hàm kiểm tra trạng thái đo
+				updateMeasuredButton(totalMonths);
+
 				let ageDisplayText = "";
 				if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
-					// Trường hợp tuổi <= 30 ngày
 					ageDisplayText = `Age: <b>${ageDays}</b> day(s)`;
 				} else if (ageYears === 0 && ageMonths <= 12) {
-					// Trường hợp tuổi <= 12 tháng
 					ageDisplayText = `Age: <b>${ageMonths}</b> month(s), ${ageDays} day(s)`;
 				} else {
-					// Trường hợp tuổi > 12 tháng
 					ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
 				}
 
-				// Cập nhật kết quả hiển thị
 				document.getElementById("age-display").innerHTML = ageDisplayText;
 			}
 		}
@@ -343,7 +316,19 @@
 		// Thêm sự kiện để cập nhật tuổi khi giá trị dob hoặc current-day thay đổi
 		document.getElementById("dob").addEventListener("change", updateAgeDisplay);
 		document.getElementById("current-day").addEventListener("change", updateAgeDisplay);
-
+		document.getElementById("age-months").addEventListener("input", function () {
+			const ageMonths = parseInt(this.value, 10);
+			if (!isNaN(ageMonths)) {
+				updateMeasuredButton(ageMonths);
+			}
+		});
+		document.getElementById("age-days").addEventListener("input", function () {
+			const ageDays = parseInt(this.value, 10);
+			if (!isNaN(ageDays)) {
+				const ageMonths = Math.floor(ageDays / 30.4375);
+				updateMeasuredButton(ageMonths);
+			}
+		});
 		document.getElementById("zscore-form").addEventListener("submit", function (event) {
 			event.preventDefault();
 
