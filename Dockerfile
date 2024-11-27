@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 RUN pip install plotly
 RUN pip install openpyxl
+RUN pip install scipy
 
 # Cài đặt các gói Python từ requirements.txt
 WORKDIR /app
