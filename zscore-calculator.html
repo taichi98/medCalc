@@ -399,7 +399,7 @@
 					// Ẩn spinner
 					spinner.style.display = "none";
 
-					// Hiển thị kết quả
+					// Hiển thị kết quả biểu đồ (nếu có)
 					if (data.charts.bmi) {
 						const bmiChart = data.charts.bmi;
 						Plotly.react("bmi-chart", JSON.parse(bmiChart.data).data, JSON.parse(bmiChart.data).layout, bmiChart.config);
@@ -414,26 +414,27 @@
 						const lhfaChart = data.charts.lhfa;
 						Plotly.react("lhfa-chart", JSON.parse(lhfaChart.data).data, JSON.parse(lhfaChart.data).layout, lhfaChart.config);
 					}
+
 					if (data.charts.wflh) {
 						const wflhChart = data.charts.wflh;
 						Plotly.react("wflh-chart", JSON.parse(wflhChart.data).data, JSON.parse(wflhChart.data).layout, wflhChart.config);
 					}
 
-					// Cập nhật kết quả z-score
+					// Cập nhật kết quả z-score và giá trị percentile
 					document.getElementById("bmi-result-side").innerText = `${data.bmi}`;
 					document.getElementById("bmi-result").innerText = `BMI: ${data.bmi}`;
 
-					document.getElementById("bmiage-result-side").innerText = `${data.bmi_age}`;
-					document.getElementById("bmiage-result").innerText = `BMI for Age: ${data.bmi_age}`;
+					document.getElementById("bmiage-result-side").innerText = `${data.bmi_age.zscore} (${data.bmi_age.percentile}th)`;
+					document.getElementById("bmiage-result").innerText = `BMI for Age: ${data.bmi_age.zscore} (${data.bmi_age.percentile}th)`;
 
-					document.getElementById("wei-result-side").innerText = `${data.wei}`;
-					document.getElementById("wei-result").innerText = `Weight for Age: ${data.wei}`;
+					document.getElementById("wei-result-side").innerText = `${data.wei.zscore} (${data.wei.percentile}th)`;
+					document.getElementById("wei-result").innerText = `Weight for Age: ${data.wei.zscore} (${data.wei.percentile}th)`;
 
-					document.getElementById("lenhei_age_result_side").innerText = `${data.lenhei_age}`;
-					document.getElementById("lenhei_age_result").innerText = `Height for Age: ${data.lenhei_age}`;
+					document.getElementById("lenhei_age_result_side").innerText = `${data.lenhei_age.zscore} (${data.lenhei_age.percentile}th)`;
+					document.getElementById("lenhei_age_result").innerText = `Height for Age: ${data.lenhei_age.zscore} (${data.lenhei_age.percentile}th)`;
 
-					document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl}`;
-					document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl}`;
+					document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl.zscore} (${data.wfl.percentile}th)`;
+					document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl.zscore} (${data.wfl.percentile}th)`;
 
 					// Hiển thị resultBox
 					resultBox.style.display = "flex";
