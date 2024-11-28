@@ -177,7 +177,7 @@ def calculate_zscore_weight_for_lenhei(lenhei,
 def zscore_to_percentile(zscore):
     if zscore is None or math.isnan(zscore):
         return None
-    return round(norm.cdf(zscore) * 100, 1)
+    return round(norm.cdf(zscore) * 100)
 
 
 @app.route("/")
