@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from drawchart import draw_bmi_chart, draw_wfa_chart, draw_lhfa_chart, draw_wfl_wfh_chart
+from percentilechart import draw_bmi_percentile_chart, draw_wfa_percentile_chart, draw_lhfa_percentile_chart, draw_wfl_wfh_percentile_chart
 from scipy.stats import norm
 import pandas as pd
 import numpy as np
@@ -12,10 +13,12 @@ app = Flask(__name__)
 IMAGE_DIR = "data/images"
 os.makedirs(IMAGE_DIR, exist_ok=True)
 
+
 # Hàm để đọc dữ liệu chuẩn từ các file txt
 def make_standard(name):
     path = f"growthstandards/{name}.txt"
     return pd.read_csv(path, sep='\t', dtype={'sex': int, 'age': int})
+
 
 # Tải các bảng dữ liệu tiêu chuẩn
 growthstandards = {
@@ -26,6 +29,7 @@ growthstandards = {
     "wfl": make_standard("wflanthro"),
     "wfh": make_standard("wfhanthro")
 }
+
 
 # Hàm tính Z-score
 def compute_zscore(y, m, l, s):
@@ -96,7 +100,8 @@ def round_up(x):
 
 
 def age_to_days(age, is_age_in_month):
-    return int(round_up(age * ANTHRO_DAYS_OF_MONTH if is_age_in_month else age))
+    return int(round_up(age *
+                        ANTHRO_DAYS_OF_MONTH if is_age_in_month else age))
 
 
 # Hàm điều chỉnh chiều dài/chiều cao theo tuổi và cách đo
@@ -177,7 +182,7 @@ def calculate_zscore_weight_for_lenhei(lenhei,
 def zscore_to_percentile(zscore):
     if zscore is None or math.isnan(zscore):
         return None
-    return round(norm.cdf(zscore) * 100)
+    return round(norm.cdf(zscore) * 100, 1)
 
 
 @app.route("/")
@@ -203,7 +208,7 @@ def zscore_calculator():
         # Chuyển giới tính thành số
         sex_value = 1 if sex.lower() == "male" else 2 if sex.lower(
         ) == "female" else None
-        # Gọi hàm vẽ biểu đồ và nhận JSON cùng cấu hình
+        # Gọi hàm vẽ biểu đồ zscore và nhận JSON cùng cấu hình
         bmia_chart_json, bmia_config = draw_bmi_chart(bmi, age_months,
                                                       sex_value)
         wfa_chart_json, wfa_config = draw_wfa_chart(weight, age_months,
@@ -213,47 +218,106 @@ def zscore_calculator():
         wflh_chart_json, wflh_config = draw_wfl_wfh_chart(
             weight, adjusted_lenhei, sex_value, measure)
 
+        # Gọi hàm vẽ biểu đồ percentile và nhận JSON cùng cấu hình
+        bmia_percentile_chart_json, bmia_percentile_config = draw_bmi_percentile_chart(
+            bmi, age_months, sex_value)
+        wfa_percentile_chart_json, wfa_percentile_config = draw_wfa_percentile_chart(
+            weight, age_months, sex_value)
+        lhfa_percentile_chart_json, lhfa_percentile_config = draw_lhfa_percentile_chart(
+            adjusted_lenhei, age_months, sex_value)
+        wflh_percentile_chart_json, wflh_percentile_config = draw_wfl_wfh_percentile_chart(
+            weight, adjusted_lenhei, sex_value, measure)
+
         # Tính toán Z-score cho các chỉ số
-        bmi_age = apply_zscore_and_growthstandards(compute_zscore_adjusted, growthstandards["bmi"], age_days, sex_value, bmi)
-        wei = apply_zscore_and_growthstandards(compute_zscore_adjusted, growthstandards["weight"], age_days, sex_value, weight)
-        lenhei_age = apply_zscore_and_growthstandards(compute_zscore_adjusted, growthstandards["length"], age_days, sex_value, adjusted_lenhei)
-        wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei, sex_value, weight, age_days=age_days, lenhei_unit=measure)
+        bmi_age = apply_zscore_and_growthstandards(compute_zscore_adjusted,
+                                                   growthstandards["bmi"],
+                                                   age_days, sex_value, bmi)
+        wei = apply_zscore_and_growthstandards(compute_zscore_adjusted,
+                                               growthstandards["weight"],
+                                               age_days, sex_value, weight)
+        lenhei_age = apply_zscore_and_growthstandards(
+            compute_zscore_adjusted, growthstandards["length"], age_days,
+            sex_value, adjusted_lenhei)
+        wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei,
+                                                 sex_value,
+                                                 weight,
+                                                 age_days=age_days,
+                                                 lenhei_unit=measure)
 
         if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
             return jsonify({
                 "bmi": round(bmi, 2),
                 "bmi_age": {
-                    "zscore":round(float(bmi_age[0]), 2) if isinstance(bmi_age, np.ndarray) else round(bmi_age, 2),
-                    "percentile":zscore_to_percentile(bmi_age[0] if isinstance(bmi_age, np.ndarray) else bmi_age)
+                    "zscore":
+                    round(float(bmi_age[0]), 2) if isinstance(
+                        bmi_age, np.ndarray) else round(bmi_age, 2),
+                    "percentile":
+                    zscore_to_percentile(bmi_age[0] if isinstance(
+                        bmi_age, np.ndarray) else bmi_age)
                 },
                 "wei": {
-                    "zscore":round(float(wei[0]), 2) if isinstance(wei, np.ndarray) else round(wei, 2),
-                    "percentile":zscore_to_percentile(wei[0] if isinstance(wei, np.ndarray) else wei)
+                    "zscore":
+                    round(float(wei[0]), 2)
+                    if isinstance(wei, np.ndarray) else round(wei, 2),
+                    "percentile":
+                    zscore_to_percentile(
+                        wei[0] if isinstance(wei, np.ndarray) else wei)
                 },
                 "lenhei_age": {
-                    "zscore":round(float(lenhei_age[0]), 2) if isinstance(lenhei_age, np.ndarray) else round(lenhei_age, 2),
-                    "percentile":zscore_to_percentile(lenhei_age[0] if isinstance(lenhei_age, np.ndarray) else lenhei_age)
+                    "zscore":
+                    round(float(lenhei_age[0]), 2) if isinstance(
+                        lenhei_age, np.ndarray) else round(lenhei_age, 2),
+                    "percentile":
+                    zscore_to_percentile(lenhei_age[0] if isinstance(
+                        lenhei_age, np.ndarray) else lenhei_age)
                 },
                 "wfl": {
-                    "zscore":round(float(wfl), 2) if isinstance(wfl, (np.ndarray, np.float64)) else round(wfl, 2),
-                    "percentile":zscore_to_percentile(wfl)
+                    "zscore":
+                    round(float(wfl), 2) if isinstance(
+                        wfl, (np.ndarray, np.float64)) else round(wfl, 2),
+                    "percentile":
+                    zscore_to_percentile(wfl)
                 },
                 "charts": {
                     "bmi": {
-                        "data": bmia_chart_json,
-                        "config": bmia_config
+                        "zscore": {
+                            "data": bmia_chart_json,
+                            "config": bmia_config
+                        },
+                        "percentile": {
+                            "data": bmia_percentile_chart_json,
+                            "config": bmia_percentile_config
+                        }
                     },
                     "wfa": {
-                        "data": wfa_chart_json,
-                        "config": wfa_config
+                        "zscore": {
+                            "data": wfa_chart_json,
+                            "config": wfa_config
+                        },
+                        "percentile": {
+                            "data": wfa_percentile_chart_json,
+                            "config": wfa_percentile_config
+                        }
                     },
                     "lhfa": {
-                        "data": lhfa_chart_json,
-                        "config": lhfa_config
+                        "zscore": {
+                            "data": lhfa_chart_json,
+                            "config": lhfa_config
+                        },
+                        "percentile": {
+                            "data": lhfa_percentile_chart_json,
+                            "config": lhfa_percentile_config
+                        }
                     },
                     "wflh": {
-                        "data": wflh_chart_json,
-                        "config": wflh_config
+                        "zscore": {
+                            "data": wflh_chart_json,
+                            "config": wflh_config
+                        },
+                        "percentile": {
+                            "data": wflh_percentile_chart_json,
+                            "config": wflh_percentile_config
+                        }
                     }
                 }
             })
