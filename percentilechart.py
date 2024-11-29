@@ -83,10 +83,7 @@ def draw_bmi_percentile_chart(bmi, age_months, sex):
     # Layout configuration
     layout = go.Layout(xaxis=dict(title="Age (months)",
                                   tickvals=[0, 12, 24, 36, 48, 60],
-                                  ticktext=[
-                                      "Birth", "1 year", "2 years", "3 years",
-                                      "4 years", "5 years"
-                                  ],
+                                  ticktext=["Birth", "1 year", "2 years", "3 years", "4 years", "5 years"],
                                   range=[0, 61]),
                        yaxis=dict(title="BMI (kg/m²)"),
                        margin=dict(l=30, r=30, t=20, b=20),
@@ -189,10 +186,7 @@ def draw_wfa_percentile_chart(weight, age_months, sex):
 
     layout = go.Layout(xaxis=dict(title="Age (months)",
                                   tickvals=[0, 12, 24, 36, 48, 60],
-                                  ticktext=[
-                                      "Birth", "1 year", "2 years", "3 years",
-                                      "4 years", "5 years"
-                                  ],
+                                  ticktext=["Birth", "1 year", "2 years", "3 years", "4 years", "5 years"],
                                   range=[0, 61]),
                        yaxis=dict(title="Weight (kg)"),
                        margin=dict(l=30, r=30, t=20, b=20),
@@ -241,7 +235,7 @@ def draw_lhfa_percentile_chart(adjusted_lenhei, age_months, sex):
                    mode='lines',
                    name=label,
                    line=dict(color=color),
-                   showlegend=True)
+                   showlegend=False)
         for percentile, color, label in zip(percentiles, colors, labels)
     ]
 
@@ -302,10 +296,7 @@ def draw_lhfa_percentile_chart(adjusted_lenhei, age_months, sex):
     # Add layout configuration
     layout = go.Layout(xaxis=dict(title="Age (months)",
                                   tickvals=[0, 12, 24, 36, 48, 60],
-                                  ticktext=[
-                                      "Birth", "1 year", "2 years", "3 years",
-                                      "4 years", "5 years"
-                                  ],
+                                  ticktext=["Birth", "1 year", "2 years", "3 years", "4 years", "5 years"],
                                   range=[0, 61]),
                        yaxis=dict(title="Length/Height (cm)"),
                        margin=dict(l=30, r=30, t=20, b=20),
