@@ -103,20 +103,31 @@
 		<div class="container_of_content">
 			<div class="description-box">
 				<h3>Growth Chart Results (WHO Standards)</h3>
-
+				<h3 style="display: inline-block; margin-top: -10px; margin-right: 10px;">Show Chart Type:</h3>
+				<select class="dropbtn" id="chart-type-selector" onchange="updateAllCharts()">
+					<option value="zscore">Z-Scores</option>
+					<option value="percentile">Percentile</option>
+				</select>
 				<fieldset id="bfaresult">
 					<legend>BMI Results</legend>
 					<ol>
-						<li class="results">BMI: <span class="scores" id="bmi-result-side"></span></li>
-						<li class="results">Z-Score: <span class="scores" id="bmiage-result-side"></span></li>
+						<li class="results">
+							BMI: <span class="scores" id="bmi-result-side"></span>
+						</li>
+						<li class="results">
+							Z-Score: <span class="scores" id="bmiage-result-side"></span>
+						</li>
 					</ol>
 				</fieldset>
+
 				<div class="plot-container" id="bmi-chart"></div>
 
 				<fieldset id="wfaresult">
 					<legend>WFA Results</legend>
 					<ol>
-						<li class="results">Z-Score: <span class="scores" id="wei-result-side"></span></li>
+						<li class="results">
+							Z-Score: <span class="scores" id="wei-result-side"></span>
+						</li>
 					</ol>
 				</fieldset>
 				<div class="plot-container" id="wfa-chart"></div>
@@ -124,7 +135,10 @@
 				<fieldset id="lhfaresult">
 					<legend>LHFA Results</legend>
 					<ol>
-						<li class="results">Z-Score:<span class="scores" id="lenhei_age_result_side"></span></li>
+						<li class="results">
+							Z-Score:
+							<span class="scores" id="lenhei_age_result_side"></span>
+						</li>
 					</ol>
 				</fieldset>
 				<div class="plot-container" id="lhfa-chart"></div>
@@ -132,7 +146,10 @@
 				<fieldset id="wflhresult">
 					<legend>WFLH Results</legend>
 					<ol>
-						<li class="results">Z-Score:<span class="scores" id="weight_lenhei_result_side"></span></li>
+						<li class="results">
+							Z-Score:
+							<span class="scores" id="weight_lenhei_result_side"></span>
+						</li>
 					</ol>
 				</fieldset>
 				<div class="plot-container" id="wflh-chart"></div>
@@ -143,8 +160,12 @@
 				<form id="zscore-form">
 					<label for="gender">Sex</label>
 					<div class="select-group">
-						<button type="button" id="male-btn" onclick="selectGender('male')">Male</button>
-						<button type="button" id="female-btn" onclick="selectGender('female')">Female</button>
+						<button type="button" id="male-btn" onclick="selectGender('male')">
+							Male
+						</button>
+						<button type="button" id="female-btn" onclick="selectGender('female')">
+							Female
+						</button>
 					</div>
 					<input type="hidden" id="gender" name="sex" required />
 					<span id="gender-error" style="margin-bottom: 5px; color: red; display: none">Please select a gender.</span>
@@ -185,8 +206,12 @@
 
 					<label for="measured">Measured:</label>
 					<div class="select-group">
-						<button type="button" id="recumbent-btn" onclick="selectMeasured('l')" class="active">Recumbent</button>
-						<button type="button" id="standing-btn" onclick="selectMeasured('h')">Standing</button>
+						<button type="button" id="recumbent-btn" onclick="selectMeasured('l')" class="active">
+							Recumbent
+						</button>
+						<button type="button" id="standing-btn" onclick="selectMeasured('h')">
+							Standing
+						</button>
 					</div>
 					<input type="hidden" id="measured" name="measure" value="l" />
 
@@ -218,6 +243,8 @@
 		</div>
 	</div>
 	<script>
+		let data; // Khai báo ở phạm vi toàn cục
+
 		document.addEventListener("DOMContentLoaded", function () {
 			// Initialize Flatpickr for Date of Birth and Current Day inputs
 			flatpickr("#dob", {
@@ -288,7 +315,10 @@
 				let ageMonths = currentDate.getMonth() - birthDate.getMonth();
 				let ageDays = currentDate.getDate() - birthDate.getDate();
 
-				if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {ageYears--; ageMonths += 12;}
+				if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+					ageYears--;
+					ageMonths += 12;
+				}
 				if (ageDays < 0) {
 					const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
 					ageDays += prevMonth.getDate();
@@ -329,6 +359,35 @@
 				updateMeasuredButton(ageMonths);
 			}
 		});
+
+		function updateChartsBasedOnSelection() {
+			const selectedType = document.getElementById("chart-type-selector").value;
+
+			// Hiển thị các biểu đồ tương ứng với lựa chọn
+			if (data.charts.bmi) {
+				const bmiChart = data.charts.bmi[selectedType];  // Lấy dữ liệu tương ứng Z-Score hoặc Percentile
+				Plotly.react("bmi-chart", JSON.parse(bmiChart.data).data, JSON.parse(bmiChart.data).layout, bmiChart.config);
+			}
+
+			if (data.charts.wfa) {
+				const wfaChart = data.charts.wfa[selectedType];  // Lấy dữ liệu tương ứng Z-Score hoặc Percentile
+				Plotly.react("wfa-chart", JSON.parse(wfaChart.data).data, JSON.parse(wfaChart.data).layout, wfaChart.config);
+			}
+
+			if (data.charts.lhfa) {
+				const lhfaChart = data.charts.lhfa[selectedType];  // Lấy dữ liệu tương ứng Z-Score hoặc Percentile
+				Plotly.react("lhfa-chart", JSON.parse(lhfaChart.data).data, JSON.parse(lhfaChart.data).layout, lhfaChart.config);
+			}
+
+			if (data.charts.wflh) {
+				const wflhChart = data.charts.wflh[selectedType];  // Lấy dữ liệu tương ứng Z-Score hoặc Percentile
+				Plotly.react("wflh-chart", JSON.parse(wflhChart.data).data, JSON.parse(wflhChart.data).layout, wflhChart.config);
+			}
+		}
+
+		// Gọi hàm updateChartsBasedOnSelection() khi có sự thay đổi dropdown
+		document.getElementById("chart-type-selector").addEventListener("change", updateChartsBasedOnSelection);
+
 		document.getElementById("zscore-form").addEventListener("submit", function (event) {
 			event.preventDefault();
 
@@ -395,30 +454,13 @@
 					}
 					return response.json();
 				})
-				.then((data) => {
+				.then((responseData) => {
+					data = responseData; // Gán phản hồi vào biến toàn cục
+
 					// Ẩn spinner
 					spinner.style.display = "none";
 
-					// Hiển thị kết quả biểu đồ (nếu có)
-					if (data.charts.bmi) {
-						const bmiChart = data.charts.bmi;
-						Plotly.react("bmi-chart", JSON.parse(bmiChart.data).data, JSON.parse(bmiChart.data).layout, bmiChart.config);
-					}
-
-					if (data.charts.wfa) {
-						const wfaChart = data.charts.wfa;
-						Plotly.react("wfa-chart", JSON.parse(wfaChart.data).data, JSON.parse(wfaChart.data).layout, wfaChart.config);
-					}
-
-					if (data.charts.lhfa) {
-						const lhfaChart = data.charts.lhfa;
-						Plotly.react("lhfa-chart", JSON.parse(lhfaChart.data).data, JSON.parse(lhfaChart.data).layout, lhfaChart.config);
-					}
-
-					if (data.charts.wflh) {
-						const wflhChart = data.charts.wflh;
-						Plotly.react("wflh-chart", JSON.parse(wflhChart.data).data, JSON.parse(wflhChart.data).layout, wflhChart.config);
-					}
+					updateChartsBasedOnSelection();
 
 					// Cập nhật kết quả z-score và giá trị percentile
 					document.getElementById("bmi-result-side").innerText = `${data.bmi}`;
