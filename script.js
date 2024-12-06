@@ -304,18 +304,26 @@ function calculateLightCriteria() {
     document.getElementById('resultBoxLight').style.display = 'flex';
 }
 
-    function selectGender(selectedGender) {
-        gender = selectedGender;
-        document.getElementById('male-btn').classList.remove('active');
-        document.getElementById('female-btn').classList.remove('active');
-        if (selectedGender === 'male') {
-            document.getElementById('male-btn').classList.add('active');
-        } else {
-            document.getElementById('female-btn').classList.add('active');
-        }
-        document.getElementById('gender').value = gender; // Cập nhật giá trị trường ẩn với giới tính đã chọn
-    	document.getElementById('gender-error').style.display = 'none'; // Ẩn thông báo lỗi khi chọn giới tính
+function selectGender(selectedGender) {
+    gender = selectedGender;
+    // Xóa trạng thái "active" khỏi cả hai nút
+    document.getElementById("male-btn").classList.remove("active");
+    document.getElementById("female-btn").classList.remove("active");
+
+    // Thêm trạng thái "active" cho nút được chọn
+    if (selectedGender === "male") {
+        document.getElementById("male-btn").classList.add("active");
+    } else {
+        document.getElementById("female-btn").classList.add("active");
     }
+    // Cập nhật giá trị trường ẩn với giới tính đã chọn
+    document.getElementById("gender").value = gender;
+    // Ẩn thông báo lỗi khi chọn giới tính
+    document.getElementById("gender-error").style.display = "none";
+    // Xóa hiệu ứng viền đỏ của khung chọn giới tính
+    document.getElementById("gender-select-group").classList.remove("gender-error-border");
+}
+
 function selectMeasured(measured) {
     document.getElementById('measured').value = measured;
     document.getElementById('recumbent-btn').classList.remove('active');
