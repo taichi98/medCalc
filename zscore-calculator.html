@@ -159,7 +159,7 @@
 				<h1>WHO Z-Score Tool</h1>
 				<form id="zscore-form">
 					<label for="gender">Sex</label>
-					<div class="select-group">
+					<div id="gender-select-group" class="select-group">
 						<button type="button" id="male-btn" onclick="selectGender('male')">
 							Male
 						</button>
@@ -406,6 +406,7 @@
 			if (!gender) {
 				spinner.style.display = "none";
 				genderError.style.display = "block";
+				document.getElementById("gender-select-group").classList.add("gender-error-border");
 				return;
 			}
 
