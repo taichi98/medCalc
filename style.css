@@ -275,6 +275,15 @@
 	    background-color: #1bb193;
 	    color: #fff;
 	}
+
+	.select-group.gender-error-border {
+			border: 2px solid red;
+			padding: 0px 5px;
+			border-radius: 5px;
+			margin-bottom: 5px;
+		background-color: rgba(255, 0, 0, 0.1); /* Nền đỏ nhạt (10% opacity) */
+		transition: border 0.3s ease, background-color 0.3s ease; /* Hiệu ứng mượt */
+	}
 	@media only screen and (max-width: 768px) {
 	   .overlay {
 		    position: fixed;
