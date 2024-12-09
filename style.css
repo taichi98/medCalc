@@ -282,13 +282,14 @@
 	.weight-group.error-border,
 	.height-group.error-border,
 	.gender-group.error-border {
-			border: 1.5px solid red;
-			padding: 5px 5px 0px 5px;
-			border-radius: 5px;
-			margin-bottom: 5px;
-		background-color: rgb(255, 0, 0, 0.07); /* Nền đỏ nhạt (7% opacity) */
+		border: 1.5px dashed red; /* Viền nét đứt màu đỏ */
+		padding: 5px 5px 0px 5px;
+		border-radius: 5px;
+		margin-bottom: 5px;
+		background-color: rgba(255, 0, 0, 0.07); /* Nền đỏ nhạt (7% opacity) */
 		transition: border 0.3s ease, background-color 0.3s ease; /* Hiệu ứng mượt */
 	}
+
 	@media only screen and (max-width: 768px) {
 	   .overlay {
 		    position: fixed;
