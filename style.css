@@ -276,12 +276,17 @@
 	    color: #fff;
 	}
 
-	.select-group.gender-error-border {
-			border: 2px solid red;
-			padding: 0px 5px;
+	.age-days-group.error-border,
+	.age-months-group.error-border,
+	.input-row.error-border,
+	.weight-group.error-border,
+	.height-group.error-border,
+	.gender-group.error-border {
+			border: 1.5px solid red;
+			padding: 5px 5px 0px 5px;
 			border-radius: 5px;
 			margin-bottom: 5px;
-		background-color: rgba(255, 0, 0, 0.1); /* Nền đỏ nhạt (10% opacity) */
+		background-color: rgb(255, 0, 0, 0.07); /* Nền đỏ nhạt (7% opacity) */
 		transition: border 0.3s ease, background-color 0.3s ease; /* Hiệu ứng mượt */
 	}
 	@media only screen and (max-width: 768px) {
