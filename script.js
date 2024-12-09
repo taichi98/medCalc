@@ -331,7 +331,7 @@ function selectGender(selectedGender) {
     // Ẩn thông báo lỗi khi chọn giới tính
     document.getElementById("gender-error").style.display = "none";
     // Xóa hiệu ứng viền đỏ của khung chọn giới tính
-    document.getElementById("gender-select-group").classList.remove("gender-error-border");
+    document.getElementById("gender-select-group").classList.remove("error-border");
 }
 
 function selectMeasured(measured) {
