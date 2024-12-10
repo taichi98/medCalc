@@ -192,9 +192,9 @@
 					</div>
 					
 					<div id="age-display" style="margin-bottom: 10px; font-weight: bold; color: red"></div>
-					<span id="dob-error" style="margin-bottom: 5px; margin-top: -15px; font-size: 12px; color: red; display: none">Vui lòng nhập Ngày sinh.</span>
-					<span id="age-days-error" style="margin-bottom: 5px; margin-top: -15px; font-size: 12px; color: red; display: none">Vui lòng nhập số ngày tuổi.</span>
-					<span id="age-months-error" style="margin-bottom: 5px; margin-top: -15px; font-size: 12px; color: red; display: none">Vui lòng nhập tuổi (tháng).</span>
+					<span id="dob-error" style="margin-bottom: 5px; margin-top: -15px; font-size: 12px; color: red; display: none">Please enter Date of Birth.</span>
+					<span id="age-days-error" style="margin-bottom: 5px; margin-top: -15px; font-size: 12px; color: red; display: none">Please enter the number of days old.</span>
+					<span id="age-months-error" style="margin-bottom: 5px; margin-top: -15px; font-size: 12px; color: red; display: none">Please enter the age (in months).</span>
 					
 					<label for="measured">Measured:</label>
 					<div class="select-group">
@@ -237,7 +237,7 @@
 		</div>
 	</div>
 	<script>
-		let data; // Khai báo ở phạm vi toàn cục
+		let data;
 
 		document.addEventListener("DOMContentLoaded", function () {
 			// Initialize Flatpickr for Date of Birth and Current Day inputs
@@ -382,47 +382,47 @@
 		// Gọi hàm updateChartsBasedOnSelection() khi có sự thay đổi dropdown
 		document.getElementById("chart-type-selector").addEventListener("change", updateChartsBasedOnSelection);
 
-		document.getElementById("zscore-form").addEventListener("submit", function (event) {
-				event.preventDefault();
+	document.getElementById("zscore-form").addEventListener("submit", function (event) {
+			event.preventDefault();
 
-				const spinner = document.getElementById("spinner");
-				const resultBox = document.getElementById("resultZS");
-				const formData = new FormData(this);
-				const selectedOption = document.getElementById("age-option").value;
-				const weight = document.getElementById("weight").value;
-				const height = document.getElementById("height").value;
-			
-				let ageInDays;
+			const spinner = document.getElementById("spinner");
+			const resultBox = document.getElementById("resultZS");
+			const formData = new FormData(this);
+			const selectedOption = document.getElementById("age-option").value;
+			const weight = document.getElementById("weight").value;
+			const height = document.getElementById("height").value;
 
-				// Ẩn resultBox và hiển thị spinner
-				resultBox.style.display = "none";
-				spinner.style.display = "block";
+			let ageInDays;
+			let isValid = true;
 
-				// Đặt lại các lỗi hiển thị
-				const fieldsToValidate = [
-						{ field: "gender", errorId: "gender-error", groupClass: "gender-group" },
-						{ field: "height", errorId: "height-error", groupClass: "height-group" },
-						{ field: "weight", errorId: "weight-error", groupClass: "weight-group" },
-				];
+			// Ẩn resultBox và hiển thị spinner
+			resultBox.style.display = "none";
+			spinner.style.display = "block";
 
-				let isValid = true;
+			// Đặt lại các lỗi hiển thị
+			const fieldsToValidate = [
+					{ field: "gender", errorId: "gender-error", groupClass: "gender-group" },
+					{ field: "height", errorId: "height-error", groupClass: "height-group" },
+					{ field: "weight", errorId: "weight-error", groupClass: "weight-group" },
+			];
 
-				// Kiểm tra thông tin đầu vào
-				fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
-						const value = document.getElementById(field).value;
-						const errorElement = document.getElementById(errorId);
-						const groupElement = document.querySelector(`.${groupClass}`);
+			// Kiểm tra thông tin đầu vào
+			fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
+					const value = document.getElementById(field).value;
+					const errorElement = document.getElementById(errorId);
+					const groupElement = document.querySelector(`.${groupClass}`);
 
-						if (!value) {
-								isValid = false;
-								errorElement.style.display = "block";
-								groupElement?.classList.add("error-border");
-						} else {
-								errorElement.style.display = "none";
-								groupElement?.classList.remove("error-border");
-						}
-				});
-			// **Xử lý loại bỏ lỗi ngay khi nhập liệu**
+					if (!value) {
+							isValid = false;
+							errorElement.style.display = "block";
+							groupElement?.classList.add("error-border");
+					} else {
+							errorElement.style.display = "none";
+							groupElement?.classList.remove("error-border");
+					}
+			});
+
+			// Xử lý loại bỏ lỗi ngay khi nhập liệu
 			fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
 					const inputField = document.getElementById(field);
 					const errorElement = document.getElementById(errorId);
@@ -439,41 +439,77 @@
 					});
 			});
 
-				// Kiểm tra tuổi dựa theo option được chọn
-				if (selectedOption === "dob") {
-						const dob = document.getElementById("dob").value;
-						const currentDay = document.getElementById("current-day").value;
-						if (!dob || !currentDay) {
-								isValid = false;
-								document.getElementById("dob-error").style.display = "block";
-								document.querySelector(".input-row")?.classList.add("error-border");
-						} else {
-								document.getElementById("dob-error").style.display = "none";
-								document.querySelector(".input-row")?.classList.remove("error-border");
-						}
-				} else if (selectedOption === "months") {
-						const ageMonths = parseInt(document.getElementById("age-months").value, 10);
-					
-						if (isNaN(ageMonths) || ageMonths < 0) {
+			// Xử lý loại bỏ lỗi khi chọn ngày sinh (DOB)
+			if (selectedOption === "dob") {
+					const dob = document.getElementById("dob");
+					const currentDay = document.getElementById("current-day");
+					const dobErrorElement = document.getElementById("dob-error");
+					const dobGroupElement = document.querySelector(".input-row");
+
+					// Kiểm tra ngay khi người dùng nhập hoặc chọn DOB
+					[dob, currentDay].forEach((field) => {
+							field.addEventListener("change", () => {
+									if (dob.value && currentDay.value) {
+											dobErrorElement.style.display = "none";
+											dobGroupElement?.classList.remove("error-border");
+									}
+							});
+					});
+
+					if (!dob.value || !currentDay.value) {
 							isValid = false;
-							document.getElementById("age-months-error").style.display = "block";
-							document.querySelector(".age-months-group")?.classList.add("error-border");
-						} else {
-							document.getElementById("age-months-error").style.display = "none";
-							document.querySelector(".age-months-group")?.classList.remove("error-border");
-						}
-				} else if (selectedOption === "days") {
-						const ageDays = parseInt(document.getElementById("age-days").value, 10);
-					
-						if (isNaN(ageDays) || ageDays < 0) {
+							dobErrorElement.style.display = "block";
+							dobGroupElement?.classList.add("error-border");
+					} else {
+							dobErrorElement.style.display = "none";
+							dobGroupElement?.classList.remove("error-border");
+					}
+			}
+
+			// Kiểm tra tuổi theo tùy chọn "months" và "days"
+			if (selectedOption === "months") {
+					const ageMonths = parseInt(document.getElementById("age-months").value, 10);
+					const ageMonthsErrorElement = document.getElementById("age-months-error");
+					const ageMonthsGroupElement = document.querySelector(".age-months-group");
+
+					const ageMonthsField = document.getElementById("age-months");
+					ageMonthsField.addEventListener("input", () => {
+							if (!isNaN(ageMonthsField.value) && ageMonthsField.value >= 0) {
+									ageMonthsErrorElement.style.display = "none";
+									ageMonthsGroupElement?.classList.remove("error-border");
+							}
+					});
+
+					if (isNaN(ageMonths) || ageMonths < 0) {
 							isValid = false;
-							document.getElementById("age-days-error").style.display = "block";
-							document.querySelector(".age-days-group")?.classList.add("error-border");
-						} else {
-							document.getElementById("age-days-error").style.display = "none";
-							document.querySelector(".age-days-group")?.classList.remove("error-border");
-						}
-				}
+							ageMonthsErrorElement.style.display = "block";
+							ageMonthsGroupElement?.classList.add("error-border");
+					} else {
+							ageMonthsErrorElement.style.display = "none";
+							ageMonthsGroupElement?.classList.remove("error-border");
+					}
+			} else if (selectedOption === "days") {
+					const ageDays = parseInt(document.getElementById("age-days").value, 10);
+					const ageDaysErrorElement = document.getElementById("age-days-error");
+					const ageDaysGroupElement = document.querySelector(".age-days-group");
+
+					const ageDaysField = document.getElementById("age-days");
+					ageDaysField.addEventListener("input", () => {
+							if (!isNaN(ageDaysField.value) && ageDaysField.value >= 0) {
+									ageDaysErrorElement.style.display = "none";
+									ageDaysGroupElement?.classList.remove("error-border");
+							}
+					});
+
+					if (isNaN(ageDays) || ageDays < 0) {
+							isValid = false;
+							ageDaysErrorElement.style.display = "block";
+							ageDaysGroupElement?.classList.add("error-border");
+					} else {
+							ageDaysErrorElement.style.display = "none";
+							ageDaysGroupElement?.classList.remove("error-border");
+					}
+			}
 
 				if (!isValid) {
 						spinner.style.display = "none";
@@ -501,7 +537,7 @@
 				})
 						.then((response) => {
 								if (!response.ok) {
-										throw new Error("Network response was not ok");
+									throw new Error("Network response was not ok");
 								}
 								return response.json();
 						})
@@ -541,7 +577,6 @@
 				// Ẩn placeholder
 				document.getElementById("text1").style.display = "none";
 		});
-
 
 	</script>
 </body>
