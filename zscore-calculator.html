@@ -14,15 +14,27 @@
 	<title>WHO Z-Score</title>
 	<link rel="icon" href="/icon.png" type="image/png" />
 	<style>
-		p {
-			margin-top: 4px;
-			margin-bottom: 4px;
-			padding-left: 5px;
+		p {margin-top: 4px; margin-bottom: 4px; padding-left: 5px;}
+		/* Thêm bo góc cho ô input */
+		input[type="text"],
+		input[type="number"],
+		select {
+			border: 1px solid #ccc;
+			border-radius: 5px; /* Bo góc */
+			padding: 8px;
+			font-size: 14px;
+			box-sizing: border-box;
+			transition: border 0.3s, box-shadow 0.3s;
 		}
-
-		.zscore-form {
-			margin-bottom: 20px;
+		/* Hiệu ứng khi input được focus */
+		input[type="text"]:focus,
+		input[type="number"]:focus,
+		select:focus {
+				border: 1.5px dashed #007bff; /* Viền xanh nét đứt */
+				outline: none;
+				box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 		}
+		.zscore-form {margin-bottom: 20px;}
 
 		.zscore-form label {
 			display: block;
@@ -205,13 +217,13 @@
 										
 					<div id="height-select-group" class="height-group">
 						<label for="height">Height (cm):</label>
-						<input type="number" id="height" class="height-group" name="height" step="0.1" />
+						<input type="number" style="width: 100%;" id="height" class="height-group" name="height" step="0.1" />
 					</div>
 					<span id="height-error" style="margin-bottom: 5px; margin-top: -5px; font-size: 12px; color: red; display: none">Please enter the height</span>
 					
 					<div id="weight-select-group" class="weight-group">
 						<label for="weight">Weight(kg):</label>
-						<input type="number" id="weight" name="weight" step="0.1" />
+						<input type="number" style="width: 100%;" id="weight" name="weight" step="0.1" />
 					</div>
 					<span id="weight-error" style="margin-bottom: 5px; margin-top: -5px; font-size: 12px; color: red; display: none">Please enter the weight</span>
 
