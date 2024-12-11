@@ -413,38 +413,65 @@
 					{ field: "height", errorId: "height-error", groupClass: "height-group" },
 					{ field: "weight", errorId: "weight-error", groupClass: "weight-group" },
 			];
-
+			
 			// Kiểm tra thông tin đầu vào
 			fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
-					const value = document.getElementById(field).value;
-					const errorElement = document.getElementById(errorId);
-					const groupElement = document.querySelector(`.${groupClass}`);
-
-					if (!value) {
-							isValid = false;
-							errorElement.style.display = "block";
-							groupElement?.classList.add("error-border");
-					} else {
-							errorElement.style.display = "none";
-							groupElement?.classList.remove("error-border");
-					}
+			    const value = document.getElementById(field).value;
+			    const errorElement = document.getElementById(errorId);
+			    const groupElement = document.querySelector(`.${groupClass}`);
+			
+			    if (!value) {
+			        isValid = false;
+			        errorElement.style.display = "block";
+			        groupElement?.classList.add("error-border");
+			    } else {
+			        errorElement.style.display = "none";
+			        groupElement?.classList.remove("error-border");
+			    }
+			
+			    // Kiểm tra giới hạn chiều cao
+			    if (field === "height" && value) {
+			        const heightValue = parseFloat(value);
+			        if (heightValue < 45 || heightValue > 120) {
+			            isValid = false;
+			            errorElement.style.display = "block";
+			            errorElement.textContent = "Please enter a height between 45 and 120 cm."; // Thông báo lỗi bằng tiếng Anh
+			            groupElement?.classList.add("error-border");
+			        } else {
+			            errorElement.style.display = "none";
+			            groupElement?.classList.remove("error-border");
+			        }
+			    }
 			});
-
+			
 			// Xử lý loại bỏ lỗi ngay khi nhập liệu
 			fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
-					const inputField = document.getElementById(field);
-					const errorElement = document.getElementById(errorId);
-					const groupElement = document.querySelector(`.${groupClass}`);
-
-					inputField.addEventListener("input", () => {
-							if (inputField.value.trim() !== "") {
-									errorElement.style.display = "none";
-									groupElement?.classList.remove("error-border");
-							} else {
-									errorElement.style.display = "block";
-									groupElement?.classList.add("error-border");
-							}
-					});
+			    const inputField = document.getElementById(field);
+			    const errorElement = document.getElementById(errorId);
+			    const groupElement = document.querySelector(`.${groupClass}`);
+			
+			    inputField.addEventListener("input", () => {
+			        if (inputField.value.trim() !== "") {
+			            errorElement.style.display = "none";
+			            groupElement?.classList.remove("error-border");
+			        } else {
+			            errorElement.style.display = "block";
+			            groupElement?.classList.add("error-border");
+			        }
+			
+			        // Loại bỏ lỗi khi nhập liệu cho chiều cao
+			        if (field === "height") {
+			            const heightValue = parseFloat(inputField.value);
+			            if (heightValue >= 45 && heightValue <= 120) {
+			                errorElement.style.display = "none";
+			                groupElement?.classList.remove("error-border");
+			            } else {
+			                errorElement.style.display = "block";
+			                errorElement.textContent = "Please enter a height between 45 and 120 cm."; // Thông báo lỗi bằng tiếng Anh
+			                groupElement?.classList.add("error-border");
+			            }
+			        }
+			    });
 			});
 
 			// Xử lý loại bỏ lỗi khi chọn ngày sinh (DOB)
