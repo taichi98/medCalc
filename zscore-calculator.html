@@ -14,18 +14,23 @@
 	<title>WHO Z-Score</title>
 	<link rel="icon" href="/icon.png" type="image/png" />
 	<style>
-		p {margin-top: 4px; margin-bottom: 4px; padding-left: 5px;}
+		p {
+			margin-top: 4px;
+			margin-bottom: 4px;
+			padding-left: 5px;
+		}
 		/* Thêm bo góc cho ô input */
 		input[type="text"],
 		input[type="number"],
 		select {
-			border: 1px solid #ccc;
-			border-radius: 5px; /* Bo góc */
-			padding: 8px;
-			font-size: 14px;
-			box-sizing: border-box;
-			transition: border 0.3s, box-shadow 0.3s;
+				border: 1px solid #ccc;
+				border-radius: 5px; /* Bo góc */
+				padding: 8px;
+				font-size: 14px;
+				box-sizing: border-box;
+				transition: border 0.3s, box-shadow 0.3s;
 		}
+
 		/* Hiệu ứng khi input được focus */
 		input[type="text"]:focus,
 		input[type="number"]:focus,
@@ -34,7 +39,10 @@
 				outline: none;
 				box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 		}
-		.zscore-form {margin-bottom: 20px;}
+
+		.zscore-form {
+			margin-bottom: 20px;
+		}
 
 		.zscore-form label {
 			display: block;
@@ -77,7 +85,7 @@
 	<div class="header">
 		<div class="icon-container" onclick="toggleSidebar()">
 			<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none">
-			<path d="M8.85719 3H15.1428C16.2266 2.99999 17.1007 2.99998 17.8086 3.05782C18.5375 3.11737 19.1777 3.24318 19.77 3.54497C20.7108 
+				<path d="M8.85719 3H15.1428C16.2266 2.99999 17.1007 2.99998 17.8086 3.05782C18.5375 3.11737 19.1777 3.24318 19.77 3.54497C20.7108 
 			4.02433 21.4757 4.78924 21.955 5.73005C22.2568 6.32234 22.3826 6.96253 22.4422 7.69138C22.5 8.39925 22.5 9.27339 22.5 10.3572V13.6428C22.5 
 			14.7266 22.5 15.6008 22.4422 16.3086C22.3826 17.0375 22.2568 17.6777 21.955 18.27C21.4757 19.2108 20.7108 19.9757 19.77 20.455C19.1777 20.7568 
 			18.5375 20.8826 17.8086 20.9422C17.1008 21 16.2266 21 15.1428 21H8.85717C7.77339 21 6.89925 21 6.19138 20.9422C5.46253 20.8826 4.82234 20.7568 
@@ -193,12 +201,12 @@
 
 							<div id="months-input" class="age-months-group" style="display: none">
 								<label for="age-months">Age in Months:</label>
-								<input type="number" style="width: 100%;" id="age-months" name="age-months" min="0" placeholder="Enter age in months" />
+								<input type="number" id="age-months" name="age-months" min="0" placeholder="Enter age in months" />
 							</div>
 
 							<div id="days-input" class="age-days-group" style="display: none">
 								<label for="age-days">Age in Days:</label>
-								<input type="number" style="width: 100%;" id="age-days" name="age-days" min="0" placeholder="Enter age in days" />
+								<input type="number" id="age-days" name="age-days" min="0" placeholder="Enter age in days" />
 							</div>
 						
 					</div>
@@ -238,7 +246,9 @@
 					<div id="resultZS" style="display: none">
 						<div class="result-item">
 							<p id="bmi-result"></p>
-							<p id="weight_lenhei_result"></p>
+							<div id="wfl-container" style="display: none;">
+									<p id="weight_lenhei_result"></p>
+							</div>
 							<p id="wei-result"></p>
 							<p id="lenhei_age_result"></p>
 							<p id="bmiage-result"></p>
@@ -257,14 +267,18 @@
 				dateFormat: "d/m/Y",
 				onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
 				maxDate: "today",
-				locale: {firstDayOfWeek: 1,},
+				locale: {
+					firstDayOfWeek: 1, // Đặt thứ hai là ngày đầu tuần
+				},
 			});
 
 			flatpickr("#current-day", {
 				dateFormat: "d/m/Y",
 				defaultDate: new Date(), // Set current day as default
 				onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
-				locale: {firstDayOfWeek: 1,},
+				locale: {
+					firstDayOfWeek: 1, // Đặt thứ hai là ngày đầu tuần
+				},
 			});
 		});
 
@@ -288,78 +302,101 @@
 
 			return ageInDays;
 		}
-		// Hàm kiểm tra và cập nhật trạng thái đo dựa trên tuổi (tính bằng tháng)
-		function updateMeasuredButton(totalMonths) {
-			if (totalMonths >= 24) {
-				selectMeasured("h"); // Chọn Standing
-			} else {
-				selectMeasured("l"); // Chọn Recumbent
-			}
+		
+		// Hàm kiểm tra và cập nhật trạng thái nút đo
+		function updateMeasuredButtons(totalMonths) {
+				const isAbove5Years = totalMonths > 60; 
+				const recumbentBtn = document.getElementById("recumbent-btn");
+				const standingBtn = document.getElementById("standing-btn");
+				const measuredInput = document.getElementById("measured");
+
+				if (isAbove5Years) {
+						// Vô hiệu hóa Recumbent và mặc định chọn Standing
+						recumbentBtn.disabled = true;
+						standingBtn.disabled = true;
+						measuredInput.value = "h";
+						standingBtn.classList.add("active");
+						recumbentBtn.classList.remove("active");
+				} else {
+						// Kích hoạt lại các nút nếu trẻ dưới 5 tuổi
+						recumbentBtn.disabled = false;
+						standingBtn.disabled = false;
+
+						// Tự động chọn đo Standing nếu tháng >= 24, ngược lại chọn Recumbent
+						if (totalMonths >= 24) {
+								selectMeasured("h");
+						} else {
+								selectMeasured("l");
+						}
+				}
 		}
+
 
 		// Hàm tính tổng tháng từ tuổi nhập vào
 		function calculateTotalMonths(ageYears, ageMonths) {
 			return ageYears * 12 + ageMonths;
 		}
-
 		function updateAgeDisplay() {
-			const dob = document.getElementById("dob").value;
-			const currentDay = document.getElementById("current-day").value;
+				const dob = document.getElementById("dob").value;
+				const currentDay = document.getElementById("current-day").value;
 
-			if (dob && currentDay) {
-				const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
-				const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
+				if (dob && currentDay) {
+						const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
+						const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
 
-				const [currentDayDay, currentDayMonth, currentDayYear] = currentDay.split("/").map(Number);
-				const currentDate = new Date(currentDayYear, currentDayMonth - 1, currentDayDay);
+						const [currentDayDay, currentDayMonth, currentDayYear] = currentDay.split("/").map(Number);
+						const currentDate = new Date(currentDayYear, currentDayMonth - 1, currentDayDay);
 
-				let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
-				let ageMonths = currentDate.getMonth() - birthDate.getMonth();
-				let ageDays = currentDate.getDate() - birthDate.getDate();
+						let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
+						let ageMonths = currentDate.getMonth() - birthDate.getMonth();
+						let ageDays = currentDate.getDate() - birthDate.getDate();
 
-				if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-					ageYears--;
-					ageMonths += 12;
+						if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+								ageYears--;
+								ageMonths += 12;
+						}
+						if (ageDays < 0) {
+								const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+								ageDays += prevMonth.getDate();
+								ageMonths--;
+						}
+
+						const totalMonths = calculateTotalMonths(ageYears, ageMonths);
+
+						// Gọi hàm kiểm tra trạng thái nút đo
+						updateMeasuredButtons(totalMonths);
+
+						let ageDisplayText = "";
+						if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
+								ageDisplayText = `Age: <b>${ageDays}</b> day(s)`;
+						} else if (ageYears === 0 && ageMonths <= 12) {
+								ageDisplayText = `Age: <b>${ageMonths}</b> month(s), ${ageDays} day(s)`;
+						} else {
+								ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
+						}
+
+						document.getElementById("age-display").innerHTML = ageDisplayText;
 				}
-				if (ageDays < 0) {
-					const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-					ageDays += prevMonth.getDate();
-					ageMonths--;
-				}
-
-				const totalMonths = calculateTotalMonths(ageYears, ageMonths);
-
-				// Gọi hàm kiểm tra trạng thái đo
-				updateMeasuredButton(totalMonths);
-
-				let ageDisplayText = "";
-				if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
-					ageDisplayText = `Age: <b>${ageDays}</b> day(s)`;
-				} else if (ageYears === 0 && ageMonths <= 12) {
-					ageDisplayText = `Age: <b>${ageMonths}</b> month(s), ${ageDays} day(s)`;
-				} else {
-					ageDisplayText = `Age: <b>${ageYears}</b> year(s), ${ageMonths} month(s), ${ageDays} day(s)`;
-				}
-
-				document.getElementById("age-display").innerHTML = ageDisplayText;
-			}
 		}
-
 		// Thêm sự kiện để cập nhật tuổi khi giá trị dob hoặc current-day thay đổi
 		document.getElementById("dob").addEventListener("change", updateAgeDisplay);
 		document.getElementById("current-day").addEventListener("change", updateAgeDisplay);
+		
+		// Cập nhật trạng thái đo khi nhập số tháng
 		document.getElementById("age-months").addEventListener("input", function () {
-			const ageMonths = parseInt(this.value, 10);
-			if (!isNaN(ageMonths)) {
-				updateMeasuredButton(ageMonths);
-			}
+				const ageMonths = parseInt(this.value, 10);
+				if (!isNaN(ageMonths)) {
+						updateMeasuredButtons(ageMonths);
+				}
 		});
+
+		// Cập nhật trạng thái đo khi nhập số ngày
 		document.getElementById("age-days").addEventListener("input", function () {
-			const ageDays = parseInt(this.value, 10);
-			if (!isNaN(ageDays)) {
-				const ageMonths = Math.floor(ageDays / 30.4375);
-				updateMeasuredButton(ageMonths);
-			}
+				const ageDays = parseInt(this.value, 10);
+				if (!isNaN(ageDays)) {
+						const ageMonths = Math.floor(ageDays / 30.4375);
+						updateMeasuredButtons(ageMonths);
+				}
 		});
 
 		function updateChartsBasedOnSelection() {
@@ -387,8 +424,8 @@
 			}
 		}
 
-		// Gọi hàm updateChartsBasedOnSelection() khi có sự thay đổi dropdown
-		document.getElementById("chart-type-selector").addEventListener("change", updateChartsBasedOnSelection);
+	// Gọi hàm updateChartsBasedOnSelection() khi có sự thay đổi dropdown
+	document.getElementById("chart-type-selector").addEventListener("change", updateChartsBasedOnSelection);
 
 	document.getElementById("zscore-form").addEventListener("submit", function (event) {
 			event.preventDefault();
@@ -400,20 +437,22 @@
 			const weight = document.getElementById("weight").value;
 			const height = document.getElementById("height").value;
 
-			let ageInDays;
 			let isValid = true;
+		
+			const ageInDays = calculateAgeInDaysFromOption(selectedOption);
+			const isAbove5Years = ageInDays > 1856; // Điều kiện để kiểm tra nếu trẻ > 5 tuổi
 
 			// Ẩn resultBox và hiển thị spinner
 			resultBox.style.display = "none";
 			spinner.style.display = "block";
-
+		
 			// Đặt lại các lỗi hiển thị
 			const fieldsToValidate = [
 					{ field: "gender", errorId: "gender-error", groupClass: "gender-group" },
 					{ field: "height", errorId: "height-error", groupClass: "height-group" },
 					{ field: "weight", errorId: "weight-error", groupClass: "weight-group" },
 			];
-			
+
 			// Kiểm tra thông tin đầu vào
 			fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
 			    const value = document.getElementById(field).value;
@@ -432,14 +471,29 @@
 			    // Kiểm tra giới hạn chiều cao
 			    if (field === "height" && value) {
 			        const heightValue = parseFloat(value);
-			        if (heightValue < 45 || heightValue > 120) {
-			            isValid = false;
-			            errorElement.style.display = "block";
-			            errorElement.textContent = "Please enter a height between 45 and 120 cm."; // Thông báo lỗi bằng tiếng Anh
-			            groupElement?.classList.add("error-border");
+						
+			        if (isAbove5Years) {
+			            // Với trẻ > 5 tuổi chỉ cần chiều cao tối thiểu 45 cm
+			            if (heightValue < 45) {
+			                isValid = false;
+			                errorElement.style.display = "block";
+			                errorElement.textContent = "Please enter a height of at least 45 cm."; // Thông báo lỗi cho trẻ > 5 tuổi
+			                groupElement?.classList.add("error-border");
+			            } else {
+			                errorElement.style.display = "none";
+			                groupElement?.classList.remove("error-border");
+			            }
 			        } else {
-			            errorElement.style.display = "none";
-			            groupElement?.classList.remove("error-border");
+			            // Với trẻ < 5 tuổi, chiều cao phải nằm trong khoảng 45-120 cm
+			            if (heightValue < 45 || heightValue > 120) {
+			                isValid = false;
+			                errorElement.style.display = "block";
+			                errorElement.textContent = "Please enter a height between 45 and 120 cm."; // Thông báo lỗi cho trẻ < 5 tuổi
+			                groupElement?.classList.add("error-border");
+			            } else {
+			                errorElement.style.display = "none";
+			                groupElement?.classList.remove("error-border");
+			            }
 			        }
 			    }
 			});
@@ -462,18 +516,33 @@
 			        // Loại bỏ lỗi khi nhập liệu cho chiều cao
 			        if (field === "height") {
 			            const heightValue = parseFloat(inputField.value);
-			            if (heightValue >= 45 && heightValue <= 120) {
-			                errorElement.style.display = "none";
-			                groupElement?.classList.remove("error-border");
+			            const isAbove5Years = ageInYears > 5;
+			
+			            if (isAbove5Years) {
+			                // Với trẻ > 5 tuổi chỉ cần chiều cao tối thiểu 45 cm
+			                if (heightValue >= 45) {
+			                    errorElement.style.display = "none";
+			                    groupElement?.classList.remove("error-border");
+			                } else {
+			                    errorElement.style.display = "block";
+			                    errorElement.textContent = "Please enter a height of at least 45 cm."; // Thông báo lỗi
+			                    groupElement?.classList.add("error-border");
+			                }
 			            } else {
-			                errorElement.style.display = "block";
-			                errorElement.textContent = "Please enter a height between 45 and 120 cm."; // Thông báo lỗi bằng tiếng Anh
-			                groupElement?.classList.add("error-border");
+			                // Với trẻ < 5 tuổi, chiều cao phải nằm trong khoảng 45-120 cm
+			                if (heightValue >= 45 && heightValue <= 120) {
+			                    errorElement.style.display = "none";
+			                    groupElement?.classList.remove("error-border");
+			                } else {
+			                    errorElement.style.display = "block";
+			                    errorElement.textContent = "Please enter a height between 45 and 120 cm."; // Thông báo lỗi
+			                    groupElement?.classList.add("error-border");
+			                }
 			            }
 			        }
 			    });
 			});
-
+			
 			// Xử lý loại bỏ lỗi khi chọn ngày sinh (DOB)
 			if (selectedOption === "dob") {
 					const dob = document.getElementById("dob");
@@ -551,17 +620,6 @@
 						return;
 				}
 
-				// Tính toán ageInDays
-				if (selectedOption === "dob") {
-						ageInDays = calculateAgeInDays(document.getElementById("dob").value, document.getElementById("current-day").value);
-				} else if (selectedOption === "months") {
-						const ageMonths = parseInt(document.getElementById("age-months").value, 10);
-						ageInDays = ageMonths * 30.4375;
-				} else if (selectedOption === "days") {
-						const ageDays = parseInt(document.getElementById("age-days").value, 10);
-						ageInDays = ageDays;
-				}
-
 				// Thêm ageInDays vào FormData
 				formData.append("ageInDays", ageInDays);
 
@@ -572,7 +630,7 @@
 				})
 						.then((response) => {
 								if (!response.ok) {
-									throw new Error("Network response was not ok");
+										throw new Error("Network response was not ok");
 								}
 								return response.json();
 						})
@@ -597,8 +655,15 @@
 								document.getElementById("lenhei_age_result_side").innerText = `${data.lenhei_age.zscore} (${data.lenhei_age.percentile}th)`;
 								document.getElementById("lenhei_age_result").innerText = `Height for Age: ${data.lenhei_age.zscore} (${data.lenhei_age.percentile}th)`;
 
-								document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl.zscore} (${data.wfl.percentile}th)`;
-								document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl.zscore} (${data.wfl.percentile}th)`;
+							// Kiểm tra nếu tuổi dưới 5 thì hiển thị wfl
+								if (data.wfl) {
+									document.getElementById("wfl-container").style.display = "block";
+									document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl.zscore} (${data.wfl.percentile}th)`;
+									document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl.zscore} (${data.wfl.percentile}th)`;
+							} else {
+									// Ẩn phần Weight for Length nếu trẻ trên 5 tuổi
+									document.getElementById("wfl-container").style.display = "none";
+							}
 
 								// Hiển thị resultBox
 								resultBox.style.display = "flex";
