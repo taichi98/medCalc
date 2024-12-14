@@ -51,6 +51,30 @@ function toggleAgeInput() {
     }
 }
 
+// Hàm tính ageInDays dựa trên phương pháp nhập liệu
+function calculateAgeInDaysFromOption(selectedOption) {
+    let ageInDays;
+    if (selectedOption === "dob") {
+        const dob = document.getElementById("dob").value;
+        const currentDay = document.getElementById("current-day").value;
+        if (dob && currentDay) {
+            ageInDays = calculateAgeInDays(dob, currentDay);
+        }
+    } else if (selectedOption === "months") {
+        const ageMonths = parseInt(document.getElementById("age-months").value, 10);
+        if (!isNaN(ageMonths)) {
+            ageInDays = ageMonths * 30.4375;
+        }
+    } else if (selectedOption === "days") {
+        const ageDays = parseInt(document.getElementById("age-days").value, 10);
+        if (!isNaN(ageDays)) {
+            ageInDays = ageDays;
+        }
+    }
+
+    return ageInDays;
+}
+
 function toggleSidebar() {
     const sidebar = document.getElementById("mySidebar");
     const tooltip = document.querySelector(".tooltip-text");
@@ -385,6 +409,8 @@ function selectMeasured(measured) {
         document.getElementById("standing-btn").classList.add("active");
     }
 }
+
+
 function calculateIBW() {
     const height = parseFloat(document.getElementById("height").value);
     const actualWeight = parseFloat(
