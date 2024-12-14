@@ -9,10 +9,6 @@ import os
 
 app = Flask(__name__)
 
-# Tạo thư mục lưu ảnh nếu chưa có
-IMAGE_DIR = "data/images"
-os.makedirs(IMAGE_DIR, exist_ok=True)
-
 
 # Hàm để đọc dữ liệu chuẩn từ các file txt
 def make_standard(name):
@@ -27,8 +23,19 @@ growthstandards = {
     "length": make_standard("lenanthro"),
     "head": make_standard("hcanthro"),
     "wfl": make_standard("wflanthro"),
-    "wfh": make_standard("wfhanthro")
+    "wfh": make_standard("wfhanthro"),
+    "weight_5_plus": make_standard("wfawho2007"),
+    "height_5_plus": make_standard("hfawho2007"),
+    "bmi_5_plus": make_standard("bfawho2007")
 }
+
+
+# Hàm làm tròn tuổi tính bằng tháng (khi >5 tuổi)
+def calculate_age_in_months(age_in_days):
+    low_age = np.floor(age_in_days / ANTHRO_DAYS_OF_MONTH).astype(int)
+    upp_age = low_age + 1
+    diff_age = (age_in_days / ANTHRO_DAYS_OF_MONTH) - low_age
+    return low_age, upp_age, diff_agev
 
 
 # Hàm tính Z-score
@@ -58,7 +65,6 @@ def compute_zscore_adjusted(y, m, l, s):
 # Hàm áp dụng Z-score và tiêu chuẩn tăng trưởng
 def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days,
                                      sex, measure):
-    # Đảm bảo đầu vào là dạng mảng numpy để tránh lỗi scalar
     input_df = pd.DataFrame({
         'measure': np.array([measure]),
         'age_in_days': np.array([age_in_days]),
@@ -78,6 +84,49 @@ def apply_zscore_and_growthstandards(zscore_fun, growthstandards, age_in_days,
     # Tính Z-score
     zscore = zscore_fun(y, m, l, s)
 
+    return np.round(zscore, 2)
+
+
+def apply_zscore_and_growthstandards_above_5(zscore_fun, growthstandards,
+                                             age_in_months, sex, measure):
+    # Tính tuổi tháng dưới và trên
+    low_age = np.floor(age_in_months)
+    upp_age = np.ceil(age_in_months)
+    diff_age = age_in_months - low_age
+
+    # Tạo DataFrame đầu vào
+    input_df_low = pd.DataFrame({
+        'measure': [measure],
+        'age': [low_age],
+        'sex': [sex]
+    })
+
+    input_df_upp = pd.DataFrame({
+        'measure': [measure],
+        'age': [upp_age],
+        'sex': [sex]
+    })
+
+    # Ghép dữ liệu từ bảng tăng trưởng
+    merged_df_low = pd.merge(input_df_low,
+                             growthstandards,
+                             how='left',
+                             on=['age', 'sex'])
+    merged_df_upp = pd.merge(input_df_upp,
+                             growthstandards,
+                             how='left',
+                             on=['age', 'sex'])
+
+    # Nội suy các giá trị l, m, s
+    m = np.interp(age_in_months, [low_age, upp_age],
+                  [merged_df_low['m'].iloc[0], merged_df_upp['m'].iloc[0]])
+    l = np.interp(age_in_months, [low_age, upp_age],
+                  [merged_df_low['l'].iloc[0], merged_df_upp['l'].iloc[0]])
+    s = np.interp(age_in_months, [low_age, upp_age],
+                  [merged_df_low['s'].iloc[0], merged_df_upp['s'].iloc[0]])
+
+    # Tính Z-score
+    zscore = zscore_fun(measure, m, l, s)
     return np.round(zscore, 2)
 
 
@@ -193,90 +242,78 @@ def index():
 @app.route("/zscore-calculator", methods=["GET", "POST"])
 def zscore_calculator():
     if request.method == "POST":
-        sex = request.form.get("sex")
-        age_days = round_up(float(request.form.get("ageInDays")))
-        height = float(request.form.get("height"))
-        weight = float(request.form.get("weight"))
-        measure = request.form.get("measure", "h").lower()
-        age_months = age_days / 30.4375
-        # Điều chỉnh chiều dài/chiều cao
-        adjusted_lenhei = adjust_lenhei(age_days, measure, height)
+        try:
+            sex = request.form.get("sex")
+            age_days = round_up(float(request.form.get("ageInDays")))
+            height = float(request.form.get("height"))
+            weight = float(request.form.get("weight"))
+            measure = request.form.get("measure", "h").lower()
+            age_months = age_days / 30.4375
+            is_above_5_years = age_days > 1856
 
-        # Tính BMI
-        bmi = weight / ((adjusted_lenhei / 100)**2)
+            # Điều chỉnh chiều dài/chiều cao
+            adjusted_lenhei = adjust_lenhei(age_days, measure, height)
 
-        # Chuyển giới tính thành số
-        sex_value = 1 if sex.lower() == "male" else 2 if sex.lower(
-        ) == "female" else None
-        # Gọi hàm vẽ biểu đồ zscore và nhận JSON cùng cấu hình
-        bmia_chart_json, bmia_config = draw_bmi_chart(bmi, age_months,
-                                                      sex_value)
-        wfa_chart_json, wfa_config = draw_wfa_chart(weight, age_months,
-                                                    sex_value)
-        lhfa_chart_json, lhfa_config = draw_lhfa_chart(adjusted_lenhei,
-                                                       age_months, sex_value)
-        wflh_chart_json, wflh_config = draw_wfl_wfh_chart(
-            weight, adjusted_lenhei, sex_value, measure)
+            # Tính BMI
+            bmi = weight / ((adjusted_lenhei / 100)**2)
 
-        # Gọi hàm vẽ biểu đồ percentile và nhận JSON cùng cấu hình
-        bmia_percentile_chart_json, bmia_percentile_config = draw_bmi_percentile_chart(
-            bmi, age_months, sex_value)
-        wfa_percentile_chart_json, wfa_percentile_config = draw_wfa_percentile_chart(
-            weight, age_months, sex_value)
-        lhfa_percentile_chart_json, lhfa_percentile_config = draw_lhfa_percentile_chart(
-            adjusted_lenhei, age_months, sex_value)
-        wflh_percentile_chart_json, wflh_percentile_config = draw_wfl_wfh_percentile_chart(
-            weight, adjusted_lenhei, sex_value, measure)
+            # Chuyển giới tính thành số
+            sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
 
-        # Tính toán Z-score cho các chỉ số
-        bmi_age = apply_zscore_and_growthstandards(compute_zscore_adjusted,
-                                                   growthstandards["bmi"],
-                                                   age_days, sex_value, bmi)
-        wei = apply_zscore_and_growthstandards(compute_zscore_adjusted,
-                                               growthstandards["weight"],
-                                               age_days, sex_value, weight)
-        lenhei_age = apply_zscore_and_growthstandards(
-            compute_zscore_adjusted, growthstandards["length"], age_days,
-            sex_value, adjusted_lenhei)
-        wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei,
-                                                 sex_value,
-                                                 weight,
-                                                 age_days=age_days,
-                                                 lenhei_unit=measure)
+            # Gọi hàm vẽ biểu đồ zscore và nhận JSON cùng cấu hình
+            bmia_chart_json, bmia_config = draw_bmi_chart(bmi, age_months, sex_value)
+            wfa_chart_json, wfa_config = draw_wfa_chart(weight, age_months, sex_value)
+            lhfa_chart_json, lhfa_config = draw_lhfa_chart(adjusted_lenhei, age_months, sex_value)
+            wflh_chart_json, wflh_config = draw_wfl_wfh_chart(weight, adjusted_lenhei, sex_value, measure)
 
-        if all(v is not None for v in [bmi_age, wei, lenhei_age, wfl]):
-            return jsonify({
+            # Gọi hàm vẽ biểu đồ percentile và nhận JSON cùng cấu hình
+            bmia_percentile_chart_json, bmia_percentile_config = draw_bmi_percentile_chart(bmi, age_months, sex_value)
+            wfa_percentile_chart_json, wfa_percentile_config = draw_wfa_percentile_chart(weight, age_months, sex_value)
+            lhfa_percentile_chart_json, lhfa_percentile_config = draw_lhfa_percentile_chart(adjusted_lenhei, age_months, sex_value)
+            wflh_percentile_chart_json, wflh_percentile_config = draw_wfl_wfh_percentile_chart(weight, adjusted_lenhei, sex_value, measure)
+
+            # Tính toán Z-score cho các chỉ số
+            if is_above_5_years:
+                bmi_age = apply_zscore_and_growthstandards_above_5(
+                    compute_zscore_adjusted, growthstandards["bmi_5_plus"],
+                    age_months, sex_value, bmi)
+                wei = apply_zscore_and_growthstandards_above_5(
+                    compute_zscore_adjusted, growthstandards["weight_5_plus"],
+                    age_months, sex_value, weight)
+                lenhei_age = apply_zscore_and_growthstandards_above_5(
+                    compute_zscore_adjusted, growthstandards["height_5_plus"],
+                    age_months, sex_value, adjusted_lenhei)
+                wfl = None  # Trẻ trên 5 tuổi không tính Weight for Length/Height
+            else:
+                bmi_age = apply_zscore_and_growthstandards(compute_zscore_adjusted,
+                                                           growthstandards["bmi"],
+                                                           age_days, sex_value,
+                                                           bmi)
+                wei = apply_zscore_and_growthstandards(compute_zscore_adjusted,
+                                                       growthstandards["weight"],
+                                                       age_days, sex_value, weight)
+                lenhei_age = apply_zscore_and_growthstandards(
+                    compute_zscore_adjusted, growthstandards["length"], age_days,
+                    sex_value, adjusted_lenhei)
+                wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei,
+                                                         sex_value,
+                                                         weight,
+                                                         age_days=age_days,
+                                                         lenhei_unit=measure)
+
+            result_data = {
                 "bmi": round(bmi, 2),
                 "bmi_age": {
-                    "zscore":
-                    round(float(bmi_age[0]), 2) if isinstance(
-                        bmi_age, np.ndarray) else round(bmi_age, 2),
-                    "percentile":
-                    zscore_to_percentile(bmi_age[0] if isinstance(
-                        bmi_age, np.ndarray) else bmi_age)
+                    "zscore": round(float(bmi_age[0]), 2) if isinstance(bmi_age, np.ndarray) else round(bmi_age, 2),
+                    "percentile": zscore_to_percentile(bmi_age[0] if isinstance(bmi_age, np.ndarray) else bmi_age)
                 },
                 "wei": {
-                    "zscore":
-                    round(float(wei[0]), 2)
-                    if isinstance(wei, np.ndarray) else round(wei, 2),
-                    "percentile":
-                    zscore_to_percentile(
-                        wei[0] if isinstance(wei, np.ndarray) else wei)
+                    "zscore": round(float(wei[0]), 2) if isinstance(wei, np.ndarray) else round(wei, 2),
+                    "percentile": zscore_to_percentile(wei[0] if isinstance(wei, np.ndarray) else wei)
                 },
                 "lenhei_age": {
-                    "zscore":
-                    round(float(lenhei_age[0]), 2) if isinstance(
-                        lenhei_age, np.ndarray) else round(lenhei_age, 2),
-                    "percentile":
-                    zscore_to_percentile(lenhei_age[0] if isinstance(
-                        lenhei_age, np.ndarray) else lenhei_age)
-                },
-                "wfl": {
-                    "zscore":
-                    round(float(wfl), 2) if isinstance(
-                        wfl, (np.ndarray, np.float64)) else round(wfl, 2),
-                    "percentile":
-                    zscore_to_percentile(wfl)
+                    "zscore": round(float(lenhei_age[0]), 2) if isinstance(lenhei_age, np.ndarray) else round(lenhei_age, 2),
+                    "percentile": zscore_to_percentile(lenhei_age[0] if isinstance(lenhei_age, np.ndarray) else lenhei_age)
                 },
                 "charts": {
                     "bmi": {
@@ -320,11 +357,22 @@ def zscore_calculator():
                         }
                     }
                 }
-            })
-        else:
-            return jsonify({"error": "Không tìm thấy dữ liệu phù hợp"}), 400
-    else:
-        return send_from_directory(os.getcwd(), 'zscore-calculator.html')
+            }
+
+            # Chỉ trả về wfl nếu trẻ dưới 5 tuổi
+            if not is_above_5_years:
+                result_data["wfl"] = {
+                    "zscore": round(float(wfl), 2) if isinstance(wfl, (np.ndarray, np.float64)) else round(wfl, 2),
+                    "percentile": zscore_to_percentile(wfl)
+                }
+
+            return jsonify(result_data)
+
+        except Exception as e:
+            return jsonify({"error": str(e)})
+
+    # Trả về tệp HTML cho yêu cầu GET
+    return send_from_directory(os.getcwd(), 'zscore-calculator.html')
 
 
 # Route for serving static files
