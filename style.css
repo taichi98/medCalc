@@ -226,6 +226,30 @@
         button:hover {
             background-color: #45a049;
         }
+		/* Áp dụng cho nút bị vô hiệu hóa */
+		button:disabled {
+				opacity: 0.6; /* Làm mờ nút */
+				cursor: not-allowed; /* Con trỏ dạng không cho phép */
+				position: relative; /* Đảm bảo overlay hoạt động */
+		}
+		/* Thêm overlay màu xám cho nút bị vô hiệu hóa */
+		button:disabled::after {
+				content: "";
+				position: absolute; 
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: rgb(87 87 87 / 30%); 
+				z-index: 1; /* Hiển thị lớp phủ lên trên */
+				border-radius: inherit; /* Đảm bảo bo góc giống nút */
+		}
+		
+		/* Đảm bảo nội dung của nút bị mờ khi vô hiệu hóa */
+		button:disabled span,
+		button:disabled p {
+				color: rgba(255, 255, 255, 0.5); /* Làm mờ nội dung bên trong */
+		}
         .result {
             margin-top: 20px;
         }
