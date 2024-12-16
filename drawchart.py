@@ -152,9 +152,9 @@ def draw_wfa_chart(weight, age_months, sex):
     shapes = [
         dict(type='line',
              x0=year * 12,
-             y0=data['SD3neg'].min(),
+             y0=data['SD3neg'].min() - 2,
              x1=year * 12,
-             y1=data['SD3'].max(),
+             y1=data['SD3'].max() + 3,
              line=dict(color='gray', width=0.2, dash='dash'))
         for year in range(1, 6)
     ] + [
@@ -164,7 +164,7 @@ def draw_wfa_chart(weight, age_months, sex):
              x1=age_months_data.max(),
              y1=y,
              line=dict(color="gray", width=0.2, dash="dash"))
-        for y in [5, 10, 15, 20, 25]
+        for y in range(5, 35, 5)
     ] + [
         dict(type="rect",
              xref="paper",
@@ -271,7 +271,7 @@ def draw_lhfa_chart(adjusted_lenhei, age_months, sex):
              x1=age_months_data.max(),
              y1=y,
              line=dict(color="gray", width=0.2, dash="dash"))
-        for y in [40, 60, 80, 100, 120]
+        for y in range(40, 130, 10)
     ] + [
         dict(type="rect",
              xref="paper",
@@ -326,6 +326,7 @@ def draw_lhfa_chart(adjusted_lenhei, age_months, sex):
     # Trả về biểu đồ dạng JSON
     return fig.to_json(), config
 
+
 def draw_wfl_wfh_chart(weight, length_or_height, sex, measure_type):
     # Determine the file path based on sex and measurement type
     if length_or_height < 65:
@@ -372,13 +373,21 @@ def draw_wfl_wfh_chart(weight, length_or_height, sex, measure_type):
 
     # Add layout configurations
     shapes = [
+        dict(type='line',
+             x0=lenhei,
+             y0=data['SD3neg'].min() - 2,
+             x1=lenhei,
+             y1=data['SD3'].max() + 4,
+             line=dict(color='gray', width=0.2, dash='dash'))
+        for lenhei in range(50, 120, 10)
+    ] + [
         dict(type="line",
              x0=length_or_height_data.min(),
              y0=y,
              x1=length_or_height_data.max(),
              y1=y,
              line=dict(color="gray", width=0.2, dash="dash"))
-        for y in [5, 10, 15, 20, 25]
+        for y in range(5, 35, 5)
     ] + [
         dict(type="rect",
              xref="paper",
@@ -434,4 +443,3 @@ def draw_wfl_wfh_chart(weight, length_or_height, sex, measure_type):
     fig.update_traces(hovertemplate="%{x:.2f}, %{y:.2f}")
 
     return fig.to_json(), config
-
