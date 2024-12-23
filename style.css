@@ -1,3 +1,7 @@
+.text-gray {
+		color: #cbc3b0;
+}
+
 body {
 	font-family: 'Inter', sans-serif;
 	margin: 0;
@@ -207,6 +211,42 @@ label {
 	max-width: 1200px;
 	/* Giới hạn độ rộng */
 	padding: 20px;
+}
+
+.collapsible-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0px 10px;
+		font-weight: bold;
+		border-radius: 10px;
+		cursor: pointer;
+		border: 1px solid #ddd;
+}
+
+.collapsible-header:hover {
+		
+}
+
+/* Mũi tên collapse/expand */
+.arrow {
+		font-size: 16px;
+		transition: transform 0.3s ease;
+}
+
+/* Nội dung collapsible (ẩn ban đầu) */
+.collapsible-content {
+	max-height: 0; /* Chiều cao ban đầu là 0 */
+	overflow: hidden; /* Ẩn phần nội dung vượt quá max-height */
+	transition: max-height 0.4s ease-out, padding 0.4s ease-out; /* Hiệu ứng mượt mà */
+	padding: 0 15px; /* Thêm padding nhưng không hiển thị khi collapsed */
+}
+.box-content {
+	padding: 0 15px;
+}
+/* Nội dung được mở rộng */
+.collapsible-content.expand {
+	padding: 15px; /* Hiển thị padding khi mở rộng */
 }
 
 .description-box {

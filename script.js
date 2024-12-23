@@ -1,3 +1,9 @@
+/**
+ * Hàm chung để ẩn/hiện nội dung và điều chỉnh biểu tượng mũi tên.
+ * @param {string} contentId - ID của phần tử nội dung cần ẩn/hiện.
+ * @param {string} arrowId - ID của biểu tượng mũi tên cần xoay.
+ */
+
 let sidebarOpen = false;
 let gender = "";
 
@@ -48,6 +54,43 @@ function toggleAgeInput() {
         document.getElementById("age-months-error").style.display = "none";
         document.querySelector(".age-months-group")?.classList.remove("error-border");
         //document.getElementById("age-days").required = true;
+    }
+}
+
+function toggleCollapse(contentId, arrowId) {
+    const content = document.getElementById(contentId);
+    const arrow = document.getElementById(arrowId);
+
+    if (content) {
+        // Kiểm tra trạng thái mở rộng
+        if (!content.classList.contains('expand')) {
+            content.style.maxHeight = content.scrollHeight + "px"; // Chiều cao tự động
+        } else {
+            content.style.maxHeight = null; // Reset maxHeight
+        }
+        content.classList.toggle('expand');
+
+        // Xoay mũi tên
+        if (arrow) {
+            arrow.style.transform = content.classList.contains('expand')
+                ? 'rotate(180deg)'
+                : 'rotate(0deg)';
+        }
+    }
+}
+
+function observeContentChanges(contentId) {
+    const content = document.getElementById(contentId);
+
+    if (content) {
+        const observer = new MutationObserver(() => {
+            if (content.classList.contains('expand')) {
+                // Cập nhật maxHeight khi nội dung thay đổi
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+
+        observer.observe(content, { childList: true, subtree: true, characterData: true });
     }
 }
 

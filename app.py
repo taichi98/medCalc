@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
-from drawchart import draw_bmi_chart, draw_wfa_chart, draw_lhfa_chart, draw_wfl_wfh_chart
-from percentilechart import draw_bmi_percentile_chart, draw_wfa_percentile_chart, draw_lhfa_percentile_chart, draw_wfl_wfh_percentile_chart
+from drawchart import draw_bmi_chart, draw_wfa_chart, draw_lhfa_chart, draw_wfl_wfh_chart, draw_bmi_chart_above5yr, draw_wfa_chart_above5yr, draw_lhfa_chart_above5yr
+from percentilechart import draw_bmi_percentile_chart, draw_wfa_percentile_chart, draw_lhfa_percentile_chart, draw_wfl_wfh_percentile_chart, draw_lhfa_percentile_chart_above5yr, draw_wfa_percentile_chart_above5yr, draw_bmi_percentile_chart_above5yr
 from scipy.stats import norm
 import pandas as pd
 import numpy as np
@@ -8,6 +8,9 @@ import math
 import os
 
 app = Flask(__name__)
+
+# Số ngày trung bình trong một tháng theo WHO
+ANTHRO_DAYS_OF_MONTH = 30.4375
 
 
 # Hàm để đọc dữ liệu chuẩn từ các file txt
@@ -28,14 +31,6 @@ growthstandards = {
     "height_5_plus": make_standard("hfawho2007"),
     "bmi_5_plus": make_standard("bfawho2007")
 }
-
-
-# Hàm làm tròn tuổi tính bằng tháng (khi >5 tuổi)
-def calculate_age_in_months(age_in_days):
-    low_age = np.floor(age_in_days / ANTHRO_DAYS_OF_MONTH).astype(int)
-    upp_age = low_age + 1
-    diff_age = (age_in_days / ANTHRO_DAYS_OF_MONTH) - low_age
-    return low_age, upp_age, diff_agev
 
 
 # Hàm tính Z-score
@@ -130,10 +125,6 @@ def apply_zscore_and_growthstandards_above_5(zscore_fun, growthstandards,
     return np.round(zscore, 2)
 
 
-# Số ngày trung bình trong một tháng theo WHO
-ANTHRO_DAYS_OF_MONTH = 30.4375
-
-
 def round_up(x):
     if isinstance(x, (int, float)) and x >= 0:
         x_rounded = math.floor(x)
@@ -146,11 +137,6 @@ def round_up(x):
     else:
         raise ValueError(
             "Giá trị phải là số dương hoặc danh sách các số dương.")
-
-
-def age_to_days(age, is_age_in_month):
-    return int(round_up(age *
-                        ANTHRO_DAYS_OF_MONTH if is_age_in_month else age))
 
 
 # Hàm điều chỉnh chiều dài/chiều cao theo tuổi và cách đo
@@ -250,6 +236,7 @@ def zscore_calculator():
             measure = request.form.get("measure", "h").lower()
             age_months = age_days / 30.4375
             is_above_5_years = age_days > 1856
+            is_above_10_years = age_days > 3682
 
             # Điều chỉnh chiều dài/chiều cao
             adjusted_lenhei = adjust_lenhei(age_days, measure, height)
@@ -258,43 +245,72 @@ def zscore_calculator():
             bmi = weight / ((adjusted_lenhei / 100)**2)
 
             # Chuyển giới tính thành số
-            sex_value = 1 if sex.lower() == "male" else 2 if sex.lower() == "female" else None
+            sex_value = 1 if sex.lower() == "male" else 2 if sex.lower(
+            ) == "female" else None
 
             # Gọi hàm vẽ biểu đồ zscore và nhận JSON cùng cấu hình
-            bmia_chart_json, bmia_config = draw_bmi_chart(bmi, age_months, sex_value)
-            wfa_chart_json, wfa_config = draw_wfa_chart(weight, age_months, sex_value)
-            lhfa_chart_json, lhfa_config = draw_lhfa_chart(adjusted_lenhei, age_months, sex_value)
-            wflh_chart_json, wflh_config = draw_wfl_wfh_chart(weight, adjusted_lenhei, sex_value, measure)
+            if is_above_5_years:
+                bmia_chart_json, bmia_config = draw_bmi_chart_above5yr(
+                    bmi, age_months, sex_value)
+                wfa_chart_json, wfa_config = draw_wfa_chart_above5yr(
+                    weight, age_months, sex_value)
+                lhfa_chart_json, lhfa_config = draw_lhfa_chart_above5yr(
+                    adjusted_lenhei, age_months, sex_value)
+                wflh_chart_json, wflh_config = None, None  # Không vẽ biểu đồ Weight for Length/Height cho trẻ >5 tuổi
 
-            # Gọi hàm vẽ biểu đồ percentile và nhận JSON cùng cấu hình
-            bmia_percentile_chart_json, bmia_percentile_config = draw_bmi_percentile_chart(bmi, age_months, sex_value)
-            wfa_percentile_chart_json, wfa_percentile_config = draw_wfa_percentile_chart(weight, age_months, sex_value)
-            lhfa_percentile_chart_json, lhfa_percentile_config = draw_lhfa_percentile_chart(adjusted_lenhei, age_months, sex_value)
-            wflh_percentile_chart_json, wflh_percentile_config = draw_wfl_wfh_percentile_chart(weight, adjusted_lenhei, sex_value, measure)
+                bmia_percentile_chart_json, bmia_percentile_config = draw_bmi_percentile_chart_above5yr(
+                    bmi, age_months, sex_value)
+                wfa_percentile_chart_json, wfa_percentile_config = draw_wfa_percentile_chart_above5yr(
+                    weight, age_months, sex_value)
+                lhfa_percentile_chart_json, lhfa_percentile_config = draw_lhfa_percentile_chart_above5yr(
+                    adjusted_lenhei, age_months, sex_value)
+                wflh_percentile_chart_json, wflh_percentile_config = None, None
+            else:
+                bmia_chart_json, bmia_config = draw_bmi_chart(
+                    bmi, age_months, sex_value)
+                wfa_chart_json, wfa_config = draw_wfa_chart(
+                    weight, age_months, sex_value)
+                lhfa_chart_json, lhfa_config = draw_lhfa_chart(
+                    adjusted_lenhei, age_months, sex_value)
+                wflh_chart_json, wflh_config = draw_wfl_wfh_chart(
+                    weight, adjusted_lenhei, sex_value, measure)
+                bmia_percentile_chart_json, bmia_percentile_config = draw_bmi_percentile_chart(
+                    bmi, age_months, sex_value)
+                wfa_percentile_chart_json, wfa_percentile_config = draw_wfa_percentile_chart(
+                    weight, age_months, sex_value)
+                lhfa_percentile_chart_json, lhfa_percentile_config = draw_lhfa_percentile_chart(
+                    adjusted_lenhei, age_months, sex_value)
+                wflh_percentile_chart_json, wflh_percentile_config = draw_wfl_wfh_percentile_chart(
+                    weight, adjusted_lenhei, sex_value, measure)
 
             # Tính toán Z-score cho các chỉ số
             if is_above_5_years:
                 bmi_age = apply_zscore_and_growthstandards_above_5(
                     compute_zscore_adjusted, growthstandards["bmi_5_plus"],
                     age_months, sex_value, bmi)
-                wei = apply_zscore_and_growthstandards_above_5(
-                    compute_zscore_adjusted, growthstandards["weight_5_plus"],
-                    age_months, sex_value, weight)
+
+                if is_above_10_years:
+                    wei = None  # Trẻ trên 10 tuổi không tính Weight for age
+                else:
+                    wei = apply_zscore_and_growthstandards_above_5(
+                        compute_zscore_adjusted,
+                        growthstandards["weight_5_plus"], age_months,
+                        sex_value, weight)
+
                 lenhei_age = apply_zscore_and_growthstandards_above_5(
                     compute_zscore_adjusted, growthstandards["height_5_plus"],
                     age_months, sex_value, adjusted_lenhei)
                 wfl = None  # Trẻ trên 5 tuổi không tính Weight for Length/Height
             else:
-                bmi_age = apply_zscore_and_growthstandards(compute_zscore_adjusted,
-                                                           growthstandards["bmi"],
-                                                           age_days, sex_value,
-                                                           bmi)
-                wei = apply_zscore_and_growthstandards(compute_zscore_adjusted,
-                                                       growthstandards["weight"],
-                                                       age_days, sex_value, weight)
+                bmi_age = apply_zscore_and_growthstandards(
+                    compute_zscore_adjusted, growthstandards["bmi"], age_days,
+                    sex_value, bmi)
+                wei = apply_zscore_and_growthstandards(
+                    compute_zscore_adjusted, growthstandards["weight"],
+                    age_days, sex_value, weight)
                 lenhei_age = apply_zscore_and_growthstandards(
-                    compute_zscore_adjusted, growthstandards["length"], age_days,
-                    sex_value, adjusted_lenhei)
+                    compute_zscore_adjusted, growthstandards["length"],
+                    age_days, sex_value, adjusted_lenhei)
                 wfl = calculate_zscore_weight_for_lenhei(adjusted_lenhei,
                                                          sex_value,
                                                          weight,
@@ -304,16 +320,20 @@ def zscore_calculator():
             result_data = {
                 "bmi": round(bmi, 2),
                 "bmi_age": {
-                    "zscore": round(float(bmi_age[0]), 2) if isinstance(bmi_age, np.ndarray) else round(bmi_age, 2),
-                    "percentile": zscore_to_percentile(bmi_age[0] if isinstance(bmi_age, np.ndarray) else bmi_age)
-                },
-                "wei": {
-                    "zscore": round(float(wei[0]), 2) if isinstance(wei, np.ndarray) else round(wei, 2),
-                    "percentile": zscore_to_percentile(wei[0] if isinstance(wei, np.ndarray) else wei)
+                    "zscore":
+                    round(float(bmi_age[0]), 2) if isinstance(
+                        bmi_age, np.ndarray) else round(bmi_age, 2),
+                    "percentile":
+                    zscore_to_percentile(bmi_age[0] if isinstance(
+                        bmi_age, np.ndarray) else bmi_age)
                 },
                 "lenhei_age": {
-                    "zscore": round(float(lenhei_age[0]), 2) if isinstance(lenhei_age, np.ndarray) else round(lenhei_age, 2),
-                    "percentile": zscore_to_percentile(lenhei_age[0] if isinstance(lenhei_age, np.ndarray) else lenhei_age)
+                    "zscore":
+                    round(float(lenhei_age[0]), 2) if isinstance(
+                        lenhei_age, np.ndarray) else round(lenhei_age, 2),
+                    "percentile":
+                    zscore_to_percentile(lenhei_age[0] if isinstance(
+                        lenhei_age, np.ndarray) else lenhei_age)
                 },
                 "charts": {
                     "bmi": {
@@ -362,8 +382,21 @@ def zscore_calculator():
             # Chỉ trả về wfl nếu trẻ dưới 5 tuổi
             if not is_above_5_years:
                 result_data["wfl"] = {
-                    "zscore": round(float(wfl), 2) if isinstance(wfl, (np.ndarray, np.float64)) else round(wfl, 2),
-                    "percentile": zscore_to_percentile(wfl)
+                    "zscore":
+                    round(float(wfl), 2) if isinstance(
+                        wfl, (np.ndarray, np.float64)) else round(wfl, 2),
+                    "percentile":
+                    zscore_to_percentile(wfl)
+                }
+
+            if not is_above_10_years:
+                result_data["wei"] = {
+                    "zscore":
+                    round(float(wei[0]), 2)
+                    if isinstance(wei, np.ndarray) else round(wei, 2),
+                    "percentile":
+                    zscore_to_percentile(
+                        wei[0] if isinstance(wei, np.ndarray) else wei)
                 }
 
             return jsonify(result_data)

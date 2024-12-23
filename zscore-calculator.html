@@ -121,46 +121,63 @@
 
 	<div id="main">
 		<div class="container_of_content">
-			<div class="description-box">
-				<h3>Growth Chart Results (WHO Standards)</h3>
-				<h3 style="display: inline-block; margin-top: -10px; margin-right: 10px;">Show Chart Type:</h3>
-				<select class="dropbtn" id="chart-type-selector" onchange="updateAllCharts()">
-					<option value="zscore">Z-Scores</option>
-					<option value="percentile">Percentile</option>
-				</select>
-				<fieldset id="bfaresult">
-					<legend>BMI Results</legend>
-					<ol>
-						<li class="results">BMI: <span class="scores" id="bmi-result-side"></span></li>
-						<li class="results">Z-Score: <span class="scores" id="bmiage-result-side"></span></li>
-					</ol>
-				</fieldset>
+			<div class="description-box" style="padding: 0px;">
+					<div class="box-content">
+						<h3>Child growth standards</h3>
+						<p>This web site presents the WHO Child Growth Standards. These standards were developed using data collected in the WHO Multicentre Growth Reference Study. The site presents documentation on how the physical growth curves and motor milestone windows of achievement were developed as well as application tools to support the implementation of the standards</p>
+					</div>
+				
+					<div class="collapsible-header" onclick="toggleCollapse('collapsible-content', 'arrow-icon')">
+							<h3>Growth Chart Results (WHO Standards)</h3>
+							<span class="arrow" id="arrow-icon">▼</span>
+					</div>
 
-				<div class="plot-container" id="bmi-chart"></div>
+					<!-- Nội dung cần thu gọn/mở rộng -->
+					<div class="collapsible-content" id="collapsible-content">
+							<h3 style="display: inline-block; margin-top: -10px; margin-right: 10px;">Show Chart Type:</h3>
+							<select class="dropbtn" id="chart-type-selector" onchange="updateAllCharts()">
+									<option value="zscore">Z-Scores</option>
+									<option value="percentile">Percentile</option>
+							</select>
 
-				<fieldset id="wfaresult">
-					<legend>WFA Results</legend>
-					<ol>
-						<li class="results">Z-Score: <span class="scores" id="wei-result-side"></span></li>
-					</ol>
-				</fieldset>
-				<div class="plot-container" id="wfa-chart"></div>
+							<fieldset id="bfaresult">
+									<legend>BMI Results</legend>
+									<ol>
+											<li class="results">BMI: <span class="scores" id="bmi-result-side"></span></li>
+											<li class="results">Z-Score: <span class="scores" id="bmiage-result-side"></span></li>
+									</ol>
+							</fieldset>
+							<div class="plot-container" id="bmi-chart"></div>
 
-				<fieldset id="lhfaresult">
-					<legend>LHFA Results</legend>
-					<ol>
-						<li class="results">Z-Score:<span class="scores" id="lenhei_age_result_side"></span></li>
-					</ol>
-				</fieldset>
-				<div class="plot-container" id="lhfa-chart"></div>
+						<div id="wei-box" style="display: block">
+							<fieldset id="wfaresult">
+								<legend>WFA Results</legend>
+								<ol>
+									<li class="results">Z-Score: <span class="scores" id="wei-result-side"></span></li>
+								</ol>
+							</fieldset>
+							<div class="plot-container" id="wfa-chart"></div>
+						</div>
+						
+							<fieldset id="lhfaresult">
+								<legend>LHFA Results</legend>
+								<ol>
+									<li class="results">Z-Score:<span class="scores" id="lenhei_age_result_side"></span></li>
+								</ol>
+							</fieldset>
+							<div class="plot-container" id="lhfa-chart"></div>
 
-				<fieldset id="wflhresult">
-					<legend>WFLH Results</legend>
-					<ol>
-						<li class="results">Z-Score:<span class="scores" id="weight_lenhei_result_side"></span></li>
-					</ol>
-				</fieldset>
-				<div class="plot-container" id="wflh-chart"></div>
+						<div id="wflh-box" style="display: block">
+							<fieldset id="wflhresult">
+								<legend>WFLH Results</legend>
+								<ol>
+									<li class="results">Z-Score:<span class="scores" id="weight_lenhei_result_side"></span></li>
+								</ol>
+							</fieldset>
+							<div class="plot-container" id="wflh-chart"></div>
+						</div>
+						
+					</div>
 			</div>
 
 			<div class="calculation-box">
@@ -246,9 +263,7 @@
 					<div id="resultZS" style="display: none">
 						<div class="result-item">
 							<p id="bmi-result"></p>
-							<div id="wfl-container" style="display: none;">
-									<p id="weight_lenhei_result"></p>
-							</div>
+							<p id="weight_lenhei_result"></p>
 							<p id="wei-result"></p>
 							<p id="lenhei_age_result"></p>
 							<p id="bmiage-result"></p>
@@ -331,7 +346,10 @@
 					{ field: "height", errorId: "height-error", groupClass: "height-group" },
 					{ field: "weight", errorId: "weight-error", groupClass: "weight-group" },
 			];
-
+		const results = [
+				{key: "wfl", resultId: "weight_lenhei_result", resultSideId: "weight_lenhei_result_side", boxId: "wflh-box", label: "Weight for Length",},
+				{key: "wei", resultId: "wei-result", resultSideId: "wei-result-side", boxId: "wei-box", label: "Weight for Age",}];
+		
 			// Kiểm tra thông tin đầu vào
 			fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
 			    const value = document.getElementById(field).value;
@@ -528,21 +546,22 @@
 								document.getElementById("bmiage-result-side").innerText = `${data.bmi_age.zscore} (${data.bmi_age.percentile}th)`;
 								document.getElementById("bmiage-result").innerText = `BMI for Age: ${data.bmi_age.zscore} (${data.bmi_age.percentile}th)`;
 
-								document.getElementById("wei-result-side").innerText = `${data.wei.zscore} (${data.wei.percentile}th)`;
-								document.getElementById("wei-result").innerText = `Weight for Age: ${data.wei.zscore} (${data.wei.percentile}th)`;
-
 								document.getElementById("lenhei_age_result_side").innerText = `${data.lenhei_age.zscore} (${data.lenhei_age.percentile}th)`;
 								document.getElementById("lenhei_age_result").innerText = `Height for Age: ${data.lenhei_age.zscore} (${data.lenhei_age.percentile}th)`;
 
-							// Kiểm tra nếu tuổi dưới 5 thì hiển thị wfl
-								if (data.wfl) {
-									document.getElementById("wfl-container").style.display = "block";
-									document.getElementById("weight_lenhei_result_side").innerText = `${data.wfl.zscore} (${data.wfl.percentile}th)`;
-									document.getElementById("weight_lenhei_result").innerText = `Weight for Length: ${data.wfl.zscore} (${data.wfl.percentile}th)`;
-							} else {
-									// Ẩn phần Weight for Length nếu trẻ trên 5 tuổi
-									document.getElementById("wfl-container").style.display = "none";
-							}
+							results.forEach(({ key, resultId, resultSideId, boxId, label }) => {
+									const dataKey = data[key];
+									if (dataKey) {
+											document.getElementById(resultId).classList.remove('text-gray');
+											document.getElementById(resultSideId).innerText = `${dataKey.zscore} (${dataKey.percentile}th)`;
+											document.getElementById(resultId).innerText = `${label}: ${dataKey.zscore} (${dataKey.percentile}th)`;
+											document.getElementById(boxId).style.display = "block";
+									} else {
+											document.getElementById(resultId).innerText = `${label}: N/A`;
+											document.getElementById(resultId).classList.add('text-gray');
+											document.getElementById(boxId).style.display = "none";
+									}
+							});
 
 								// Hiển thị resultBox
 								resultBox.style.display = "flex";
@@ -556,7 +575,10 @@
 				// Ẩn placeholder
 				document.getElementById("text1").style.display = "none";
 		});
-
+		// Gọi observeContentChanges sau khi trang đã tải xong
+		document.addEventListener("DOMContentLoaded", function() {
+				observeContentChanges("collapsible-content");
+		});
 	</script>
 </body>
 
