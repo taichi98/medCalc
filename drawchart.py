@@ -4,14 +4,14 @@ import pandas as pd
 
 def draw_bmi_chart(bmi, age_months, sex):
     if sex == 1:  # Boys
-        file_path = 'data/bfa-boys-zscore-expanded-tables.xlsx'
+        file_path = 'data/bfa-boys-zscore-expanded-tables.feather'
     elif sex == 2:  # Girls
-        file_path = 'data/bfa-girls-zscore-expanded-tables.xlsx'
+        file_path = 'data/bfa-girls-zscore-expanded-tables.feather'
     else:
         raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_feather(file_path)
     age_months_data = data['Day'] / 30.4375
 
     # Create traces for SD lines
@@ -103,14 +103,14 @@ def draw_bmi_chart(bmi, age_months, sex):
 
 def draw_wfa_chart(weight, age_months, sex):
     if sex == 1:  # Boys
-        file_path = 'data/wfa-boys-zscore-expanded-tables.xlsx'
+        file_path = 'data/wfa-boys-zscore-expanded-tables.feather'
     elif sex == 2:  # Girls
-        file_path = 'data/wfa-girls-zscore-expanded-tables.xlsx'
+        file_path = 'data/wfa-girls-zscore-expanded-tables.feather'
     else:
         raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_feather(file_path)
     age_months_data = data['Day'] / 30.4375
 
     # Create traces for SD lines
@@ -192,14 +192,14 @@ def draw_wfa_chart(weight, age_months, sex):
 
 def draw_lhfa_chart(adjusted_lenhei, age_months, sex):
     if sex == 1:  # Boys
-        file_path = 'data/lhfa-boys-zscore-expanded-tables.xlsx'
+        file_path = 'data/lhfa-boys-zscore-expanded-tables.feather'
     elif sex == 2:  # Girls
-        file_path = 'data/lhfa-girls-zscore-expanded-tables.xlsx'
+        file_path = 'data/lhfa-girls-zscore-expanded-tables.feather'
     else:
         raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_feather(file_path)
     age_months_data = data['Day'] / 30.4375
 
     # Create traces for SD lines
@@ -297,14 +297,14 @@ def draw_wfl_wfh_chart(weight, length_or_height, sex, measure_type):
         file_type = 'wfl' if measure_type == 'l' else 'wfh'
 
     if sex == 1:  # Boys
-        file_path = f"data/{file_type}-boys-zscore-expanded-tables.xlsx"
+        file_path = f"data/{file_type}-boys-zscore-expanded-tables.feather"
     elif sex == 2:  # Girls
-        file_path = f"data/{file_type}-girls-zscore-expanded-tables.xlsx"
+        file_path = f"data/{file_type}-girls-zscore-expanded-tables.feather"
     else:
         raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_feather(file_path)
     length_or_height_data = data['Length'] if file_type == 'wfl' else data[
         'Height']
 
@@ -391,14 +391,14 @@ def draw_wfl_wfh_chart(weight, length_or_height, sex, measure_type):
 
 def draw_bmi_chart_above5yr(bmi, age_months, sex):
     if sex == 1:  # Boys
-        file_path = 'data/who2007/bfa-boys-z-who-2007-exp.xlsx'
+        file_path = 'data/who2007/bfa-boys-z-who-2007-exp.feather'
     elif sex == 2:  # Girls
-        file_path = 'data/who2007/bfa-girls-z-who-2007-exp.xlsx'
+        file_path = 'data/who2007/bfa-girls-z-who-2007-exp.feather'
     else:
         raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_feather(file_path)
     age_months_data = data['Month']
 
     # Create traces for SD lines
@@ -483,14 +483,14 @@ def draw_bmi_chart_above5yr(bmi, age_months, sex):
 
 def draw_wfa_chart_above5yr(weight, age_months, sex):
     if sex == 1:  # Boys
-        file_path = 'data/who2007/wfa-boys-z-who-2007-exp.xlsx'
+        file_path = 'data/who2007/wfa-boys-z-who-2007-exp.feather'
     elif sex == 2:  # Girls
-        file_path = 'data/who2007/wfa-girls-z-who-2007-exp.xlsx'
+        file_path = 'data/who2007/wfa-girls-z-who-2007-exp.feather'
     else:
         raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_feather(file_path)
     age_months_data = data['Month']
 
     # Create traces for SD lines
@@ -570,14 +570,14 @@ def draw_wfa_chart_above5yr(weight, age_months, sex):
 
 def draw_lhfa_chart_above5yr(adjusted_lenhei, age_months, sex):
     if sex == 1:  # Boys
-        file_path = 'data/who2007/lhfa-boys-z-who-2007-exp.xlsx'
+        file_path = 'data/who2007/lhfa-boys-z-who-2007-exp.feather'
     elif sex == 2:  # Girls
-        file_path = 'data/who2007/lhfa-girls-z-who-2007-exp.xlsx'
+        file_path = 'data/who2007/lhfa-girls-z-who-2007-exp.feather'
     else:
         raise ValueError("Invalid sex. Please use 1 for male or 2 for female.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_feather(file_path)
     age_months_data = data['Month']
 
     # Create traces for SD lines
