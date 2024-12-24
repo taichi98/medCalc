@@ -120,66 +120,64 @@
 	<div id="myOverlay" class="overlay" onclick="toggleSidebar()"></div>
 
 	<div id="main">
+		<div class="box-content">
+			<h2 class="compact-title">Child Growth Standards</h2>
+			<p> Monitoring a child's growth is an essential aspect of ensuring their health and well-being. The WHO Child Growth Standards were meticulously developed based on comprehensive data collected through the Multicentre Growth Reference Study (MGRS). These standards provide a robust foundation for assessing the growth and development of children worldwide, offering benchmarks that are universally applicable regardless of geographical or socio-economic factors.</p>
+			<p>This web site presents the WHO Child Growth Standards. These standards were developed using data collected in the WHO Multicentre Growth Reference Study. The site presents documentation on how the physical growth curves and motor milestone windows of achievement were developed as well as application tools to support the implementation of the standards</p>
+		</div>
+		
 		<div class="container_of_content">
-			<div class="description-box" style="padding: 0px;">
-					<div class="box-content">
-						<h3>Child growth standards</h3>
-						<p>This web site presents the WHO Child Growth Standards. These standards were developed using data collected in the WHO Multicentre Growth Reference Study. The site presents documentation on how the physical growth curves and motor milestone windows of achievement were developed as well as application tools to support the implementation of the standards</p>
-					</div>
-				
-					<div class="collapsible-header" onclick="toggleCollapse('collapsible-content', 'arrow-icon')">
-							<h3>Growth Chart Results (WHO Standards)</h3>
-							<span class="arrow" id="arrow-icon">▼</span>
-					</div>
-
-					<!-- Nội dung cần thu gọn/mở rộng -->
-					<div class="collapsible-content" id="collapsible-content">
-							<h3 style="display: inline-block; margin-top: -10px; margin-right: 10px;">Show Chart Type:</h3>
-							<select class="dropbtn" id="chart-type-selector" onchange="updateAllCharts()">
-									<option value="zscore">Z-Scores</option>
-									<option value="percentile">Percentile</option>
-							</select>
-
-							<fieldset id="bfaresult">
-									<legend>BMI Results</legend>
-									<ol>
-											<li class="results">BMI: <span class="scores" id="bmi-result-side"></span></li>
-											<li class="results">Z-Score: <span class="scores" id="bmiage-result-side"></span></li>
-									</ol>
-							</fieldset>
-							<div class="plot-container" id="bmi-chart"></div>
-
-						<div id="wei-box" style="display: block">
-							<fieldset id="wfaresult">
-								<legend>WFA Results</legend>
+			<div class="result-box-zscore">
+				<div class="collapsible-header" onclick="toggleCollapse('collapsible-content', 'arrow-icon')">
+					<img src="/data/down.png" alt="Arrow Icon" class="arrow-icon" id="arrow-icon">
+					<h2 class="compact-title">Growth Chart Results (WHO Standards)</h2>
+				</div>
+				<div class="collapsible-content" id="collapsible-content">
+						<h3 style="display: inline-block; margin-top: -10px; margin-right: 10px;">Show Chart Type:</h3>
+						<select class="dropbtn" id="chart-type-selector" onchange="updateAllCharts()">
+								<option value="zscore">Z-Scores</option>
+								<option value="percentile">Percentile</option>
+						</select>
+	
+						<fieldset id="bfaresult">
+								<legend>BMI Results</legend>
 								<ol>
-									<li class="results">Z-Score: <span class="scores" id="wei-result-side"></span></li>
+										<li class="results">BMI: <span class="scores" id="bmi-result-side"></span></li>
+										<li class="results">Z-Score: <span class="scores" id="bmiage-result-side"></span></li>
 								</ol>
-							</fieldset>
-							<div class="plot-container" id="wfa-chart"></div>
-						</div>
-						
-							<fieldset id="lhfaresult">
-								<legend>LHFA Results</legend>
-								<ol>
-									<li class="results">Z-Score:<span class="scores" id="lenhei_age_result_side"></span></li>
-								</ol>
-							</fieldset>
-							<div class="plot-container" id="lhfa-chart"></div>
-
-						<div id="wflh-box" style="display: block">
-							<fieldset id="wflhresult">
-								<legend>WFLH Results</legend>
-								<ol>
-									<li class="results">Z-Score:<span class="scores" id="weight_lenhei_result_side"></span></li>
-								</ol>
-							</fieldset>
-							<div class="plot-container" id="wflh-chart"></div>
-						</div>
-						
+						</fieldset>
+						<div class="plot-container" id="bmi-chart"></div>
+	
+					<div id="wei-box" style="display: block">
+						<fieldset id="wfaresult">
+							<legend>WFA Results</legend>
+							<ol>
+								<li class="results">Z-Score: <span class="scores" id="wei-result-side"></span></li>
+							</ol>
+						</fieldset>
+						<div class="plot-container" id="wfa-chart"></div>
 					</div>
+	
+						<fieldset id="lhfaresult">
+							<legend>LHFA Results</legend>
+							<ol>
+								<li class="results">Z-Score:<span class="scores" id="lenhei_age_result_side"></span></li>
+							</ol>
+						</fieldset>
+						<div class="plot-container" id="lhfa-chart"></div>
+	
+					<div id="wflh-box" style="display: block">
+						<fieldset id="wflhresult">
+							<legend>WFLH Results</legend>
+							<ol>
+								<li class="results">Z-Score:<span class="scores" id="weight_lenhei_result_side"></span></li>
+							</ol>
+						</fieldset>
+						<div class="plot-container" id="wflh-chart"></div>
+					</div>
+				</div>
 			</div>
-
+				
 			<div class="calculation-box">
 				<h1>WHO Z-Score Tool</h1>
 				<form id="zscore-form">
