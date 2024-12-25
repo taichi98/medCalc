@@ -600,6 +600,22 @@ function updateChartsBasedOnSelection() {
     });
 }
 
+function updateResults(data) {
+    // Kiểm tra nếu dữ liệu không có (ví dụ: null hoặc empty)
+    if (!data || Object.keys(data).length === 0) {
+        // Hiển thị thông báo "No data"
+        document.getElementById('no-data-message').style.display = 'block';
+
+        // Ẩn các kết quả cũ
+        document.getElementById('collapsible-content').style.display = 'none';
+    } else {
+        // Nếu có dữ liệu, ẩn thông báo "No data"
+        document.getElementById('no-data-message').style.display = 'none';
+        // Hiển thị các kết quả
+        document.getElementById('collapsible-content').style.display = 'block';
+    }
+}
+
 
 function calculateIBW() {
     const height = parseFloat(document.getElementById("height").value);

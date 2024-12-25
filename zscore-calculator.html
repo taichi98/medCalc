@@ -132,7 +132,11 @@
 					<img src="/data/down.png" alt="Arrow Icon" class="arrow-icon" id="arrow-icon">
 					<h2 class="compact-title">Growth Chart Results (WHO Standards)</h2>
 				</div>
-				<div class="collapsible-content" id="collapsible-content">
+				<div id="no-data-message" class="no-data" style="display: block">
+						No data available
+				</div>
+
+				<div class="collapsible-content" id="collapsible-content" style="display: none">
 						<h3 style="display: inline-block; margin-top: -10px; margin-right: 10px;">Show Chart Type:</h3>
 						<select class="dropbtn" id="chart-type-selector" onchange="updateAllCharts()">
 								<option value="zscore">Z-Scores</option>
@@ -178,8 +182,8 @@
 				</div>
 			</div>
 				
-			<div class="calculation-box">
-				<h1>WHO Z-Score Tool</h1>
+			<div class="calculation-box" style="padding-top: 0px;">
+				<h2 class="compact-title">WHO Z-Score Tool</h2>
 				<form id="zscore-form">
 					<div id="gender-select-group" class="gender-group">
 						<label for="gender">Sex</label>
@@ -563,6 +567,7 @@
 
 								// Hiển thị resultBox
 								resultBox.style.display = "flex";
+								updateResults(data);
 						})
 						.catch((error) => {
 								console.error("There was a problem with the fetch operation:", error);
