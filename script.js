@@ -502,59 +502,110 @@ function updateMeasuredButtons(totalMonths) {
         }
 }
 
-
 // Hàm tính tổng tháng từ tuổi nhập vào
 function calculateTotalMonths(ageYears, ageMonths) {
     return ageYears * 12 + ageMonths;
 }
 
 function updateAgeDisplay() {
+    const ageOption = document.getElementById("age-option").value;
+    const ageDisplayElement = document.getElementById("age-display");
+
+    if (ageOption === "dob") {
         const dob = document.getElementById("dob").value;
         const currentDay = document.getElementById("current-day").value;
 
         if (dob && currentDay) {
-                const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
-                const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
+            const [dobDay, dobMonth, dobYear] = dob.split("/").map(Number);
+            const birthDate = new Date(dobYear, dobMonth - 1, dobDay);
 
-                const [currentDayDay, currentDayMonth, currentDayYear] = currentDay.split("/").map(Number);
-                const currentDate = new Date(currentDayYear, currentDayMonth - 1, currentDayDay);
+            const [currentDayDay, currentDayMonth, currentDayYear] = currentDay.split("/").map(Number);
+            const currentDate = new Date(currentDayYear, currentDayMonth - 1, currentDayDay);
 
-                let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
-                let ageMonths = currentDate.getMonth() - birthDate.getMonth();
-                let ageDays = currentDate.getDate() - birthDate.getDate();
+            let ageYears = currentDate.getFullYear() - birthDate.getFullYear();
+            let ageMonths = currentDate.getMonth() - birthDate.getMonth();
+            let ageDays = currentDate.getDate() - birthDate.getDate();
 
-                if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
-                        ageYears--;
-                        ageMonths += 12;
-                }
-                if (ageDays < 0) {
-                        const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-                        ageDays += prevMonth.getDate();
-                        ageMonths--;
-                }
+            if (ageMonths < 0 || (ageMonths === 0 && ageDays < 0)) {
+                ageYears--;
+                ageMonths += 12;
+            }
+            if (ageDays < 0) {
+                const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+                ageDays += prevMonth.getDate();
+                ageMonths--;
+            }
 
-                const totalMonths = calculateTotalMonths(ageYears, ageMonths);
+            const totalMonths = calculateTotalMonths(ageYears, ageMonths);
 
-                // Gọi hàm kiểm tra trạng thái nút đo
-                updateMeasuredButtons(totalMonths);
+            // Gọi hàm kiểm tra trạng thái nút đo
+            updateMeasuredButtons(totalMonths);
 
-                let ageDisplayText = "";
-                if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
-                        ageDisplayText = `<b>Age:</b> ${ageDays} day(s)`;
-                } else if (ageYears === 0 && ageMonths <= 12) {
-                        ageDisplayText = `<b>Age:</b> ${ageMonths}mo ${ageDays}d`;
-                } else {
-                        ageDisplayText = `<b>Age:</b> ${ageYears}yr ${ageMonths}mo ${ageDays}d`;
-                }
+            let ageDisplayText = "";
+            if (ageYears === 0 && ageMonths === 0 && ageDays <= 30) {
+                ageDisplayText = `<b>Age:</b> ${ageDays} day(s)`;
+            } else if (ageYears === 0 && ageMonths <= 12) {
+                ageDisplayText = `<b>Age:</b> ${ageMonths}mo ${ageDays}d`;
+            } else {
+                ageDisplayText = `<b>Age:</b> ${ageYears}yr ${ageMonths}mo ${ageDays}d`;
+            }
 
-                document.getElementById("age-display").innerHTML = ageDisplayText;
+            ageDisplayElement.innerHTML = ageDisplayText;
         }
+    } else if (ageOption === "months") {
+        const months = parseInt(document.getElementById("age-months").value, 10);
+        if (!isNaN(months)) {
+            if (months >= 12) {
+                const years = Math.floor(months / 12);
+                const remainingMonths = months % 12;
+                ageDisplayElement.innerHTML = `<b>Age:</b> ${years}yr ${remainingMonths}mo`;
+            } else {
+                ageDisplayElement.innerHTML = `<b>Age:</b> ${months}mo`;
+            }
+
+            // Gọi hàm kiểm tra trạng thái nút đo
+            updateMeasuredButtons(months);
+        } else {
+            ageDisplayElement.innerHTML = ""; // Xóa nội dung nếu không có giá trị
+        }
+    }
 }
 
+// Hàm cập nhật tất cả biểu đồ dựa trên kích thước container
+function resizeCharts() {
+    const chartMappings = [
+        { id: "bmi-chart" },
+        { id: "wfa-chart" },
+        { id: "lhfa-chart" },
+        { id: "wflh-chart" },
+    ];
+
+    // Tỷ lệ cố định: Chiều rộng : Chiều cao (4:3)
+    const aspectRatio = 4 / 3;
+
+    chartMappings.forEach((chart) => {
+        const chartContainer = document.getElementById(chart.id);
+
+        if (chartContainer && chartContainer.data) {
+            try {
+                // Cập nhật layout với chiều cao mới
+                const newLayout = {
+                    ...chartContainer.layout,
+                    height: chartContainer.offsetWidth / aspectRatio, // Tính chiều cao dựa trên tỷ lệ
+                };
+
+                Plotly.react(chart.id, chartContainer.data, newLayout);
+            } catch (error) {
+                console.error(`Lỗi khi resize biểu đồ ${chart.id}:`, error);
+            }
+        }
+    });
+}
+
+// Hàm cập nhật biểu đồ dựa trên loại được chọn
 function updateChartsBasedOnSelection() {
     const selectedType = document.getElementById("chart-type-selector").value;
 
-    // Danh sách các biểu đồ và ID tương ứng
     const chartMappings = [
         { key: "bmi", id: "bmi-chart" },
         { key: "wfa", id: "wfa-chart" },
@@ -562,10 +613,8 @@ function updateChartsBasedOnSelection() {
         { key: "wflh", id: "wflh-chart" },
     ];
 
-    // Tỷ lệ cố định: Chiều rộng : Chiều cao (ví dụ: 4:3)
     const aspectRatio = 4 / 3;
 
-    // Lặp qua từng loại biểu đồ và cập nhật nếu tồn tại
     chartMappings.forEach((chart) => {
         const chartContainer = document.getElementById(chart.id);
 
@@ -573,25 +622,22 @@ function updateChartsBasedOnSelection() {
             const chartData = data.charts[chart.key][selectedType];
             if (chartData && chartData.data) {
                 try {
-                    // Xóa sạch dữ liệu cũ trong container để tránh chồng biểu đồ
                     Plotly.purge(chart.id);
 
-                    // Parse dữ liệu mới
                     const parsedData = JSON.parse(chartData.data);
 
-                    // Layout với kích thước linh hoạt dựa trên aspect ratio
-                    const layout = {
+                    // Gán dữ liệu vào container để dùng khi resize
+                    chartContainer.data = parsedData.data;
+                    chartContainer.layout = {
                         ...parsedData.layout,
                         autosize: true,
-                        height: chartContainer.offsetWidth / aspectRatio, // Tính chiều cao theo tỷ lệ
+                        height: chartContainer.offsetWidth / aspectRatio,
                         margin: { l: 10, r: 10, t: 10, b: 10 },
                     };
 
-                    // Cấu hình co dãn
                     const config = { ...chartData.config, responsive: true };
 
-                    // Vẽ biểu đồ mới
-                    Plotly.newPlot(chart.id, parsedData.data, layout, config);
+                    Plotly.newPlot(chart.id, chartContainer.data, chartContainer.layout, config);
                 } catch (error) {
                     console.error(`Lỗi khi cập nhật biểu đồ ${chart.key}:`, error);
                 }
@@ -601,18 +647,26 @@ function updateChartsBasedOnSelection() {
 }
 
 function updateResults(data) {
-    // Kiểm tra nếu dữ liệu không có (ví dụ: null hoặc empty)
+    const noDataMessage = document.getElementById('no-data-message');
+    const collapsibleContent = document.getElementById('collapsible-content');
+
     if (!data || Object.keys(data).length === 0) {
         // Hiển thị thông báo "No data"
-        document.getElementById('no-data-message').style.display = 'block';
+        noDataMessage.style.visibility = 'visible';
+        noDataMessage.style.height = 'auto';
 
         // Ẩn các kết quả cũ
-        document.getElementById('collapsible-content').style.display = 'none';
+        collapsibleContent.style.visibility = 'hidden';
+        collapsibleContent.style.height = '-200px'; // Có thể điều chỉnh để ẩn hoàn toàn
     } else {
         // Nếu có dữ liệu, ẩn thông báo "No data"
-        document.getElementById('no-data-message').style.display = 'none';
+        noDataMessage.style.visibility = 'hidden';
+        noDataMessage.style.height = '0px';
+
         // Hiển thị các kết quả
-        document.getElementById('collapsible-content').style.display = 'block';
+        collapsibleContent.style.visibility = 'visible';
+        collapsibleContent.style.height = 'auto';
+        resizeCharts(); // Gọi resize ngay lập tức
     }
 }
 
