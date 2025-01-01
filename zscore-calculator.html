@@ -14,11 +14,7 @@
 	<title>WHO Z-Score</title>
 	<link rel="icon" href="/icon.png" type="image/png" />
 	<style>
-		p {
-			margin-top: 4px;
-			margin-bottom: 4px;
-			padding-left: 5px;
-		}
+		p {margin-top: 4px;margin-bottom: 4px;padding-left: 5px;}
 		/* Thêm bo góc cho ô input */
 		input[type="text"],
 		input[type="number"],
@@ -40,16 +36,8 @@
 				box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 		}
 
-		.zscore-form {
-			margin-bottom: 20px;
-		}
-
-		.zscore-form label {
-			display: block;
-			margin-bottom: 5px;
-			font-weight: bold;
-		}
-
+		.zscore-form {margin-bottom: 20px;}
+		.zscore-form label {display: block;margin-bottom: 5px;font-weight: bold;}
 		.result-container {
 			max-width: 400px;
 			justify-content: space-between;
@@ -72,12 +60,7 @@
 			padding: 5px 10px;
 		}
 
-		.dropbtn {
-			padding: 5px;
-			font-size: 14px;
-			cursor: pointer;
-			border-radius: 5px;
-		}
+		.dropbtn {padding: 5px;font-size: 14px;cursor: pointer;border-radius: 5px;}
 	</style>
 </head>
 
@@ -399,9 +382,10 @@
 					{ field: "height", errorId: "height-error", groupClass: "height-group" },
 					{ field: "weight", errorId: "weight-error", groupClass: "weight-group" },
 			];
-		const results = [
-				{key: "wfl", resultId: "weight_lenhei_result", resultSideId: "weight_lenhei_result_side", boxId: "wflh-box", label: "Weight for Length",},
-				{key: "wei", resultId: "wei-result", resultSideId: "wei-result-side", boxId: "wei-box", label: "Weight for Age",}];
+			const results = [
+					{key: "wfl", resultId: "weight_lenhei_result", resultSideId: "weight_lenhei_result_side", boxId: "wflh-box", label: "Weight for Length",},
+					{key: "wei", resultId: "wei-result", resultSideId: "wei-result-side", boxId: "wei-box", label: "Weight for Age",}
+			];
 		
 			// Kiểm tra thông tin đầu vào
 			fieldsToValidate.forEach(({ field, errorId, groupClass }) => {
@@ -636,5 +620,4 @@
 	});
 	</script>
 </body>
-
 </html>
