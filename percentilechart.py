@@ -39,23 +39,13 @@ def draw_bmi_percentile_chart(bmi, age_months, sex):
 
     # Add shapes for vertical and horizontal lines
     shapes = [
-        dict(type='line',
-             x0=year * 12,
-             y0=data['P3'].min() - 1,
-             x1=year * 12,
-             y1=data['P97'].max() + 1,
-             line=dict(color="gray",
-                       width=2 if year == 2 else 0.2,
-                       dash="solid" if year == 2 else "dash"))
-        for year in range(1, 6)
-    ] + [
-        dict(type='line',
-             x0=age_months_data.min(),
-             y0=y,
-             x1=age_months_data.max(),
-             y1=y,
-             line=dict(color='gray', width=0.2, dash='dash'))
-        for y in range(10, 22, 2)
+        dict(
+            type='line',
+            x0=24,
+            y0=data['P3'].min() - 1,
+            x1=24,
+            y1=21,
+            line=dict(color="gray",width=2,dash="solid"))
     ] + [
         dict(type="rect",
              xref="paper",
@@ -148,22 +138,6 @@ def draw_wfa_percentile_chart(weight, age_months, sex):
 
     # Add shapes and layout
     shapes = [
-        dict(type='line',
-             x0=year * 12,
-             y0=data['P3'].min() - 1,
-             x1=year * 12,
-             y1=data['P97'].max() + 1,
-             line=dict(color='gray', width=0.2, dash='solid'))
-        for year in range(1, 6)
-    ] + [
-        dict(type="line",
-             x0=age_months_data.min(),
-             y0=y,
-             x1=age_months_data.max(),
-             y1=y,
-             line=dict(color="gray", width=0.2, dash="dash"))
-        for y in range(5, 25, 5)
-    ] + [
         dict(type="rect",
              xref="paper",
              yref="paper",
@@ -258,23 +232,11 @@ def draw_lhfa_percentile_chart(adjusted_lenhei, age_months, sex):
     shapes = [
         dict(
             type='line',
-            x0=year * 12,
-            y0=data['P3'].min() - 10,
-            x1=year * 12,
-            y1=130,
-            line=dict(
-                color="gray",
-                width=2 if year == 2 else 0.2,  # Nét dày hơn cho year = 2
-                dash="solid" if year == 2 else "dash"  # Nét liền cho year = 2
-            )) for year in range(1, 6)
-    ] + [
-        dict(type="line",
-             x0=age_months_data.min(),
-             y0=y,
-             x1=age_months_data.max(),
-             y1=y,
-             line=dict(color="gray", width=0.2, dash="dash"))
-        for y in range(40, 130, 10)
+            x0=24,
+            y0=data['P3'].min()-4,
+            x1=24,
+            y1=data['P97'].max() + 4,
+            line=dict(color="gray",width=2,dash="solid"))
     ] + [
         dict(type="rect",
              xref="paper",
@@ -378,22 +340,6 @@ def draw_wfl_wfh_percentile_chart(weight, length_or_height, sex, measure_type):
 
     # Add layout configurations
     shapes = [
-        dict(type='line',
-             x0=length_or_height,
-             y0=data['P3'].min() - 2,
-             x1=length_or_height,
-             y1=data['P95'].max() + 2,
-             line=dict(color='gray', width=0.2, dash='dash'))
-        for length_or_height in range(50, 120, 10)
-    ] + [
-        dict(type="line",
-             x0=length_or_height_data.min(),
-             y0=y,
-             x1=length_or_height_data.max(),
-             y1=y,
-             line=dict(color="gray", width=0.2, dash="dash"))
-        for y in range(5, int(data['P95'].max() + 2), 5)
-    ] + [
         dict(type="rect",
              xref="paper",
              yref="paper",
