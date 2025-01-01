@@ -43,7 +43,6 @@ function toggleAgeInput() {
         document.querySelector(".input-row")?.classList.remove("error-border");
         document.getElementById("age-days-error").style.display = "none";
         document.querySelector(".age-days-group")?.classList.remove("error-border");
-        //document.getElementById("age-months").required = true;
     } else if (selectedOption === "days") {
         document.getElementById("dob-container").style.display = "none";
         document.getElementById("months-input").style.display = "none";
@@ -53,7 +52,6 @@ function toggleAgeInput() {
         document.querySelector(".input-row")?.classList.remove("error-border");
         document.getElementById("age-months-error").style.display = "none";
         document.querySelector(".age-months-group")?.classList.remove("error-border");
-        //document.getElementById("age-days").required = true;
     }
 }
 
@@ -588,10 +586,17 @@ function resizeCharts() {
 
         if (chartContainer && chartContainer.data) {
             try {
-                // Cập nhật layout với chiều cao mới
+                const chartWidth = chartContainer.offsetWidth;
+                const chartHeight = chartWidth / aspectRatio;
+
+                // Cập nhật layout với chiều cao mới và font chữ động
                 const newLayout = {
                     ...chartContainer.layout,
-                    height: chartContainer.offsetWidth / aspectRatio, // Tính chiều cao dựa trên tỷ lệ
+                    height: chartHeight, // Tính chiều cao dựa trên tỷ lệ
+                    font: {
+                        ...chartContainer.layout.font,
+                        size: Math.max(8, chartWidth * 0.02),
+                    },
                 };
 
                 Plotly.react(chart.id, chartContainer.data, newLayout);
@@ -626,13 +631,20 @@ function updateChartsBasedOnSelection() {
 
                     const parsedData = JSON.parse(chartData.data);
 
+                    const chartWidth = chartContainer.offsetWidth;
+                    const chartHeight = chartWidth / aspectRatio;
+
                     // Gán dữ liệu vào container để dùng khi resize
                     chartContainer.data = parsedData.data;
                     chartContainer.layout = {
                         ...parsedData.layout,
                         autosize: true,
-                        height: chartContainer.offsetWidth / aspectRatio,
+                        height: chartHeight,
                         margin: { l: 10, r: 10, t: 10, b: 10 },
+                        font: {
+                            ...parsedData.layout.font,
+                            size: Math.max(8, chartWidth * 0.02),
+                        },
                     };
 
                     const config = { ...chartData.config, responsive: true };
@@ -645,6 +657,7 @@ function updateChartsBasedOnSelection() {
         }
     });
 }
+
 
 function updateResults(data) {
     const noDataMessage = document.getElementById('no-data-message');

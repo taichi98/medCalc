@@ -278,25 +278,75 @@
 	<script>
 		let data;
 		window.addEventListener("resize", resizeCharts);  // Gắn sự kiện resize để biểu đồ co dãn
-		
 		document.addEventListener("DOMContentLoaded", function () {
-			flatpickr("#dob", {
-				dateFormat: "d/m/Y",
-				onChange: updateAgeDisplay, // Cập nhật tuổi khi thay đổi ngày sinh
-				maxDate: "today",
-				locale: {
-					firstDayOfWeek: 1,
-				},
-			});
+				// Lấy ngày hiện tại
+				const today = new Date();
+				const formattedToday = formatDate(today);
 
-			flatpickr("#current-day", {
-				dateFormat: "d/m/Y",
-				defaultDate: new Date(), 
-				onChange: updateAgeDisplay,
-				locale: {
-					firstDayOfWeek: 1,
-				},
-			});
+				// Khởi tạo flatpickr cho #current-day
+				const currentDayInput = flatpickr("#current-day", {
+						dateFormat: "d/m/Y",
+						allowInput: true,  
+						onClose: validateManualInput,  
+						defaultDate: today,  
+						maxDate: "today", 
+						locale: {
+								firstDayOfWeek: 1,
+						},
+				});
+
+				// Khởi tạo flatpickr cho #dob, maxDate sẽ được cập nhật sau khi currentDayInput khởi tạo
+				const dobInput = flatpickr("#dob", {
+						dateFormat: "d/m/Y",
+						allowInput: true,  
+						onClose: validateManualInput,  
+						locale: {
+								firstDayOfWeek: 1,
+						},
+				});
+
+				// Cập nhật maxDate của dobInput bằng giá trị của currentDayInput
+				currentDayInput.config.onChange.push(() => {
+						dobInput.set("maxDate", currentDayInput.selectedDates[0]); // Cập nhật maxDate của dobInput
+				});
+
+				// Gán giá trị ngày hiện tại vào input khi trang tải
+				document.getElementById("current-day").value = formattedToday;
+				document.querySelector("#dob").setAttribute("autocomplete", "off"); //Vô hiệu hóa tính năng tự động điền
+				document.querySelector("#current-day").setAttribute("autocomplete", "off");
+			
+				// Hàm xử lý khi người dùng nhập tay vào trường input
+				function validateManualInput(selectedDates, dateStr, instance) {
+						const inputElement = instance.input; // Lấy phần tử input liên kết với flatpickr
+						const inputValue = inputElement.value;
+
+						if (isValidDate(inputValue, "d/m/Y")) {
+								instance.setDate(inputValue, true); // Cập nhật flatpickr với giá trị hợp lệ
+						} else {
+								inputElement.value = ""; // Xóa giá trị không hợp lệ
+						}
+				}
+
+				// Hàm kiểm tra định dạng ngày hợp lệ
+				function isValidDate(dateStr, format) {
+						const [day, month, year] = dateStr.split('/').map(Number);
+						if (!day || !month || !year) return false;
+
+						const date = new Date(year, month - 1, day);
+						return (
+								date.getFullYear() === year &&
+								date.getMonth() === month - 1 &&
+								date.getDate() === day
+						);
+				}
+
+				// Hàm định dạng ngày thành chuỗi "dd/mm/yyyy"
+				function formatDate(date) {
+						const day = String(date.getDate()).padStart(2, "0");
+						const month = String(date.getMonth() + 1).padStart(2, "0");
+						const year = date.getFullYear();
+						return `${day}/${month}/${year}`;
+				}
 		});
 
 		// Thêm sự kiện để cập nhật tuổi khi giá trị dob hoặc current-day thay đổi

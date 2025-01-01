@@ -53,7 +53,12 @@ body {
 		color: #213555; /* Giữ nguyên màu sắc của văn bản */
 }
 
-
+/* Tùy chỉnh hover cho ngày -----------------------------------*/
+.flatpickr-day:hover {
+		background: #cbd2ce; /* Màu nền khi hover */
+		font-weight: bold;
+}
+/* ------------------------------------------------------- */
 /*Box hiển thị BMI/Age ZScore---------------*/
 fieldset {
 	width: 300px;
