@@ -270,6 +270,7 @@
 		    const currentDayInput = flatpickr("#current-day", {
 		        dateFormat: "d/m/Y",
 		        allowInput: true,  
+				disableMobile: "true",
 		        onClose: validateManualInput,  
 		        defaultDate: today,  
 		        maxDate: "today", 
@@ -281,29 +282,26 @@
 		    // Khởi tạo flatpickr cho #dob
 		    const dobInput = flatpickr("#dob", {
 		        dateFormat: "d/m/Y",
-		        allowInput: true,  
+		        allowInput: true, 
+				disableMobile: "true",
 		        onClose: validateManualInput,  
 		        locale: {
 		            firstDayOfWeek: 1,
 		        },
 		    });
-		
-		    // Đặt maxDate cho dobInput bằng giá trị defaultDate của currentDayInput
-		    dobInput.set("maxDate", currentDayInput.selectedDates[0] || today);
-		
-		    // Đẩy hàm cập nhật maxDate vào sự kiện onChange của currentDayInput
+
+		    dobInput.set("maxDate", currentDayInput.selectedDates[0] || today); // Đặt maxDate cho dobInput bằng giá trị defaultDate của currentDayInput
 		    currentDayInput.config.onChange.push(() => {
 		        dobInput.set("maxDate", currentDayInput.selectedDates[0]);
 		    });
 		
-		    // Gán giá trị ngày hiện tại vào input khi trang tải
 		    document.getElementById("current-day").value = formattedToday;
 		    document.querySelector("#dob").setAttribute("autocomplete", "off"); // Vô hiệu hóa tự động điền
 		    document.querySelector("#current-day").setAttribute("autocomplete", "off");
 		
 		    // Hàm xử lý khi người dùng nhập tay vào trường input
 		    function validateManualInput(selectedDates, dateStr, instance) {
-		        const inputElement = instance.input; // Lấy phần tử input liên kết với flatpickr
+		        const inputElement = instance.input; 
 		        const inputValue = inputElement.value;
 		
 		        if (isValidDate(inputValue, "d/m/Y")) {
