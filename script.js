@@ -7,6 +7,18 @@
 let sidebarOpen = false;
 let gender = "";
 
+function showAlert(message) {
+    const alertBox = document.getElementById("custom-alert");
+    const alertMessage = document.getElementById("alert-message");
+    alertMessage.textContent = message;
+    alertBox.style.display = "block";
+}
+
+function closeAlert() {
+    const alertBox = document.getElementById("custom-alert");
+    alertBox.style.display = "none";
+}
+
 function toggleAgeInput() {
     const selectedOption = document.getElementById("age-option").value;
     const dobFlatpickr = document.querySelector("#dob")._flatpickr;
@@ -525,6 +537,7 @@ function calculateTotalMonths(ageYears, ageMonths) {
 function updateAgeDisplay() {
     const ageOption = document.getElementById("age-option").value;
     const ageDisplayElement = document.getElementById("age-display");
+    const form = document.getElementById("zscore-form");
 
     if (ageOption === "dob") {
         const dob = document.getElementById("dob").value;
@@ -553,6 +566,17 @@ function updateAgeDisplay() {
 
             const totalMonths = calculateTotalMonths(ageYears, ageMonths);
 
+            // Kiểm tra nếu tuổi vượt quá 228 tháng
+            if (totalMonths > 228) {
+                showAlert("Age exceeds 228 months (19 years). Submission is not allowed.");
+                if (form) {
+                    form.addEventListener("submit", function (event) {
+                        event.preventDefault(); // Ngăn form submit
+                    });
+                }
+                return;
+            }
+
             // Gọi hàm kiểm tra trạng thái nút đo
             updateMeasuredButtons(totalMonths);
 
@@ -570,6 +594,16 @@ function updateAgeDisplay() {
     } else if (ageOption === "months") {
         const months = parseInt(document.getElementById("age-months").value, 10);
         if (!isNaN(months)) {
+            if (months > 228) {
+                showAlert("Age exceeds 228 months (19 years). Submission is not allowed.");
+                if (form) {
+                    form.addEventListener("submit", function (event) {
+                        event.preventDefault(); // Ngăn form submit
+                    });
+                }
+                return;
+            }
+
             if (months >= 12) {
                 const years = Math.floor(months / 12);
                 const remainingMonths = months % 12;
@@ -686,7 +720,10 @@ function updateResults(data) {
 
         // Ẩn các kết quả cũ
         collapsibleContent.style.visibility = 'hidden';
-        collapsibleContent.style.height = '-200px'; // Có thể điều chỉnh để ẩn hoàn toàn
+        collapsibleContent.style.height = '-200px'; 
+        if (collapsibleContent.classList.contains('expand')) {
+            toggleCollapse('collapsible-content', 'arrow-icon');
+        }
     } else {
         // Nếu có dữ liệu, ẩn thông báo "No data"
         noDataMessage.style.visibility = 'hidden';
@@ -695,6 +732,10 @@ function updateResults(data) {
         // Hiển thị các kết quả
         collapsibleContent.style.visibility = 'visible';
         collapsibleContent.style.height = 'auto';
+        // Hiển thị nội dung và tự động mở rộng nếu chưa mở
+        if (!collapsibleContent.classList.contains('expand')) {
+            toggleCollapse('collapsible-content', 'arrow-icon');
+        }
         resizeCharts(); // Gọi resize ngay lập tức
     }
 }
