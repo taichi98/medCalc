@@ -1,3 +1,33 @@
+:root {
+--light: hsl(0, 0%, 100%);
+--background: linear-gradient(to right bottom, hsl(130, 46%, 76%), hsl(72, 14%, 93%));
+}
+
+@keyframes zoomIn {
+	0% {
+		transform: scale(0.5);
+		opacity: 0;
+	}
+	75% {
+		transform: scale(1.2);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+@keyframes zoomOut {
+	0% {
+		transform: scale(1.2);
+		opacity: 1;
+	}
+
+	100% {
+		transform: scale(0.5);
+		opacity: 0;
+	}
+}
 .text-gray {
 		color: #cbc3b0;
 }
@@ -12,25 +42,65 @@
 	height: 100%;
 	overflow: auto;
 	background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+	box-shadow: .4rem .4rem 2.4rem .2rem hsla(236, 50%, 50%, 0.3);
 }
 
 .modal-content {
-	background-color: #fefefe;
+	color: black;
+	background: var(--background);
 	margin: 15% auto;
 	padding: 20px;
 	border: 1px solid #888;
 	width: 80%;
-	max-width: 400px;
+	max-width: 300px;
 	text-align: center;
 	border-radius: 8px;
+	position: relative;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+/* Khi hiển thị Modal */
+.modal.show .modal-content {
+	animation: zoomIn 0.25s ease-out;
+}
 
+/* Khi đóng Modal */
+.modal.hide .modal-content {
+	animation: zoomOut 0.25s ease-in;
+}
 .modal-title {
 	font-size: 18px;
 	font-weight: bold;
 	margin-bottom: 10px;
+	color: #213555;
 	display: block;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #213555;
+}
+/* Nút đóng Modal */
+.link-2 {
+	position: absolute;
+	top: 10px; /* Khoảng cách từ cạnh trên hộp thoại */
+	right: 10px; /* Khoảng cách từ cạnh phải hộp thoại */
+	width: 1rem;
+	height: 1rem;
+	border: 2px solid black;
+	border-radius: 50%;
+	color: black;
+	font-size: 1rem;
+	text-align: center;
+	line-height: 1rem; /* Đảm bảo văn bản "×" căn giữa */
+	cursor: pointer;
+	transition: 0.2s;
+}
+.link-2::before {
+	content: '×';
+	display: block;
+	transform: translateY(-0.05rem);
+}
+.link-2:hover,
+.link-2:focus {
+	border-color: black;
+	transform: translateY(-.1rem);
 }
 
 .no-data {

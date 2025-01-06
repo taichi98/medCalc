@@ -11,12 +11,22 @@ function showAlert(message) {
     const alertBox = document.getElementById("custom-alert");
     const alertMessage = document.getElementById("alert-message");
     alertMessage.textContent = message;
+    alertBox.classList.remove('hide');
+    alertBox.classList.add('show'); 
     alertBox.style.display = "block";
 }
 
 function closeAlert() {
     const alertBox = document.getElementById("custom-alert");
-    alertBox.style.display = "none";
+    const dobInput = document.getElementById("dob"); 
+    alertBox.classList.remove('show'); // Loại bỏ class `show` nếu có
+    alertBox.classList.add('hide');    // Thêm class `hide` để áp dụng hiệu ứng Zoom Out
+
+    // Đợi 0.25s (thời gian của hiệu ứng zoomOut) rồi ẩn modal
+    setTimeout(() => {
+        alertBox.style.display = 'none';
+    }, 250);
+    dobInput.value = ""; //Reset lại DOB - buộc người dùng phải chọn lại
 }
 
 function toggleAgeInput() {
@@ -538,7 +548,8 @@ function updateAgeDisplay() {
     const ageOption = document.getElementById("age-option").value;
     const ageDisplayElement = document.getElementById("age-display");
     const form = document.getElementById("zscore-form");
-
+    const dobInput = document.getElementById("dob"); 
+    
     if (ageOption === "dob") {
         const dob = document.getElementById("dob").value;
         const currentDay = document.getElementById("current-day").value;
@@ -569,6 +580,8 @@ function updateAgeDisplay() {
             // Kiểm tra nếu tuổi vượt quá 228 tháng
             if (totalMonths > 228) {
                 showAlert("Age exceeds 228 months (19 years). Submission is not allowed.");
+                dobInput.value = "";
+                ageDisplayElement.innerHTML = "";
                 if (form) {
                     form.addEventListener("submit", function (event) {
                         event.preventDefault(); // Ngăn form submit
@@ -596,6 +609,8 @@ function updateAgeDisplay() {
         if (!isNaN(months)) {
             if (months > 228) {
                 showAlert("Age exceeds 228 months (19 years). Submission is not allowed.");
+                dobInput.value = "";
+                ageDisplayElement.innerHTML = "";
                 if (form) {
                     form.addEventListener("submit", function (event) {
                         event.preventDefault(); // Ngăn form submit
