@@ -178,10 +178,8 @@ function calculateFlow() {
     const oxyFlow = totalFlow - airFlow;
 
     // Hiển thị kết quả
-    document.getElementById("airFlow").textContent =
-        "Air Flow: " + airFlow.toFixed(2) + " L/min";
-    document.getElementById("oxyFlow").textContent =
-        "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
+    document.getElementById("airFlow").textContent = "Air Flow: " + airFlow.toFixed(2) + " L/min";
+    document.getElementById("oxyFlow").textContent = "Oxy Flow: " + oxyFlow.toFixed(2) + " L/min";
 }
 
 function loadPage(page) {
@@ -249,12 +247,9 @@ function calculateETT() {
     const ettDepth = ettWithCuff * 3; // Công thức tính độ sâu: ETT với bóng * 3
     document.getElementById("age").textContent = age;
     // Hiển thị kết quả
-    document.getElementById("ettWithoutCuff").textContent =
-        ettWithoutCuff.toFixed(1) + " mm";
-    document.getElementById("ettWithCuff").textContent =
-        ettWithCuff.toFixed(1) + " mm";
-    document.getElementById("ettDepth").textContent =
-        ettDepth.toFixed(1) + " cm";
+    document.getElementById("ettWithoutCuff").textContent = ettWithoutCuff.toFixed(1) + " mm";
+    document.getElementById("ettWithCuff").textContent = ettWithCuff.toFixed(1) + " mm";
+    document.getElementById("ettDepth").textContent = ettDepth.toFixed(1) + " cm";
 
     // Ẩn form nhập liệu và hiện kết quả
     document.getElementById("formBox").style.display = "none";
@@ -441,13 +436,23 @@ function selectGender(selectedGender) {
 
 function selectMeasured(measured) {
     document.getElementById("measured").value = measured;
-    document.getElementById("recumbent-btn").classList.remove("active");
-    document.getElementById("standing-btn").classList.remove("active");
 
-    if (measured === "l") {
-        document.getElementById("recumbent-btn").classList.add("active");
-    } else {
-        document.getElementById("standing-btn").classList.add("active");
+    const heightLabel = measured === "l" ? "Length (cm):" : "Height (cm):";
+    const weightLenheiLabel = measured === "l" ? "Weight for Length:" : "Weight for Height:";
+    const lenheiAgeLabel = measured === "l" ? "Length for Age:" : "Height for Age:";
+
+    document.querySelector('label[for="height"]').textContent = heightLabel;
+    document.querySelector("#weight_lenhei_result .result-title").textContent = weightLenheiLabel;
+    document.querySelector("#lenhei_age_result .result-title").textContent = lenheiAgeLabel;
+
+    document.getElementById("recumbent-btn").classList.toggle("active", measured === "l");
+    document.getElementById("standing-btn").classList.toggle("active", measured === "h");
+}
+
+function autoSubmit() {
+    if (data && Object.keys(data).length > 0) {
+        const form = document.getElementById("zscore-form");
+        form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
     }
 }
 
@@ -477,13 +482,12 @@ function updateMeasuredButtons(totalMonths) {
         const isAbove5Years = totalMonths > 60; 
         const recumbentBtn = document.getElementById("recumbent-btn");
         const standingBtn = document.getElementById("standing-btn");
-        const measuredInput = document.getElementById("measured");
 
         if (isAbove5Years) {
                 // Vô hiệu hóa Recumbent và mặc định chọn Standing
                 recumbentBtn.disabled = true;
                 standingBtn.disabled = true;
-                measuredInput.value = "h";
+                selectMeasured("h");
                 standingBtn.classList.add("active");
                 recumbentBtn.classList.remove("active");
         } else {
@@ -498,6 +502,19 @@ function updateMeasuredButtons(totalMonths) {
                         selectMeasured("l");
                 }
         }
+}
+
+function initializeMeasured() {
+    const measured = document.getElementById("measured").value; // Lấy giá trị mặc định
+    if (measured === "l") {
+        document.querySelector('label[for="height"]').textContent = "Length (cm):";
+        document.querySelector("#weight_lenhei_result .result-title").textContent = "Weight for Length";
+        document.querySelector("#lenhei_age_result .result-title").textContent = "Length for Age:";
+    } else if (measured === "h") {
+        document.querySelector('label[for="height"]').textContent = "Height (cm):";
+        document.querySelector("#weight_lenhei_result .result-title").textContent = "Weight for Height";
+        document.querySelector("#lenhei_age_result .result-title").textContent = "Height for Age:";
+    }
 }
 
 // Hàm tính tổng tháng từ tuổi nhập vào
@@ -658,11 +675,10 @@ function updateChartsBasedOnSelection() {
     });
 }
 
-
 function updateResults(data) {
     const noDataMessage = document.getElementById('no-data-message');
     const collapsibleContent = document.getElementById('collapsible-content');
-
+    
     if (!data || Object.keys(data).length === 0) {
         // Hiển thị thông báo "No data"
         noDataMessage.style.visibility = 'visible';
