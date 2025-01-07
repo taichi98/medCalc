@@ -39,7 +39,7 @@ MedixTools is a lightweight and user-friendly web application designed for healt
 
 ### 1. Clone the Repository
 ```bash
-$ git clone https://github.com/yourusername/MedixTools.git
+$ git clone https://github.com/taichi98/MedixTools.git
 $ cd MedixTools
 ```
 
