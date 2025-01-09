@@ -225,7 +225,7 @@ def endpoint():
     
 @app.route("/")
 def index():
-    return send_from_directory(os.getcwd(), 'index.html')
+    return send_from_directory(os.getcwd(), '/php-app/index.php')
 
 
 @app.route("/zscore-calculator", methods=["GET", "POST"])
