@@ -2,16 +2,18 @@ version: "3"
 
 services:
   python-app:
-    build: ./python-app  # Đảm bảo đường dẫn này đúng với thư mục chứa Dockerfile của Python
+    build: ./python-app
     ports:
-      - "5000:5000"  # Mở cổng 5000 cho ứng dụng Python
+      - "8080:$PORT"  # Sử dụng cổng từ Railway
     environment:
       - FLASK_APP=app.py
-    command: flask run --host=0.0.0.0
+      - PORT=8080  # Đảm bảo Flask sử dụng cổng đúng
+    command: flask run --host=0.0.0.0 --port=$PORT
     depends_on:
       - php-app
 
   php-app:
-    build: ./php-app  # Đảm bảo đường dẫn này đúng với thư mục chứa Dockerfile của PHP
+    build: ./php-app
     ports:
-      - "80:80"  # Mở cổng 80 cho Apache (PHP)
+      - "8080:$PORT"  # Cũng sử dụng cổng từ Railway
+    command: apache2-foreground
