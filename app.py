@@ -219,7 +219,10 @@ def zscore_to_percentile(zscore):
         return None
     return round(norm.cdf(zscore) * 100, 1)
 
-
+@app.route('/endpoint')
+def endpoint():
+    return "Hello from Python on Railway!"
+    
 @app.route("/")
 def index():
     return send_from_directory(os.getcwd(), 'index.html')
