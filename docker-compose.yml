@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  python-app:
+    build: ./python-app  # Đảm bảo đường dẫn này đúng với thư mục chứa Dockerfile của Python
+    ports:
+      - "5000:5000"  # Mở cổng 5000 cho ứng dụng Python
+    environment:
+      - FLASK_APP=app.py
+    command: flask run --host=0.0.0.0
+    depends_on:
+      - php-app
+
+  php-app:
+    build: ./php-app  # Đảm bảo đường dẫn này đúng với thư mục chứa Dockerfile của PHP
+    ports:
+      - "80:80"  # Mở cổng 80 cho Apache (PHP)
