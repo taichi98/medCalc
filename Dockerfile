@@ -1,6 +1,7 @@
+# Tầng cơ bản cho Python
 FROM python:3.10-slim AS python-base
 
-# Cài đặt các công cụ cơ bản cho Python
+# Cài đặt công cụ cơ bản và các gói cần thiết cho Python
 RUN apt-get update && apt-get install -y \
     gcc \
     libffi-dev \
@@ -17,19 +18,12 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy mã nguồn Python
-COPY . .
+COPY . /app
 
-# Đặt biến môi trường cho Flask
-ENV FLASK_APP=app.py
-
-# Cổng Python chạy (Flask)
-EXPOSE 5000
-
-
-# Tầng PHP
+# Tầng cơ bản cho PHP
 FROM php:8.1-apache AS php-base
 
-# Cài đặt các gói mở rộng cho PHP
+# Cài đặt các gói cần thiết cho PHP
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -37,15 +31,25 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install gd
 
-# Cài đặt Composer nếu cần
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 # Copy mã nguồn PHP
 WORKDIR /var/www/html
-COPY . .
+COPY . /var/www/html
 
-# Cổng PHP chạy (Apache)
-EXPOSE 80
+# Tầng cuối cùng để chạy đồng thời cả Python và PHP
+FROM php:8.1-apache
 
-# Lựa chọn môi trường khi chạy container
-CMD ["sh", "-c", "if [ \"$APP_ENV\" = 'python' ]; then flask run --host=0.0.0.0; else apache2-foreground; fi"]
+# Sao chép từ cả hai tầng trước đó
+COPY --from=python-base /app /app
+COPY --from=php-base /var/www/html /var/www/html
+
+# Cài đặt Supervisor để quản lý nhiều quy trình
+RUN apt-get update && apt-get install -y supervisor && rm -rf /var/lib/apt/lists/*
+
+# Cấu hình Supervisor để chạy cả Flask và Apache
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Mở các cổng cần thiết
+EXPOSE 5000 80
+
+# Lệnh khởi chạy Supervisor
+CMD ["/usr/bin/supervisord", "-n"]
