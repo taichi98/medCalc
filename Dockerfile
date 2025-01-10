@@ -1,32 +1,25 @@
 # Tầng cơ bản cho Python
 FROM python:3.10-slim AS python-base
 
-# Cài đặt công cụ cơ bản và các gói cần thiết cho Python
+# Cài đặt các công cụ và gói Python cần thiết
 RUN apt-get update && apt-get install -y \
     gcc \
     libffi-dev \
     libssl-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
-RUN pip install plotly
-RUN pip install openpyxl
-RUN pip install scipy
+RUN pip install flask plotly openpyxl scipy
 
-# Cài đặt các gói Python từ requirements.txt
+# Copy mã nguồn Python
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-# Copy mã nguồn Python
 COPY . /app
 
-# Cài đặt Flask trong PATH toàn cục để tránh lỗi "can't find command"
-RUN pip install flask gunicorn
-
 # Tầng cơ bản cho PHP
-FROM php:8.1-apache AS php-base
+FROM php:8.1-fpm AS php-base
 
-# Cài đặt các gói cần thiết cho PHP
+# Cài đặt PHP và các extension cần thiết
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -38,24 +31,18 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 COPY . /var/www/html
 
-# Tầng cuối cùng để chạy đồng thời cả Python và PHP
-FROM php:8.1-apache
+# Tầng cuối cùng với Nginx làm reverse proxy
+FROM nginx:alpine
 
-# Sao chép từ cả hai tầng trước đó
+# Copy cấu hình Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy các mã nguồn từ các tầng trước
 COPY --from=python-base /app /app
 COPY --from=php-base /var/www/html /var/www/html
 
-# Cài đặt Supervisor để quản lý nhiều quy trình
-RUN apt-get update && apt-get install -y supervisor && rm -rf /var/lib/apt/lists/*
-
-# Cấu hình Supervisor để chạy cả Flask và Apache
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-# Đặt PATH cho Python để đảm bảo Flask được tìm thấy
-ENV PATH="/usr/local/bin:$PATH"
-
 # Mở các cổng cần thiết
-EXPOSE 5000 80
+EXPOSE 80
 
-# Lệnh khởi chạy Supervisor
-CMD ["/usr/bin/supervisord", "-n"]
+# Lệnh khởi động Nginx
+CMD ["nginx", "-g", "daemon off;"]
