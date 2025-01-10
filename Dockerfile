@@ -1,8 +1,15 @@
-# Sử dụng image cơ bản của Python
-FROM python:3.11
+FROM python:3.10-slim
 
-# Cài đặt R và các thư viện cần thiết
-RUN apt-get update && apt-get install -y r-base
+# Cài đặt các công cụ cơ bản
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libffi-dev \
+    libssl-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip install plotly
+RUN pip install openpyxl
+RUN pip install scipy
 
 # Cài đặt các gói Python từ requirements.txt
 WORKDIR /app
