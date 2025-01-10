@@ -20,6 +20,9 @@ RUN pip install -r requirements.txt
 # Copy mã nguồn Python
 COPY . /app
 
+# Cài đặt Flask trong PATH toàn cục để tránh lỗi "can't find command"
+RUN pip install flask gunicorn
+
 # Tầng cơ bản cho PHP
 FROM php:8.1-apache AS php-base
 
@@ -47,6 +50,9 @@ RUN apt-get update && apt-get install -y supervisor && rm -rf /var/lib/apt/lists
 
 # Cấu hình Supervisor để chạy cả Flask và Apache
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Đặt PATH cho Python để đảm bảo Flask được tìm thấy
+ENV PATH="/usr/local/bin:$PATH"
 
 # Mở các cổng cần thiết
 EXPOSE 5000 80
