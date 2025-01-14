@@ -369,11 +369,11 @@ def zscore_calculator():
                     zscore_to_percentile(wei[0] if isinstance(wei, np.ndarray) else wei)}
 
         # Trả dữ liệu JSON về cho PHP
-        return jsonify(result_data)
+            return jsonify(result_data)
 
-    except Exception as e:
-        # Trả về lỗi nếu có bất kỳ vấn đề nào xảy ra
-        return jsonify({"error": str(e)}), 500
+        except Exception as e:
+            # Trả về lỗi nếu có bất kỳ vấn đề nào xảy ra
+            return jsonify({"error": str(e)}), 500
 
 # Route for serving static files
 @app.route('/<path:filename>')
