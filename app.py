@@ -6,13 +6,6 @@ import pandas as pd
 import numpy as np
 import math
 import os
-import logging
-
-logging.basicConfig(
-    filename="app.log",   # Đường dẫn file log
-    level=logging.INFO,   # Mức độ log (DEBUG, INFO, WARNING, ERROR)
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
 
 app = Flask(__name__)
 
