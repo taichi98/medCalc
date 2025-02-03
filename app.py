@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 from drawchart import draw_bmi_chart, draw_wfa_chart, draw_lhfa_chart, draw_wfl_wfh_chart, draw_bmi_chart_above5yr, draw_wfa_chart_above5yr, draw_lhfa_chart_above5yr
 from percentilechart import draw_bmi_percentile_chart, draw_wfa_percentile_chart, draw_lhfa_percentile_chart, draw_wfl_wfh_percentile_chart, draw_lhfa_percentile_chart_above5yr, draw_wfa_percentile_chart_above5yr, draw_bmi_percentile_chart_above5yr
+from eer import calculate_eer
 from scipy.stats import norm
 import pandas as pd
 import numpy as np
@@ -375,6 +376,39 @@ def zscore_calculator():
             # Trả về lỗi nếu có bất kỳ vấn đề nào xảy ra
             return jsonify({"error": str(e)}), 500
 
+@app.route("/calculate-eer", methods=["GET", "POST"])
+def eer_api():
+    if request.method == "POST":
+        try:
+            # Lấy dữ liệu từ form
+            sex = request.form.get("sex")
+            age_days = round_up(float(request.form.get("ageInDays")))
+            height = float(request.form.get("height"))
+            weight = float(request.form.get("weight"))
+            measure = request.form.get("measure", "h").lower()
+            pal = request.form.get("pal") 
+            
+            # Chuyển đổi tuổi từ ngày sang năm
+            age = age_days / 365  
+
+            # Điều chỉnh chiều dài/chiều cao
+            adjusted_lenhei = adjust_lenhei(age_days, measure, height)
+
+            # Kiểm tra xem có thiếu dữ liệu không
+            if None in [height, weight, pal, sex]:
+                return jsonify({"error": "Missing required fields"}), 400
+
+            # Tính EER
+            eer = calculate_eer(age, adjusted_lenhei, weight, pal, sex)
+
+            return jsonify({"EER": eer})
+
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+        except Exception as e:
+            return jsonify({"error": "Internal Server Error", "details": str(e)}), 500
+
+    
 # Route for serving static files
 @app.route('/<path:filename>')
 def static_files(filename):
